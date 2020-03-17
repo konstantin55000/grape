@@ -1,0 +1,76 @@
+body {
+    position: relative;
+}
+
+/* Позиционирование */
+.left-bar, .right-bar {
+    position: absolute;
+    top: 0;
+}
+.left-bar {
+    width: 13.04%;
+    height: 100%;
+}
+.right-bar {
+    left: 13.04%;
+    width: calc(100% - 13.04%) !important;
+}
+
+/* Стилизация */
+.left-bar {
+    display: flex;
+    flex-direction: column;
+    font-family: Helvetica,sans-serif;
+    color: #b9a5a6;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    background-color: #463a3c;
+}
+.left-bar__title {
+    order: 0;
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    margin: 0;
+}
+.left-bar__title-item {
+    font-size: inherit;
+    font-weight: 400;
+    line-height: inherit;
+    margin: 0;
+}
+.left-bar__title-control {
+    margin-left: auto;
+    font-weight: bold;
+    line-height: inherit;
+}
+.left-bar__item {
+    order: 1;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: row;
+    padding: 0 10px 0 20px;
+}
+.left-bar__item-control {
+    line-height: inherit;
+    margin-left: 5px;
+}
+.left-bar__item-title + .left-bar__item-control {
+    margin-left: auto;
+}
+.bar-item {
+    font-size: .75rem;
+    line-height: 40px;
+    height: 39px;
+    padding: 0 10px 0 20px;
+}
+.item-accent {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.inline-button {
+    cursor: pointer;
+}
+.inline-button:hover {
+    color: #d97aa6;
+}
+.item-bold {
+    font-weight: bold;
+}
