@@ -60,9 +60,6 @@ const editor = grapesjs.init({
   canvas: {
     styles: []
   },
-  blockManager: {
-    appendTo: '#blockManager',
-  },
   storageManager: { 
     id: '',
     type: 'remote',
@@ -77,11 +74,13 @@ const editor = grapesjs.init({
   },
   container: '#gjs',
   fromElement: true,
-
   plugins: ['gjs-preset-webpage'],
   pluginsOpts: {
     'gjs-preset-webpage': {}
-  }, 
+  },
+  blockManager: {
+    appendTo : '#blockManager'
+  },
 });
 
 // My block manager
@@ -101,7 +100,6 @@ const blockManager = {
   searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
     const blocks = this.obj.getAll();
     return this.obj.render(blocks.filter(block => {
-      console.log(block);
       const labelBlock = block.attributes.label;
       const idBlock = block.id;
       const labelCategory = block.attributes.category !== '' ? block.attributes.category.attributes.label : null;
@@ -123,7 +121,7 @@ const blockManager = {
   },
   // Initialization of listener for searching blocks
   initSearcher: function (query='.js__search-blocks') {
-    document.querySelector(query).addEventListener('change', this.searchManage.bind(this));
+    document.querySelector(query).addEventListener('input', this.searchManage.bind(this));
   },
   // Creating new block (if no define to category it will be in 'other' category)
   creatingNewBlock: function (id, opts) {
@@ -154,6 +152,25 @@ blockManager.creatingNewBlock('h2-block', {
 });
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block');
+
+// Fix fullscreen-mode
+editor.Commands.extend('core:fullscreen', {
+  run () {
+    const el = document.querySelector('body');
+    console.log(el);
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  },
+  stop () {
+    const d = document;
+    if (d.exitFullscreen) d.exitFullscreen();
+    else if (d.webkitExitFullscreen) d.webkitExitFullscreen();
+    else if (d.mozCancelFullScreen) d.mozCancelFullScreen();
+    else if (d.msExitFullscreen) d.msExitFullscreen();
+  }
+});
 
 //allow components to be drag and dropped
 // editor.setDragMode('absolute');
@@ -328,6 +345,8 @@ window.onload = function (event) {
   blockManager.initSearcher();
   // Load content from HTML to tab manager
   tabManager.importFromDOM();
+  // Deleting old blocks button
+  editor.Panels.removeButton('views', 'open-blocks');
   const Http = new XMLHttpRequest();
   const url='/cadau/user-project/1/pages';
   Http.open("GET", url);
