@@ -1,3 +1,57 @@
+// Manager of tabs (now 'Components' and 'Blocks') contains a method to add new Tab
+const tabManager = {
+  // DOM Container of tabs
+  objectDOM: document.querySelector('.js__tab-manager'),
+  // Map with tab faces
+  tabNames: new Map(),
+  // Map with tab bodies
+  tabBodies: new Map(),
+  // Key of current tab
+  currentKey: null,
+  // Change current tab
+  setCurrentTab: function (key) {
+    if (this.currentKey !== key) {
+      document.querySelectorAll('.js__active-tab').forEach(e => e.classList.remove('js__active-tab'));
+      document.querySelectorAll(`[data-tab-key=${key}]`).forEach(e => e.classList.add('js__active-tab'));
+      this.currentKey = key;
+    }
+  },
+  // Load tabs from HTML
+  importFromDOM: function (namesContainer = '.js__tab-names', bodiesContainer = '.js__tab-bodies') {
+    const nmsWrpDOM = document.querySelector(namesContainer);
+    const bdsWrpDOM = document.querySelector(bodiesContainer);
+    nmsWrpDOM.childNodes.forEach(child => {
+      const key = child.getAttribute('data-tab-key');
+      if (child.classList.contains('js__active-tab'))
+        this.crrTab = key;
+      this.tabNames.set(key, child);
+    });
+    bdsWrpDOM.childNodes.forEach(child => {
+      const key = child.getAttribute('data-tab-key');
+      this.tabBodies.set(key, child);
+    });
+  },
+  // Load tabs to HTML
+  exportToDOM: function (namesContainer = '.js__tab-names', bodiesContainer = '.js__tab--bodies') {
+    const nmsWrpDOM = document.querySelector(namesContainer);
+    const bdsWrpDOM = document.querySelector(bodiesContainer);
+    nmsWrpDOM.innerHTML = '';
+    bdsWrpDOM.innerHTML = '';
+    this.tabNames.forEach((value, key) => {
+      if (this.crrTab === key)
+        value.classList.add('js__active-tab');
+      value.setAttribute('data-tab-key', key);
+      nmsWrpDOM.appendChild(value);
+    });
+    this.tabBodies.forEach((value, key) => {
+      if (this.crrTab === key)
+        value.classList.add('js__active-tab');
+      value.setAttribute('data-tab-key', key);
+      nmsWrpDOM.appendChild(value);
+    })
+  },
+};
+
 // Grapes-editor object
 const editor = grapesjs.init({
   height: '100%',
@@ -5,6 +59,9 @@ const editor = grapesjs.init({
   noticeOnUnload: 0,
   canvas: {
     styles: []
+  },
+  blockManager: {
+    appendTo: '#blockManager',
   },
   storageManager: { 
     id: '',
@@ -27,6 +84,77 @@ const editor = grapesjs.init({
   }, 
 });
 
+// My block manager
+const blockManager = {
+  // Reference to editor block manager
+  obj: editor.BlockManager,
+  // Render panel with blocks to DOM element by query selector
+  render: function (blocks, querySelector='#blockManager') {
+    if (!blocks)
+      blocks = this.obj.render();
+    const el = document.querySelector(querySelector);
+    if (!el) return;
+    el.innerHTML = '';
+    el.appendChild(blocks);
+  },
+  // Searching query in blocks names and category names
+  searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
+    const blocks = this.obj.getAll();
+    return this.obj.render(blocks.filter(block => {
+      console.log(block);
+      const labelBlock = block.attributes.label;
+      const idBlock = block.id;
+      const labelCategory = block.attributes.category !== '' ? block.attributes.category.attributes.label : null;
+      const idCategory = block.attributes.category !== '' ? block.attributes.category.id : null;
+      const cFlag = (labelCategory ? labelCategory.toLowerCase().indexOf(query) !== -1 : false) || (idCategory ? idCategory.toLowerCase().indexOf(query) !== -1 : false);
+      const bFlag = labelBlock.toLowerCase().indexOf(query) !== -1 || idBlock.toLowerCase().indexOf(query) !== -1;
+      return (cFlag && categoryFlag) || (bFlag && labelFlag);
+    }));
+  },
+  // Manage search from DOM event
+  searchManage: function (event) {
+    const str = event.target.value;
+    if (str === '' || null || undefined) {
+      this.render();
+    } else {
+      const blocks = this.searchBlocks(event.target.value);
+      this.render(blocks);
+    }
+  },
+  // Initialization of listener for searching blocks
+  initSearcher: function (query='.js__search-blocks') {
+    document.querySelector(query).addEventListener('change', this.searchManage.bind(this));
+  },
+  // Creating new block (if no define to category it will be in 'other' category)
+  creatingNewBlock: function (id, opts) {
+    let options = opts ? opts : {category: 'Other'};
+    if (!options.category)
+      options.category = 'Other';
+    this.obj.add(id, options);
+    this.render();
+  },
+};
+
+// Testing creating new block without category
+blockManager.creatingNewBlock('h1-block', {
+  label: 'Heading',
+  content: '<h1>Put your title here</h1>',
+  attributes: {
+    title: 'Insert h1 block'
+  }
+});
+// Testing creating new block with category
+blockManager.creatingNewBlock('h2-block', {
+  label: 'Heading',
+  content: '<h2>Put your title here</h2>',
+  category: 'Other',
+  attributes: {
+    title: 'Insert h2 block'
+  }
+});
+// Testing creating new block without options
+blockManager.creatingNewBlock('h3-block');
+
 //allow components to be drag and dropped
 // editor.setDragMode('absolute');
 
@@ -41,6 +169,7 @@ editor.on('storage:start:store', (objectToStore) => {
 // Left-side panel with page list
 const leftBar = document.getElementsByClassName('left-bar')[0];
 const rightBar = document.getElementsByClassName('right-bar')[0];
+const pageManagerDOM = document.getElementsByClassName('page-manager')[0];
 
 //hide left panel on preview
 editor.on('run:preview:before', () => {
@@ -77,14 +206,14 @@ function crtAddPgVw (name, i, flag) {
   inner += `<i class="left-bar__item-control inline-button fa fa-edit" onclick="pageManager.rnmPg(${i})"></i>`;
   inner += `<i class="left-bar__item-control inline-button fa fa-trash" onclick="pageManager.dltPg(${i})"></i>`;
   el.innerHTML = inner;
-  leftBar.appendChild(el);
+  pageManagerDOM.appendChild(el);
 }
 
 // Clearing panel and filling it by pages
 function drwNmsPgs (pgs, cur) {
-  let lstChl = leftBar.lastElementChild;
-  while (leftBar.childElementCount > 1) {
-    leftBar.removeChild(lstChl);
+  let lstChl = pageManagerDOM.lastElementChild;
+  while (pageManagerDOM.childElementCount > 1) {
+    pageManagerDOM.removeChild(lstChl);
     lstChl = leftBar.lastElementChild;
   }
   for (let i = 0; i < pgs.length; i++) {
@@ -193,7 +322,12 @@ const pageManager = {
 window.onload = function (event) {
   pageManager.dflPg.components = editor.getHtml();
   pageManager.dflPg.styles = editor.getCss();
-
+  // Rendering blocks
+  blockManager.render();
+  // Initializing of search handler
+  blockManager.initSearcher();
+  // Load content from HTML to tab manager
+  tabManager.importFromDOM();
   const Http = new XMLHttpRequest();
   const url='/cadau/user-project/1/pages';
   Http.open("GET", url);
