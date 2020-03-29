@@ -346,6 +346,10 @@ window.onload = function (event) {
   tabManager.importFromDOM();
   // Deleting old blocks button
   editor.Panels.removeButton('views', 'open-blocks');
+  //
+  editor.Panels.getButton('views', 'open-sm').set('active', true);
+  // Open a panel
+  editor.Commands.run('open-sm');
   const Http = new XMLHttpRequest();
   const url='/cadau/user-project/1/pages';
   Http.open("GET", url);
