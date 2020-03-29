@@ -157,7 +157,6 @@ blockManager.creatingNewBlock('h3-block');
 editor.Commands.extend('core:fullscreen', {
   run () {
     const el = document.querySelector('body');
-    console.log(el);
     if (el.requestFullscreen) el.requestFullscreen();
     else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
