@@ -156,7 +156,7 @@ blockManager.creatingNewBlock('h3-block');
 // Fix fullscreen-mode
 editor.Commands.extend('core:fullscreen', {
   run () {
-    const el = document.querySelector('body');
+    const el = document.documentElement;
     if (el.requestFullscreen) el.requestFullscreen();
     else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
