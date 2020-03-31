@@ -1,3 +1,103 @@
+// Grapes-editor object
+const editor = grapesjs.init({
+  height: '100%',
+  showOffsets: 1,
+  noticeOnUnload: 0,
+  canvas: {
+    styles: []
+  },
+  storageManager: { 
+    id: '',
+    type: 'remote',
+    autosave: false,
+    autoload: false, 
+    contentTypeJson: true,
+    urlStore: '/cadau/user-template-page/save',
+    // urlLoad: '/lroxv54oss7dz4wtlxtdxrfcft6zynyw/storage/grapesjs',
+    // For custom parameters/headers on requests
+    // params: { _some_token: '....' },
+    // headers: { Authorization: 'Basic ...' },
+  },
+  container: '#gjs',
+  fromElement: true,
+  plugins: ['gjs-preset-webpage'],
+  pluginsOpts: {
+    'gjs-preset-webpage': {}
+  },
+  blockManager: {
+    appendTo : '#componentsContent'
+  },
+});
+
+// My block manager
+const blockManager = {
+  // Reference to editor block manager
+  obj: editor.BlockManager,
+  config: {
+    // Prefix for current tab
+    prefix: '',
+    // DOM Element for current tab block manager
+    queryContent: '#componentsContent',
+  },
+  // Render panel with blocks to DOM element by query selector
+  render: function (blocks) {
+    const el = document.querySelector(this.config.queryContent);
+    if (!el) return;
+    el.innerHTML = '';
+    el.appendChild(blocks === undefined ? this.searchBlocks('') : blocks);
+  },
+  // Searching query in blocks names and category names
+  searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
+    // Filtering by current tab
+    const blocks = this.obj.getAll().filter(block => {
+      let category = block.attributes.category;
+      if (category === '' && this.config.prefix === '')
+        return true;
+      if (category === '')
+        return false;
+      category = category.attributes.id;
+      if (this.config.prefix === '') {
+        return category.indexOf('tab-') === -1;
+      }
+      return category.split('-')[0] === this.config.prefix.split('-')[0] && category.split('-')[1] === this.config.prefix.split('-')[1];
+    });
+    // Filtering by inner string
+    return this.obj.render(blocks.filter(block => {
+      const labelBlock = block.attributes.label;
+      const idBlock = block.id;
+      const labelCategory = block.attributes.category !== '' ? block.attributes.category.attributes.label : null;
+      const idCategory = block.attributes.category !== '' ? block.attributes.category.id : null;
+      const cFlag = (labelCategory ? labelCategory.toLowerCase().indexOf(query) !== -1 : false) || (idCategory ? idCategory.toLowerCase().indexOf(query) !== -1 : false);
+      const bFlag = labelBlock.toLowerCase().indexOf(query) !== -1 || idBlock.toLowerCase().indexOf(query) !== -1;
+      return (cFlag && categoryFlag) || (bFlag && labelFlag);
+    }));
+  },
+  // Manage search from DOM event
+  searchManage: function (event) {
+    let str = event.target.value;
+    if (str === null || str === undefined) {
+      str = '';
+    }
+    const blocks = this.searchBlocks(str);
+    this.render(blocks);
+  },
+  // Initialization of listeners for searching blocks
+  initSearchers: function (query='.body__search') {
+    document.querySelectorAll(query).forEach(e => e.addEventListener('input', this.searchManage.bind(this)));
+  },
+  // Creating new block (if no define to category it will be in 'other' category)
+  creatingNewBlock: function (id, opts, tab='') {
+    const defaultCategory = {
+      id: tab !== '' ? `tab-${tab}-other` : 'Other',
+      label: 'Other',
+    };
+    let options = opts ? opts : { category: defaultCategory };
+    if (!options.category)
+      options.category = defaultCategory;
+    this.obj.add(id, options);
+  },
+};
+
 // Manager of tabs (now 'Components' and 'Blocks') contains a method to add new Tab
 const tabManager = {
   // DOM Container of tabs
@@ -8,12 +108,21 @@ const tabManager = {
   tabBodies: new Map(),
   // Key of current tab
   currentKey: null,
+  // Refer to block manager
+  bManager: blockManager,
   // Change current tab
   setCurrentTab: function (key) {
     if (this.currentKey !== key) {
       document.querySelectorAll('.js__active-tab').forEach(e => e.classList.remove('js__active-tab'));
       document.querySelectorAll(`[data-tab-key=${key}]`).forEach(e => e.classList.add('js__active-tab'));
       this.currentKey = key;
+      if (key === 'components') {
+        this.bManager.config.prefix = ''
+      } else {
+        this.bManager.config.prefix = `tab-${key}`;
+      }
+      this.bManager.config.queryContent = `#${key}Content`;
+      this.bManager.render();
     }
   },
   // Load tabs from HTML
@@ -52,91 +161,14 @@ const tabManager = {
   },
 };
 
-// Grapes-editor object
-const editor = grapesjs.init({
-  height: '100%',
-  showOffsets: 1,
-  noticeOnUnload: 0,
-  canvas: {
-    styles: []
-  },
-  storageManager: { 
-    id: '',
-    type: 'remote',
-    autosave: false,
-    autoload: false, 
-    contentTypeJson: true,
-    urlStore: '/cadau/user-template-page/save',
-    // urlLoad: '/lroxv54oss7dz4wtlxtdxrfcft6zynyw/storage/grapesjs',
-    // For custom parameters/headers on requests
-    // params: { _some_token: '....' },
-    // headers: { Authorization: 'Basic ...' },
-  },
-  container: '#gjs',
-  fromElement: true,
-  plugins: ['gjs-preset-webpage'],
-  pluginsOpts: {
-    'gjs-preset-webpage': {}
-  },
-  blockManager: {
-    appendTo : '#blockManager'
-  },
-});
-
-// My block manager
-const blockManager = {
-  // Reference to editor block manager
-  obj: editor.BlockManager,
-  // Render panel with blocks to DOM element by query selector
-  render: function (blocks, querySelector='#blockManager') {
-    if (!blocks)
-      blocks = this.obj.render();
-    const el = document.querySelector(querySelector);
-    if (!el) return;
-    el.innerHTML = '';
-    el.appendChild(blocks);
-  },
-  // Searching query in blocks names and category names
-  searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
-    const blocks = this.obj.getAll();
-    return this.obj.render(blocks.filter(block => {
-      const labelBlock = block.attributes.label;
-      const idBlock = block.id;
-      const labelCategory = block.attributes.category !== '' ? block.attributes.category.attributes.label : null;
-      const idCategory = block.attributes.category !== '' ? block.attributes.category.id : null;
-      const cFlag = (labelCategory ? labelCategory.toLowerCase().indexOf(query) !== -1 : false) || (idCategory ? idCategory.toLowerCase().indexOf(query) !== -1 : false);
-      const bFlag = labelBlock.toLowerCase().indexOf(query) !== -1 || idBlock.toLowerCase().indexOf(query) !== -1;
-      return (cFlag && categoryFlag) || (bFlag && labelFlag);
-    }));
-  },
-  // Manage search from DOM event
-  searchManage: function (event) {
-    const str = event.target.value;
-    if (str === '' || null || undefined) {
-      this.render();
-    } else {
-      const blocks = this.searchBlocks(event.target.value);
-      this.render(blocks);
-    }
-  },
-  // Initialization of listener for searching blocks
-  initSearcher: function (query='.js__search-blocks') {
-    document.querySelector(query).addEventListener('input', this.searchManage.bind(this));
-  },
-  // Creating new block (if no define to category it will be in 'other' category)
-  creatingNewBlock: function (id, opts) {
-    let options = opts ? opts : {category: 'Other'};
-    if (!options.category)
-      options.category = 'Other';
-    this.obj.add(id, options);
-    this.render();
-  },
-};
-
 // Testing creating new block without category
 blockManager.creatingNewBlock('h1-block', {
   label: 'Heading',
   content: '<h1>Put your title here</h1>',
+  category: {
+    id: 'tab-blocks-other',
+    label: 'Other',
+  },
   attributes: {
     title: 'Insert h1 block'
   }
@@ -151,7 +183,7 @@ blockManager.creatingNewBlock('h2-block', {
   }
 });
 // Testing creating new block without options
-blockManager.creatingNewBlock('h3-block');
+blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 
 // Fix fullscreen-mode
 editor.Commands.extend('core:fullscreen', {
@@ -341,7 +373,7 @@ window.onload = function (event) {
   // Rendering blocks
   blockManager.render();
   // Initializing of search handler
-  blockManager.initSearcher();
+  blockManager.initSearchers();
   // Load content from HTML to tab manager
   tabManager.importFromDOM();
   // Deleting old blocks button
