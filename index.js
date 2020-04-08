@@ -217,7 +217,7 @@ editor.on('storage:start:store', (objectToStore) => {
 // Left-side panel with page list
 const leftBar = document.getElementsByClassName('left-bar')[0];
 const rightBar = document.getElementsByClassName('right-bar')[0];
-const pageManagerDOM = document.getElementsByClassName('page-manager')[0];
+const pageManagerDOM = document.getElementsByClassName('page-manager-body')[0];
 
 //hide left panel on preview
 editor.on('run:preview:before', () => {
@@ -249,10 +249,10 @@ function crtAddPgVw (name, i, flag) {
   const el = document.createElement('DIV');
   el.classList.add('left-bar__item', 'bar-item');
   const fw = flag ? 'item-bold' : '';
-  let inner = `<span class="left-bar__item-title inline-button ${fw}" onclick="pageManager.chnCrrPg(${i})">${name}</span>`;
-  inner += `<i class="left-bar__item-control inline-button fa fa-copy" onclick="pageManager.cpPg(${i})"></i>`;
-  inner += `<i class="left-bar__item-control inline-button fa fa-edit" onclick="pageManager.rnmPg(${i})"></i>`;
-  inner += `<i class="left-bar__item-control inline-button fa fa-trash" onclick="pageManager.dltPg(${i})"></i>`;
+  let inner = `<span class="page-manager-body__item-title inline-button ${fw}" onclick="pageManager.chnCrrPg(${i})">${name}</span>`;
+  inner += `<i class="page-manager-body__item-control inline-button fa fa-copy" onclick="pageManager.cpPg(${i})"></i>`;
+  inner += `<i class="page-manager-body__item-control inline-button fa fa-edit" onclick="pageManager.rnmPg(${i})"></i>`;
+  inner += `<i class="page-manager-body__item-control inline-button fa fa-trash" onclick="pageManager.dltPg(${i})"></i>`;
   el.innerHTML = inner;
   pageManagerDOM.appendChild(el);
 }
