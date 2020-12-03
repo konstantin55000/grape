@@ -7,8 +7,8 @@
     <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
     <link href="dist/grapesjs-preset-webpage.min.css" rel="stylesheet">
     <link href="dist/editor.css" rel="stylesheet">
-    
-    
+
+
     <script src="//feather.aviary.com/imaging/v3/editor.js"></script>
     <script src="https://static.filestackapi.com/v3/filestack-0.1.10.js"></script>
     <script src="https://unpkg.com/grapesjs"></script>
@@ -18,6 +18,14 @@
         html {
             height: 100%;
             margin: 0;
+        }
+
+        #blocksContent{
+          height:100%;
+        }
+
+        #blocksContent .gjs-blocks-cs{
+          height:100%;
         }
 
     </style>
@@ -38,13 +46,13 @@
                 <div class="name" data-tab-key="blocks" onclick="tabManager.setCurrentTab(&quot;blocks&quot;)"><a class="name__content">Blocks</a></div>
             </div>
             <div class="tab-manager__tab-bodies js__tab-bodies">
-                <div class="body js__active-tab" data-tab-key="components"> 
-                    <input class="body__search js__search-components" type="text" /> 
-                    
+                <div class="body js__active-tab" data-tab-key="components">
+                    <input class="body__search js__search-components" type="text" />
+
                     <div class="body__content" id="componentsContent"></div>
-                </div>  
-                <div class="body" data-tab-key="blocks"><input class="body__search js__search-blocks" type="text" /> 
- 
+                </div>
+                <div class="body" data-tab-key="blocks"><input class="body__search js__search-blocks" type="text" />
+
                     </div>
                     </div>
                 </div>
@@ -53,8 +61,8 @@
 
                 <!--  + Panel start: -->
                     <div class="panel-blocks is-abs--t-l ">
-                        <div class="panel-blocks__wrap gjs-one-bg grid grid--direction-column"> 
-                         
+                        <div class="panel-blocks__wrap gjs-one-bg grid grid--direction-column">
+
 
                             <div class="grid-item grid-item--behavior-fixed">
                                 <div id="blocks-switch" class="gjs-blocks-switch border-b--s">
@@ -62,7 +70,7 @@
                                         <div class="grid-item">
                                             <div class="input-group-container is-relative">
                                                <div class="is-rel"><select id="input-g0jy5fh11c" class="input-group__input input-group__input--select input-box">
-                                             
+
                                                         <option value="1">
                                                             Basic Blocks
                                                         </option>
@@ -71,9 +79,9 @@
                                                         </option>
                                                         <option value="3">
                                                             Custom blocks
-                                                        </option> 
+                                                        </option>
                                                     </select> <i class="select-group__icon is-abs--r is-no-pointer icon fa fa-null"></i></div>
-                                           
+
                                             </div>
                                         </div>
                                         <!-- <div class="grid-item grid-item--behavior-fixed"><i class="icon fa fa-search tp-size--l u-p--xs is-clickable u-m-left--xs color-bg--secondary-light radius--m"></i></div> -->
@@ -82,13 +90,13 @@
                             </div>
 
                         </div>
-                 
+
 
                     <div class="body__content" id="blocksContent">
 
-                        
+
                     </div>
-                </div> 
+                </div>
                 <!-- panel end-->
                 </div>
             </div>
