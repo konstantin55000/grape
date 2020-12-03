@@ -163,11 +163,11 @@ const tabManager = {
 
 // Testing creating new block without category
 blockManager.creatingNewBlock('h1-block', {
-  label: 'Heading',
+  label: 'Yes, label',
   content: '<h1>Put your title here</h1>',
   category: {
     id: 'tab-blocks-other',
-    label: 'Other',
+    label: 'BLOCKS other.',
   },
   attributes: {
     title: 'Insert h1 block'
@@ -176,7 +176,7 @@ blockManager.creatingNewBlock('h1-block', {
 // Testing creating new block with category
 blockManager.creatingNewBlock('h2-block', {
   label: 'Heading',
-  content: '<h2>Put your title here</h2>',
+  content: '<h2>Test</h2>',
   category: 'Other',
   attributes: {
     title: 'Insert h2 block'
@@ -184,7 +184,69 @@ blockManager.creatingNewBlock('h2-block', {
 });
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
+ 
 
+//const panelManager = editor.Panels.addPanel({
+//  id: 'basic-actions',
+//  el: '.panel__basic-actions',
+//  buttons: [
+//    {
+//      id: 'alert-button',
+//      className: 'btn-alert-button',
+//      label: 'Click  button',
+//      command(editor) { alert('Ok'); }
+//    }
+//  ]
+//});
+//
+//console.log('panel', panelManager) 
+editor.Panels.addPanel({
+  id: 'panel-top',
+  el: '.panel__top',
+});
+
+//console.log(editor.Panels.getPanelsEl(), editor.Panels.getPanels());
+ 
+editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
+ command: function(editor1, sender) {
+    tabManager.setCurrentTab("blocks");
+    document.querySelector('.panel-blocks').classList.add('panel-blocks--open');    
+    console.log(document.querySelector('.panel-blocks'));
+    
+   }, attributes: { title: 'Blocks' } }
+   , ])
+
+// <select id="input-hz4hh2mz16" class="input-group__input input-group__input--select input-box"><!----> <option value="1">
+//        Basic Blocks
+//        </option><option value="2">
+//        Built-in Blocks
+//        </option><option value="4">
+//        Bootstrap v4
+//        </option><option value="3">
+//        Custom blocks
+//        </option></select>
+
+//
+//editor.Panels.addPanel({
+//  id: 'basic-actions',
+//  el: '.panel__basic-actions',
+//  buttons: [
+//    {
+//      id: 'visibility',
+//      active: true, // active by default
+//      className: 'btn-toggle-borders',
+//      label: '<u>+</u>',
+//      command: 'sw-visibility', // Built-in command
+//    }, {
+//      id: 'export',
+//      className: 'btn-open-export',
+//      label: 'Exp',
+//      command: 'export-template',
+//      context: 'export-template', // For grouping context of buttons from the same panel
+//    } 
+//     
+//  ]
+//});
 // Fix fullscreen-mode
 editor.Commands.extend('core:fullscreen', {
   run () {
@@ -232,9 +294,35 @@ editor.on('stop:preview:before', () => {
   rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
 });
 
+
+editor.on('component:selected', () => {
+
+    // whenever a component is selected in the editor
+
+    // set your command and icon here
+    const commandToAdd = 'tlb-settime';
+    const commandIcon = 'fa fa-cog';
+
+    // get the selected componnet and its default toolbar
+    const selectedComponent = editor.getSelected();
+    const defaultToolbar = selectedComponent.get('toolbar');
+
+    // check if this command already exists on this component toolbar
+    const commandExists = defaultToolbar.some(item => item.command === commandToAdd);
+
+    // if it doesn't already exist, add it
+    if (!commandExists) {
+      selectedComponent.set({
+        toolbar: [ ...defaultToolbar, {  attributes: {class: commandIcon}, command: commandToAdd }]
+      });
+    }
+
+  });
+
+
 const data = {userProjectId: getUrlVars()["userProject"]};
 editor.Commands.add('canvas-publish', e => {
-      fetch('http://localhost:9080/cadau/user-project/publish', {
+      fetch('http://localhost:9080/cadau/user-project/publish', {//url not found
         method: 'POST',
         body: JSON.stringify(data),
       })

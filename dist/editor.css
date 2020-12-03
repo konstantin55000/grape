@@ -1,0 +1,74 @@
+  
+ 
+.input-box {
+ border:1px solid rgba(0,0,0,.2);
+ background-color:rgba(0,0,0,.1);
+ border-radius:3px;
+ padding:5px 10px;
+ color:#fff;
+ width:100%;
+ font-size:14px;
+ height:32px;
+ line-height:normal;
+ transition:border-color .25s
+}
+  
+
+
+.panel-blocks {
+    height: 100%;
+    width: 275px; 
+    overflow: hidden;
+    padding-top: 40px;
+    opacity: 0;
+    transform: translateX(-275px);
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 5000;
+}
+
+.panel-blocks.panel-blocks--open {
+    opacity: 1 !important;
+    transform: translateX(0);
+}
+
+.is-abs--fill, .is-abs--t-l {
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+}
+ 
+.panel-blocks--open {
+    opacity: 1;
+    transform: translateX(0);
+}
+.panel-blocks {
+    height: 100%;
+    width: 275px;
+    z-index: 5;
+    overflow: hidden;
+    padding-top: 40px;
+    opacity: 0;
+    transform: translateX(-275px);
+    transition: opacity 0.25s, transform 0.25s;
+}
+.is-abs--fill, .is-abs--t-l {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+.grid--direction-column > .grid-item, .grid--direction-column-reverse > .grid-item {
+    flex-basis: 0;
+}
+
+.grid--direction-column > .grid-item, .grid--direction-column-reverse > .grid-item {
+    flex-basis: 0;
+}
+
+.grid-item--behavior-fixed {
+    flex: 0 1 auto;
+    flex-basis: auto;
+}
