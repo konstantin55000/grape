@@ -100,3 +100,9 @@
 .fa-th-large.gjs-pn-active, .fa-th-large.gjs-pn-active::before {
     display: none;
 }
+
+
+.panel-blocks {
+  overflow-y: scroll;
+   height: 600px !important;
+}

@@ -170,38 +170,20 @@ blockManager.creatingNewBlock('h2-block', {
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 
+ 
 
-//const panelManager = editor.Panels.addPanel({
-//  id: 'basic-actions',
-//  el: '.panel__basic-actions',
-//  buttons: [
-//    {
-//      id: 'alert-button',
-//      className: 'btn-alert-button',
-//      label: 'Click  button',
-//      command(editor) { alert('Ok'); }
-//    }
-//  ]
-//});
-//
-//console.log('panel', panelManager)
-
-//editor.Panels.addPanel({
-//  id: 'panel-top',
-//  el: '.panel__top',
-//});
-
-// editor.Panels.removePanel({
-//   id: 'views'
-// });
-
-// editor.Panels.removePanel({
-//   id: 'views-container'
-// });
-
-//console.log(editor.Panels.getPanelsEl(), editor.Panels.getPanels());
-
-
+editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank', 
+ command: {
+  run: function(editor) {
+    editor.setDragMode('absolute'); 
+   
+  },
+  stop: function(editor) {
+    editor.setDragMode('block'); 
+  }
+  
+}     } ] );
+ 
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
    tabManager.setCurrentTab('components');
@@ -209,37 +191,7 @@ editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: '
    }, attributes: { title: 'Blocks' } }
 , ]);
 
-// <select id="input-hz4hh2mz16" class="input-group__input input-group__input--select input-box"><!----> <option value="1">
-//        Basic Blocks
-//        </option><option value="2">
-//        Built-in Blocks
-//        </option><option value="4">
-//        Bootstrap v4
-//        </option><option value="3">
-//        Custom blocks
-//        </option></select>
-
-//
-//editor.Panels.addPanel({
-//  id: 'basic-actions',
-//  el: '.panel__basic-actions',
-//  buttons: [
-//    {
-//      id: 'visibility',
-//      active: true, // active by default
-//      className: 'btn-toggle-borders',
-//      label: '<u>+</u>',
-//      command: 'sw-visibility', // Built-in command
-//    }, {
-//      id: 'export',
-//      className: 'btn-open-export',
-//      label: 'Exp',
-//      command: 'export-template',
-//      context: 'export-template', // For grouping context of buttons from the same panel
-//    }
-//
-//  ]
-//});
+ 
 // Fix fullscreen-mode
 editor.Commands.extend('core:fullscreen', {
   run () {
@@ -291,6 +243,81 @@ editor.on('stop:preview:before', () => {
 editor.on('component:selected', () => {
 
     // whenever a component is selected in the editor
+    const getSelect = function() {
+      var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+      return {
+          run: function(e, n) {
+              var r = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
+              w()(this, ['hideElement']),
+              this.editor = e;
+              var i = 'px',
+                  o = r.target || e.getSelected(),
+                  a = e.Canvas,
+                  s = this.settingsEl;
+              if (o) {
+                  if (!s) {
+                      var c = 'gpd-settings-panel',
+                          u = [{
+                              label: t.labelSelectParent,
+                              command: 'select-parent'
+                          }, {
+                              label: t.labelCreateBlock,
+                              command: 'open-custom-block'
+                          }, {
+                              label: t.labelAbsMoveToggle,
+                              command: 'toggle-abs-move'
+                          }];
+                      s = e.$("<div class=\"".concat(c, "\"></div>"))[0],
+                      a.getToolsEl().appendChild(s),
+                      u.forEach(function(t) {
+                          var n = e.$("<div class=\"".concat(c, "__option\">").concat(t.label, "</div>"))[0];
+                          Object(l["u"])(n, 'mousedown', function(n) {
+                              return 0 === n.button && e.runCommand(t.command)
+                          }),
+                          s.appendChild(n)
+                      }),
+                      this.settingsEl = s
+                  }
+                  this.toggleEvents(1);
+                  var d = a.getToolbarEl(),
+                      p = a.getTargetToElementDim(s, o.getEl()),
+                      f = s.getBoundingClientRect(),
+                      h = d.getBoundingClientRect(),
+                      m = {
+                          top: p.canvasTop,
+                          left: p.canvasLeft
+                      },
+                      v = parseFloat(d.style.top),
+                      g = v - f.height,
+                      b = parseFloat(d.style.left) + h.width - f.width;
+                  g <= m.top && (g = v + h.height),
+                  b <= m.left && (b = m.left),
+                  s.style.top = "".concat(g).concat(i),
+                  s.style.left = "".concat(b).concat(i)
+              }
+          },
+          hideElement: function() {
+              this.toggleEvents()
+          },
+          toggleEvents: function(t) {
+              var e = this.settingsEl,
+                  n = this.editor,
+                  r = t ? 'on' : 'off',
+                  i = {
+                      on: l["u"],
+                      off: l["t"]
+                  },
+                  o = [document, n.Canvas.getDocument()];
+              i[r](o, 'mousedown', this.hideElement),
+              e.style.display = t ? 'block' : 'none',
+              setTimeout(function() {
+                  return e.style.opacity = t ? '1' : '0'
+              })
+          }
+      }
+  }
+
+  getSelect();
 
     // set your command and icon here
     const commandToAdd = 'tlb-settime';
@@ -309,6 +336,8 @@ editor.on('component:selected', () => {
         toolbar: [ ...defaultToolbar, {  attributes: {class: commandIcon}, command: commandToAdd }]
       });
     }
+
+  
 
   });
 
