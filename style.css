@@ -40,9 +40,6 @@ body {
   display: flex;
   flex-direction: column;
   font-family: Helvetica, sans-serif;
-  color: #b9a5a6;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  background-color: #463a3c;
 }
 
 .page-manager-header {
@@ -156,6 +153,7 @@ body {
   box-shadow: none;
   color: #b9a5a6;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 .tab-manager__tab-bodies .body__content {
   height: calc(100% - 35px);

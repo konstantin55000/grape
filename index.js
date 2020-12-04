@@ -6,11 +6,11 @@ const editor = grapesjs.init({
   canvas: {
     styles: []
   },
-  storageManager: { 
+  storageManager: {
     id: '',
     type: 'remote',
     autosave: false,
-    autoload: false, 
+    autoload: false,
     contentTypeJson: true,
     urlStore: '/cadau/user-template-page/save',
     // urlLoad: '/lroxv54oss7dz4wtlxtdxrfcft6zynyw/storage/grapesjs',
@@ -125,21 +125,6 @@ const tabManager = {
       this.bManager.render();
     }
   },
-  // Load tabs from HTML
-  importFromDOM: function (namesContainer = '.js__tab-names', bodiesContainer = '.js__tab-bodies') {
-    const nmsWrpDOM = document.querySelector(namesContainer);
-    const bdsWrpDOM = document.querySelector(bodiesContainer);
-    nmsWrpDOM.childNodes.forEach(child => {
-      const key = child.getAttribute('data-tab-key');
-      if (child.classList.contains('js__active-tab'))
-        this.crrTab = key;
-      this.tabNames.set(key, child);
-    });
-    bdsWrpDOM.childNodes.forEach(child => {
-      const key = child.getAttribute('data-tab-key');
-      this.tabBodies.set(key, child);
-    });
-  },
   // Load tabs to HTML
   exportToDOM: function (namesContainer = '.js__tab-names', bodiesContainer = '.js__tab--bodies') {
     const nmsWrpDOM = document.querySelector(namesContainer);
@@ -184,7 +169,7 @@ blockManager.creatingNewBlock('h2-block', {
 });
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
- 
+
 
 //const panelManager = editor.Panels.addPanel({
 //  id: 'basic-actions',
@@ -199,28 +184,28 @@ blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 //  ]
 //});
 //
-//console.log('panel', panelManager) 
- 
+//console.log('panel', panelManager)
+
 //editor.Panels.addPanel({
 //  id: 'panel-top',
 //  el: '.panel__top',
 //});
 
 // editor.Panels.removePanel({
-//   id: 'views' 
+//   id: 'views'
 // });
 
 // editor.Panels.removePanel({
-//   id: 'views-container' 
+//   id: 'views-container'
 // });
 
 //console.log(editor.Panels.getPanelsEl(), editor.Panels.getPanels());
- 
+
 
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
- command: function(editor1, sender) {        
-   tabManager.setCurrentTab('blocks');
-    jQuery('.panel-blocks').toggleClass('panel-blocks--open'); 
+ command: function(editor1, sender) {
+   tabManager.setCurrentTab('components');
+    jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
 
@@ -251,8 +236,8 @@ editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: '
 //      label: 'Exp',
 //      command: 'export-template',
 //      context: 'export-template', // For grouping context of buttons from the same panel
-//    } 
-//     
+//    }
+//
 //  ]
 //});
 // Fix fullscreen-mode
@@ -328,17 +313,17 @@ editor.on('component:selected', () => {
   });
 
 
-const data = {userProjectId: getUrlVars()["userProject"]};
-editor.Commands.add('canvas-publish', e => {
-      fetch('http://localhost:9080/cadau/user-project/publish', {//url not found
-        method: 'POST',
-        body: JSON.stringify(data),
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert("success: " + data);
-      });
-});
+//const data = {userProjectId: getUrlVars()["userProject"]};
+//editor.Commands.add('canvas-publish', e => {
+//      fetch('http://localhost:9080/cadau/user-project/publish', {//url not found
+//        method: 'POST',
+//        body: JSON.stringify(data),
+//      })
+//      .then(response => response.json())
+//      .then(data => {
+//        alert("success: " + data);
+//      });
+//});
 
 //// Create and add page (name and controls) to DOM
 //function crtAddPgVw (name, i, flag) {
@@ -401,7 +386,7 @@ function getUrlVars() {
 //    }
 //  },
 //  // Add new default page to list
-//  addNewPg: function () { 
+//  addNewPg: function () {
 //    const str = prompt('Page name', this.pgs[this.crrPg].name);
 //    if (str !== '' && str !== undefined && str !== null) {
 //      this.pgs.push({
@@ -439,7 +424,7 @@ function getUrlVars() {
 //    this.chnCrrPg(this.pgs.length-1);
 //  },
 //  // Rename page having index i
-//  rnmPg: function (i) { 
+//  rnmPg: function (i) {
 //    const str = prompt('Rename the page', this.pgs[i].name);
 //    if (str !== '' && str !== undefined && str !== null) {
 //      this.pgs[i].name = str;
@@ -471,8 +456,7 @@ window.onload = function (event) {
   // Initializing of search handler
   blockManager.initSearchers();
   // Load content from HTML to tab manager
-  tabManager.importFromDOM();
-  tabManager.setCurrentTab('blocks');
+  tabManager.setCurrentTab('components');
   //tabManager.setCurrentTab('components');
   // Deleting old blocks button
   editor.Panels.removeButton('views', 'open-blocks');
@@ -480,7 +464,7 @@ window.onload = function (event) {
   editor.Panels.getButton('views', 'open-sm').set('active', true);
   // Open a panel
   editor.Commands.run('open-sm');
-    
+
 //  const Http = new XMLHttpRequest();
 //  const url='/cadau/user-project/1/pages';
 //  Http.open("GET", url);
