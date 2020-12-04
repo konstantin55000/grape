@@ -170,7 +170,8 @@ blockManager.creatingNewBlock('h2-block', {
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 
- 
+
+
 
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank', 
  command: {
@@ -239,107 +240,41 @@ editor.on('stop:preview:before', () => {
   rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
 });
 
-
+ 
 editor.on('component:selected', () => {
 
-    // whenever a component is selected in the editor
-    const getSelect = function() {
-      var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
-      return {
-          run: function(e, n) {
-              var r = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
-              w()(this, ['hideElement']),
-              this.editor = e;
-              var i = 'px',
-                  o = r.target || e.getSelected(),
-                  a = e.Canvas,
-                  s = this.settingsEl;
-              if (o) {
-                  if (!s) {
-                      var c = 'gpd-settings-panel',
-                          u = [{
-                              label: t.labelSelectParent,
-                              command: 'select-parent'
-                          }, {
-                              label: t.labelCreateBlock,
-                              command: 'open-custom-block'
-                          }, {
-                              label: t.labelAbsMoveToggle,
-                              command: 'toggle-abs-move'
-                          }];
-                      s = e.$("<div class=\"".concat(c, "\"></div>"))[0],
-                      a.getToolsEl().appendChild(s),
-                      u.forEach(function(t) {
-                          var n = e.$("<div class=\"".concat(c, "__option\">").concat(t.label, "</div>"))[0];
-                          Object(l["u"])(n, 'mousedown', function(n) {
-                              return 0 === n.button && e.runCommand(t.command)
-                          }),
-                          s.appendChild(n)
-                      }),
-                      this.settingsEl = s
-                  }
-                  this.toggleEvents(1);
-                  var d = a.getToolbarEl(),
-                      p = a.getTargetToElementDim(s, o.getEl()),
-                      f = s.getBoundingClientRect(),
-                      h = d.getBoundingClientRect(),
-                      m = {
-                          top: p.canvasTop,
-                          left: p.canvasLeft
-                      },
-                      v = parseFloat(d.style.top),
-                      g = v - f.height,
-                      b = parseFloat(d.style.left) + h.width - f.width;
-                  g <= m.top && (g = v + h.height),
-                  b <= m.left && (b = m.left),
-                  s.style.top = "".concat(g).concat(i),
-                  s.style.left = "".concat(b).concat(i)
-              }
-          },
-          hideElement: function() {
-              this.toggleEvents()
-          },
-          toggleEvents: function(t) {
-              var e = this.settingsEl,
-                  n = this.editor,
-                  r = t ? 'on' : 'off',
-                  i = {
-                      on: l["u"],
-                      off: l["t"]
-                  },
-                  o = [document, n.Canvas.getDocument()];
-              i[r](o, 'mousedown', this.hideElement),
-              e.style.display = t ? 'block' : 'none',
-              setTimeout(function() {
-                  return e.style.opacity = t ? '1' : '0'
-              })
-          }
-      }
-  }
-
-  getSelect();
+    // whenever a component is selected in the editor 
 
     // set your command and icon here
-    const commandToAdd = 'tlb-settime';
-    const commandIcon = 'fa fa-cog';
+    const toggleDropDown = () => { 
+      console.log('test: ', jQuery('.gpd-settings-panel').length ); 
+      if ( jQuery('.gpd-settings-panel').length == 0 ) {
+            let toolbarString =`<div class="gpd-settings-panel" >
+            <div class="gpd-settings-panel__option" >Select parent</div>
+            <div class="gpd-settings-panel__option">Create block</div>
+            <div class="gpd-settings-panel__option">Toggle Free Move</div>
+          </div>`; 
+        jQuery(toolbarString).appendTo(jQuery('.gjs-toolbar'));
+      } 
+    };
 
-    // get the selected componnet and its default toolbar
     const selectedComponent = editor.getSelected();
+    const commandIcon = 'fa fa-cog';  
     const defaultToolbar = selectedComponent.get('toolbar');
-
-    // check if this command already exists on this component toolbar
-    const commandExists = defaultToolbar.some(item => item.command === commandToAdd);
-
-    // if it doesn't already exist, add it
+    const commandExists = defaultToolbar.some(item => item.command === toggleDropDown ); 
     if (!commandExists) {
       selectedComponent.set({
-        toolbar: [ ...defaultToolbar, {  attributes: {class: commandIcon}, command: commandToAdd }]
+        toolbar: [ ...defaultToolbar, {  attributes: {class: commandIcon}, command:  toggleDropDown }
+        ]
       });
     }
+      
+  });
+
 
   
 
-  });
+ 
 
 
 //const data = {userProjectId: getUrlVars()["userProject"]};

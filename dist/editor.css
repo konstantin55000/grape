@@ -106,3 +106,14 @@
   overflow-y: scroll;
    height: 600px !important;
 }
+
+.gpd-settings-panel .gpd-settings-panel__option:hover {
+    background-color: rgba(0,0,0,.2); 
+}
+
+.gpd-settings-panel .gpd-settings-panel__option {
+    padding: 3px 6px;
+    cursor: pointer;
+    transition: background-color .25s;
+    white-space: nowrap;
+}

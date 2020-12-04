@@ -1,0 +1,14 @@
+ - cтили  по ховеру добавлены с grapedrop  , почемуто не подтягиваются (not a problem)
+ - если просто добавлять https://prnt.sc/vvxs8f selectedComponent.append(neededStr) будет добавлять к компоненту как на скриншоте
+    убрал такой вариант.
+
+ - по ховеру  на другой компонет должно скрыватся выпадающее меню. это сейчас копаю.
+
+
+ вот єто главное: связать клик дивов с eventListener єто команды едитора.
+ надо сделать : что-то типа 
+  document.querySelector('.gpd-settings-panel__option').forEach(()=>{ callAppropriateGrapeJSCommand})
+  //selectParent
+  //addCustomBlock =>empty function
+  //3rd command
+ 
