@@ -104,11 +104,10 @@
 
 .panel-blocks {
   overflow-y: scroll;
-   height: 600px !important;
 }
 
 .gpd-settings-panel .gpd-settings-panel__option:hover {
-    background-color: rgba(0,0,0,.2); 
+    background-color: rgba(0,0,0,.2);
 }
 
 .gpd-settings-panel .gpd-settings-panel__option {
