@@ -96,3 +96,7 @@
     height: 100%;
     background-color: #463a3c;
 }
+
+.fa-th-large.gjs-pn-active, .fa-th-large.gjs-pn-active::before {
+    display: none;
+}
