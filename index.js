@@ -246,10 +246,9 @@ editor.on('component:selected', (model) => {
     // self.setAttribute('gis-free-mode',"1"); //not a function
     //selectedComponent.setAttribute('gis-free-mode',"1"); //not a function 
     console.log(self, selectedComponent);
-    
-    
-    const addBlockClass = 'fa fa-plus'; 
-    const iconFreeMode = 'fa fa-arrows-alt';
+     
+    const addBlockClass = 'fa fa-plus-square-o'; 
+    const iconFreeMode = 'fa fa-mouse-pointer';
     if (!commandExists) {
       selectedComponent.set({
         toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
