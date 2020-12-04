@@ -200,21 +200,28 @@ blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 //});
 //
 //console.log('panel', panelManager) 
-editor.Panels.addPanel({
-  id: 'panel-top',
-  el: '.panel__top',
-});
+ 
+//editor.Panels.addPanel({
+//  id: 'panel-top',
+//  el: '.panel__top',
+//});
+
+// editor.Panels.removePanel({
+//   id: 'views' 
+// });
+
+// editor.Panels.removePanel({
+//   id: 'views-container' 
+// });
 
 //console.log(editor.Panels.getPanelsEl(), editor.Panels.getPanels());
  
+
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
- command: function(editor1, sender) {
-    tabManager.setCurrentTab("blocks");
-    document.querySelector('.panel-blocks').classList.add('panel-blocks--open');    
-    console.log(document.querySelector('.panel-blocks'));
-    
+ command: function(editor1, sender) {        
+    jQuery('.panel-blocks').toggleClass('panel-blocks--open'); 
    }, attributes: { title: 'Blocks' } }
-   , ])
+, ]);
 
 // <select id="input-hz4hh2mz16" class="input-group__input input-group__input--select input-box"><!----> <option value="1">
 //        Basic Blocks
@@ -268,18 +275,18 @@ editor.Commands.extend('core:fullscreen', {
 //allow components to be drag and dropped
 // editor.setDragMode('absolute');
 
-editor.on('storage:start:store', (objectToStore) => {
-  console.log("Extend parameters to store");
-  console.log(pageManager.pgs + ":" + pageManager.crrPg);
-  objectToStore.pageId = pageManager.pgs[pageManager.crrPg].id;
-  objectToStore.pageName = pageManager.pgs[pageManager.crrPg].name;
-  objectToStore.userProjectId = getUrlVars()["userProject"];
-});
+//editor.on('storage:start:store', (objectToStore) => {
+//  console.log("Extend parameters to store");
+//  console.log(pageManager.pgs + ":" + pageManager.crrPg);
+//  objectToStore.pageId = pageManager.pgs[pageManager.crrPg].id;
+//  objectToStore.pageName = pageManager.pgs[pageManager.crrPg].name;
+//  objectToStore.userProjectId = getUrlVars()["userProject"];
+//});
 
 // Left-side panel with page list
 const leftBar = document.getElementsByClassName('left-bar')[0];
 const rightBar = document.getElementsByClassName('right-bar')[0];
-const pageManagerDOM = document.getElementsByClassName('page-manager-body')[0];
+//const pageManagerDOM = document.getElementsByClassName('page-manager-body')[0];
 
 //hide left panel on preview
 editor.on('run:preview:before', () => {
@@ -332,30 +339,30 @@ editor.Commands.add('canvas-publish', e => {
       });
 });
 
-// Create and add page (name and controls) to DOM
-function crtAddPgVw (name, i, flag) {
-  const el = document.createElement('DIV');
-  el.classList.add('left-bar__item', 'bar-item');
-  const fw = flag ? 'item-bold' : '';
-  let inner = `<span class="page-manager-body__item-title inline-button ${fw}" onclick="pageManager.chnCrrPg(${i})">${name}</span>`;
-  inner += `<i class="page-manager-body__item-control inline-button fa fa-copy" onclick="pageManager.cpPg(${i})"></i>`;
-  inner += `<i class="page-manager-body__item-control inline-button fa fa-edit" onclick="pageManager.rnmPg(${i})"></i>`;
-  inner += `<i class="page-manager-body__item-control inline-button fa fa-trash" onclick="pageManager.dltPg(${i})"></i>`;
-  el.innerHTML = inner;
-  pageManagerDOM.appendChild(el);
-}
+//// Create and add page (name and controls) to DOM
+//function crtAddPgVw (name, i, flag) {
+//  const el = document.createElement('DIV');
+//  el.classList.add('left-bar__item', 'bar-item');
+//  const fw = flag ? 'item-bold' : '';
+//  let inner = `<span class="page-manager-body__item-title inline-button ${fw}" onclick="pageManager.chnCrrPg(${i})">${name}</span>`;
+//  inner += `<i class="page-manager-body__item-control inline-button fa fa-copy" onclick="pageManager.cpPg(${i})"></i>`;
+//  inner += `<i class="page-manager-body__item-control inline-button fa fa-edit" onclick="pageManager.rnmPg(${i})"></i>`;
+//  inner += `<i class="page-manager-body__item-control inline-button fa fa-trash" onclick="pageManager.dltPg(${i})"></i>`;
+//  el.innerHTML = inner;
+//  pageManagerDOM.appendChild(el);
+//}
 
 // Clearing panel and filling it by pages
-function drwNmsPgs (pgs, cur) {
-  let lstChl = pageManagerDOM.lastElementChild;
-  while (pageManagerDOM.childElementCount > 1) {
-    pageManagerDOM.removeChild(lstChl);
-    lstChl = leftBar.lastElementChild;
-  }
-  for (let i = 0; i < pgs.length; i++) {
-    crtAddPgVw(pgs[i].name, i, i === cur);
-  }
-}
+//function drwNmsPgs (pgs, cur) {
+//  let lstChl = pageManagerDOM.lastElementChild;
+//  while (pageManagerDOM.childElementCount > 1) {
+//    pageManagerDOM.removeChild(lstChl);
+//    lstChl = leftBar.lastElementChild;
+//  }
+//  for (let i = 0; i < pgs.length; i++) {
+//    crtAddPgVw(pgs[i].name, i, i === cur);
+//  }
+//}
 
 function getUrlVars() {
   let vars = {};
@@ -366,98 +373,98 @@ function getUrlVars() {
 }
 
 // Object contains interactions with pages logic
-const pageManager = {
-  // Default page
-  dflPg: {
-    components: null,
-    styles: null,
-  },
-  // List of pages
-  pgs: [
-
-  ],
-  // Index of current page
-  crrPg: 0,
-  // Change index of current page to i
-  chnCrrPg: function (i) {
-    if (i !== this.crrPg) {
-      editor.store();
-      if (this.crrPg !== -1) {
-        this.pgs[this.crrPg].components = editor.getHtml();
-        this.pgs[this.crrPg].styles = editor.getCss();
-      }
-      this.crrPg = i;
-      editor.setComponents(i !== -1 ? this.pgs[this.crrPg].components : '');
-      editor.setStyle(i !== -1 ? this.pgs[this.crrPg].styles : '');
-      drwNmsPgs(this.pgs, this.crrPg);
-    }
-  },
-  // Add new default page to list
-  addNewPg: function () { 
-    const str = prompt('Page name', this.pgs[this.crrPg].name);
-    if (str !== '' && str !== undefined && str !== null) {
-      this.pgs.push({
-        id: null,
-        name: str,
-        components: this.dflPg.components,
-        styles: this.dflPg.styles,
-        externalStyles: null,
-        externalScripts: null
-      });
-      drwNmsPgs(this.pgs, this.crrPg);
-
-      //load the newly created page
-      this.chnCrrPg(this.pgs.length-1);
-    }
-  },
-  // Copy of existing page having index i
-  cpPg: function (i) {
-    const pg = this.pgs[i];
-    if (this.crrPg === i) {
-      this.pgs[this.crrPg].components = editor.getHtml();
-      this.pgs[this.crrPg].styles = editor.getCss();
-    }
-    this.pgs.push({
-      id: null,
-      name: pg.name + '_copy',
-      components: pg.components,
-      styles: pg.styles,
-      externalStyles: null,
-      externalScripts: null
-    });
-    drwNmsPgs(this.pgs, this.crrPg);
-
-    //load the newly created page
-    this.chnCrrPg(this.pgs.length-1);
-  },
-  // Rename page having index i
-  rnmPg: function (i) { 
-    const str = prompt('Rename the page', this.pgs[i].name);
-    if (str !== '' && str !== undefined && str !== null) {
-      this.pgs[i].name = str;
-      drwNmsPgs(this.pgs, this.crrPg);
-    }
-  },
-  // Delete page having index i
-  dltPg: function (i) {
-    if (confirm(`Do you want to delete ${this.pgs[i].name} ?`)) {
-      this.chnCrrPg(i - 1);
-      this.pgs.splice(i, 1);
-      drwNmsPgs(this.pgs, this.crrPg);
-    }
-  },
-  // Get array with html and css of all pages
-  getData() {
-    this.pgs[this.crrPg].components = editor.getHtml();
-    this.pgs[this.crrPg].styles = editor.getCss();
-    return this.pgs;
-  }
-};
+//const pageManager = {
+//  // Default page
+//  dflPg: {
+//    components: null,
+//    styles: null,
+//  },
+//  // List of pages
+//  pgs: [
+//
+//  ],
+//  // Index of current page
+//  crrPg: 0,
+//  // Change index of current page to i
+//  chnCrrPg: function (i) {
+//    if (i !== this.crrPg) {
+//      editor.store();
+//      if (this.crrPg !== -1) {
+//        this.pgs[this.crrPg].components = editor.getHtml();
+//        this.pgs[this.crrPg].styles = editor.getCss();
+//      }
+//      this.crrPg = i;
+//      editor.setComponents(i !== -1 ? this.pgs[this.crrPg].components : '');
+//      editor.setStyle(i !== -1 ? this.pgs[this.crrPg].styles : '');
+//      drwNmsPgs(this.pgs, this.crrPg);
+//    }
+//  },
+//  // Add new default page to list
+//  addNewPg: function () { 
+//    const str = prompt('Page name', this.pgs[this.crrPg].name);
+//    if (str !== '' && str !== undefined && str !== null) {
+//      this.pgs.push({
+//        id: null,
+//        name: str,
+//        components: this.dflPg.components,
+//        styles: this.dflPg.styles,
+//        externalStyles: null,
+//        externalScripts: null
+//      });
+//      drwNmsPgs(this.pgs, this.crrPg);
+//
+//      //load the newly created page
+//      this.chnCrrPg(this.pgs.length-1);
+//    }
+//  },
+//  // Copy of existing page having index i
+//  cpPg: function (i) {
+//    const pg = this.pgs[i];
+//    if (this.crrPg === i) {
+//      this.pgs[this.crrPg].components = editor.getHtml();
+//      this.pgs[this.crrPg].styles = editor.getCss();
+//    }
+//    this.pgs.push({
+//      id: null,
+//      name: pg.name + '_copy',
+//      components: pg.components,
+//      styles: pg.styles,
+//      externalStyles: null,
+//      externalScripts: null
+//    });
+//    drwNmsPgs(this.pgs, this.crrPg);
+//
+//    //load the newly created page
+//    this.chnCrrPg(this.pgs.length-1);
+//  },
+//  // Rename page having index i
+//  rnmPg: function (i) { 
+//    const str = prompt('Rename the page', this.pgs[i].name);
+//    if (str !== '' && str !== undefined && str !== null) {
+//      this.pgs[i].name = str;
+//      drwNmsPgs(this.pgs, this.crrPg);
+//    }
+//  },
+//  // Delete page having index i
+//  dltPg: function (i) {
+//    if (confirm(`Do you want to delete ${this.pgs[i].name} ?`)) {
+//      this.chnCrrPg(i - 1);
+//      this.pgs.splice(i, 1);
+//      drwNmsPgs(this.pgs, this.crrPg);
+//    }
+//  },
+//  // Get array with html and css of all pages
+//  getData() {
+//    this.pgs[this.crrPg].components = editor.getHtml();
+//    this.pgs[this.crrPg].styles = editor.getCss();
+//    return this.pgs;
+//  }
+//};
 
 // Init default page by editor content
 window.onload = function (event) {
-  pageManager.dflPg.components = editor.getHtml();
-  pageManager.dflPg.styles = editor.getCss();
+//  pageManager.dflPg.components = editor.getHtml();
+//  pageManager.dflPg.styles = editor.getCss();
   // Rendering blocks
   blockManager.render();
   // Initializing of search handler
@@ -470,43 +477,44 @@ window.onload = function (event) {
   editor.Panels.getButton('views', 'open-sm').set('active', true);
   // Open a panel
   editor.Commands.run('open-sm');
-  const Http = new XMLHttpRequest();
-  const url='/cadau/user-project/1/pages';
-  Http.open("GET", url);
-  Http.send();
-
-  Http.onreadystatechange = function() {
-    if(this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(Http.responseText);
-      for(let i=0; i<response.length; i++) {
-        let jsonObj = response[i];
-        let pageObj = {};
-
-        pageObj.id = jsonObj.id;
-        pageObj.name = jsonObj.name;
-        pageObj.components = jsonObj.html;
-        pageObj.styles = jsonObj.css;
-        pageObj.externalStyles = jsonObj.externalStyles;
-        pageObj.externalScripts = jsonObj.externalScripts;
-
-        pageManager.pgs.push(pageObj);
-      }
-
-      drwNmsPgs(pageManager.pgs, pageManager.crrPg);
-
-      editor.setComponents(pageManager.pgs[0].components);
-      editor.setStyle(pageManager.pgs[0].styles);
-
-      for(let i=0; i<pageManager.pgs[0].externalStyles.length; i++) {
-        let link = pageManager.pgs[0].externalStyles[i];
-        editor.Canvas.getFrame().addLink(link);
-      }
-
-      for(let i=0; i<pageManager.pgs[0].externalScripts.length; i++) {
-        let script = pageManager.pgs[0].externalScripts[i];
-        editor.Canvas.getFrame().addScript(script);
-      }
-
-    }
-  }
+    
+//  const Http = new XMLHttpRequest();
+//  const url='/cadau/user-project/1/pages';
+//  Http.open("GET", url);
+//  Http.send();
+//
+//  Http.onreadystatechange = function() {
+//    if(this.readyState == 4 && this.status == 200) {
+//      let response = JSON.parse(Http.responseText);
+//      for(let i=0; i<response.length; i++) {
+//        let jsonObj = response[i];
+//        let pageObj = {};
+//
+//        pageObj.id = jsonObj.id;
+//        pageObj.name = jsonObj.name;
+//        pageObj.components = jsonObj.html;
+//        pageObj.styles = jsonObj.css;
+//        pageObj.externalStyles = jsonObj.externalStyles;
+//        pageObj.externalScripts = jsonObj.externalScripts;
+//
+//        pageManager.pgs.push(pageObj);
+//      }
+//
+//      drwNmsPgs(pageManager.pgs, pageManager.crrPg);
+//
+//      editor.setComponents(pageManager.pgs[0].components);
+//      editor.setStyle(pageManager.pgs[0].styles);
+//
+//      for(let i=0; i<pageManager.pgs[0].externalStyles.length; i++) {
+//        let link = pageManager.pgs[0].externalStyles[i];
+//        editor.Canvas.getFrame().addLink(link);
+//      }
+//
+//      for(let i=0; i<pageManager.pgs[0].externalScripts.length; i++) {
+//        let script = pageManager.pgs[0].externalScripts[i];
+//        editor.Canvas.getFrame().addScript(script);
+//      }
+//
+//    }
+ // }
 };

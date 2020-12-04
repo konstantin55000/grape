@@ -72,3 +72,25 @@
     flex: 0 1 auto;
     flex-basis: auto;
 }
+
+/* Select */
+#input-g0jy5fh11c {
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+  
+#gjs.right-bar {    
+    width: 100% !important;
+    left: 0;
+}  
+
+.is-abs--t-l {
+    position: absolute;
+  
+}
+.panel-blocks,  .panel-blocks.panel-blocks--open{
+    padding-top: 0;   top: 40px; 
+}
+.panel-blocks.panel-blocks--open{
+ 
+}
