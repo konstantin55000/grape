@@ -94,3 +94,7 @@
 .panel-blocks.panel-blocks--open{
  
 }
+
+.fa-th-large.gjs-pn-active, .fa-th-large.gjs-pn-active::before {
+    display: none;
+}
