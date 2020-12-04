@@ -472,6 +472,8 @@ window.onload = function (event) {
   blockManager.initSearchers();
   // Load content from HTML to tab manager
   tabManager.importFromDOM();
+  tabManager.setCurrentTab('blocks');
+  //tabManager.setCurrentTab('components');
   // Deleting old blocks button
   editor.Panels.removeButton('views', 'open-blocks');
   //
