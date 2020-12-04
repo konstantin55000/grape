@@ -219,6 +219,7 @@ blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
 
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {        
+   tabManager.setCurrentTab('blocks');
     jQuery('.panel-blocks').toggleClass('panel-blocks--open'); 
    }, attributes: { title: 'Blocks' } }
 , ]);
