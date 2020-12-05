@@ -333,29 +333,25 @@ window.onload = function (event) {
   console.log('change', jQuery('#select-tab') );
 
   setTimeout( () => {
+    
     document.querySelector('#select-tab')
       .addEventListener("change", () =>{
-        alert('onchange');
-      });  
-
-      jQuery('#select-tab').on('change', (elem) => {   
-        console.log('this', this, this.value); 
-        if (this.value == 1){
-          tabManager.setCurrentTab('blocks');   
+        let val = document.getElementById("select-tab").value; 
+        if (val == 1){
+          tabManager.setCurrentTab('blocks'); 
         }
-        if (this.value == 2){
-          tabManager.setCurrentTab('components'); 
-          alert('components');   
+        if (val == 2){
+          tabManager.setCurrentTab('components');   
         }
-        if (this.value == 3){
-          tabManager.setCurrentTab('custom'); 
-          // alert('custom');    
+        if (val == 3){
+         
+          tabManager.setCurrentTab('custom');         
         } 
-        if (this.value == 4 ){
-          tabManager.setCurrentTab('bootstrap'); 
-          // alert('custom');    
-        } 
-      });
+        if (val == 4 ){
+          tabManager.setCurrentTab('bootstrap');  
+        }  
+    });   
+ 
   },  
   100);
  
