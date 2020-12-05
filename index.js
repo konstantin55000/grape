@@ -103,7 +103,6 @@ const blockManager = {
 
 const getBlocks =   function (url){ 
 
-
   jQuery.ajax({
     url: url , 
     crossDomain: true
@@ -117,8 +116,8 @@ const getBlocks =   function (url){
       let content = row.HTML;
       content = content.replace(/\n/g, "<br />");
 
-      tabManager.setCurrentTab('bootstrap');
-      
+ 
+      //tabManager.setCurrentTab('сomponents');
       
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
@@ -198,10 +197,12 @@ blockManager.creatingNewBlock('h2-block', {
   label: 'Heading',
   content: '<h2>Test</h2>',
   category: 'Other',
+  
   attributes: {
     title: 'Insert h2 block'
   }
 });
+
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
   
@@ -219,7 +220,8 @@ blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
  
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
-   tabManager.setCurrentTab('components');
+    tabManager.setCurrentTab('components');
+   
     jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
@@ -320,7 +322,7 @@ window.onload = function (event) {
   let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
   console.log('current url', url);
 
-  tabManager.setCurrentTab('custom');
+  
   //blocks 1
   getBlocks(url);
   //blocks 2 
