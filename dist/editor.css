@@ -116,3 +116,7 @@
     transition: background-color .25s;
     white-space: nowrap;
 }
+
+.active-icon {
+    color: greenyellow !important;
+}
