@@ -238,27 +238,30 @@ editor.on('component:selected', (model) => {
     const addBlock = () => {
       alert('add new block');
     }
+
     const selectedComponent = editor.getSelected();
-  
     const defaultToolbar = selectedComponent.get('toolbar');
-    const commandExists = defaultToolbar.some(item => item.command === freeModeCommand ); 
-    //model.set('dmode', 'absolute'); 
-    // self.setAttribute('gis-free-mode',"1"); //not a function
-    //selectedComponent.setAttribute('gis-free-mode',"1"); //not a function 
-    console.log(self, selectedComponent);
+    // const commandExists = defaultToolbar.some(item => item.command === freeModeCommand ); 
+    // const commandTwoExists = defaultToolbar.  (item => item.command === addBlock ); 
+    // console.log(self, selectedComponent);
+
      
     const addBlockClass = 'fa fa-plus-square-o'; 
     const iconFreeMode = 'fa fa-mouse-pointer';
-    if (!commandExists) {
-      selectedComponent.set({
-        toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
-            {  attributes: {class: addBlockClass }, command:  addBlock },
-       
-        ]
-      });
+if (defaultToolbar.length < 6){
+  selectedComponent.set({
+    toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
+        {  attributes: {class: addBlockClass }, command:  addBlock },
+   
+    ]
 
-    }
-  
+  });
+}
+    //if (!commandExists && !commandTwoExists) {
+    
+    //}
+
+    console.log(defaultToolbar.length, defaultToolbar);
       
   });
 
