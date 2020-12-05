@@ -123,7 +123,7 @@ const getBlocks =   function (url){
               label: row.Name,
               content: content,
               category: {
-                id: 'tab-blocks-other',
+                id: 'tab-custom-other',
                 label: row.Category,
               },
               attributes: {
