@@ -1,5 +1,6 @@
 body {
   position: relative;
+  overflow: hidden;
 }
 
 .left-bar, .right-bar {
@@ -158,6 +159,7 @@ body {
 .tab-manager__tab-bodies .body__content {
   height: calc(100% - 35px);
   overflow-y: auto;
+  padding-bottom: 50px;
 }
 
 /*# sourceMappingURL=style.css.map */
