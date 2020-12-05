@@ -111,30 +111,42 @@ const getBlocks =   function (url, tab){
   .done(function( data ) {
 
     data.forEach( (row, index)=> {
-      console.log( row.Category );
+      console.log( row.Category , row);
       let blockType  = row.blockType //1
       let content = row.HTML;
       content = content.replace(/\n/g, "<br />");
-
-
       //tabManager.setCurrentTab('сomponents');
       let categoryName = 'tab-custom-other';
        if (tab == 2){
         categoryName = 'tab-blocks'
       }
+      // blockManager.creatingNewBlock('custom-block-'+index, {
+      //         label: row.Name,
+      //         content: content,
+      //         category: {
+      //           id: categoryName,
+      //           label: row.Category,
+      //         },
+      //         attributes: {
+      //         title:  row.Name
+      //       }
+      //   });
 
+      blockManager.creatingNewBlock('custom-block-'+index, { 
+              label: `<div>
+              <img src="`+row.Preview+`"/>
+              <div class="my-label-block">`+row.Category+`</div>
+            </div>`,  
+            content: content,
+            category: {
+              id: categoryName,
+              label: row.Category
+            },
+            attributes: {
+            title:  row.Name
+          }
+      });
 
-      blockManager.creatingNewBlock('custom-block-'+index, {
-              label: row.Name,
-              content: content,
-              category: {
-                id: categoryName,
-                label: row.Category,
-              },
-              attributes: {
-              title:  row.Name
-            }
-        });
     });
 
   })
@@ -334,9 +346,9 @@ window.onload = function (event) {
   //blocks 1
   getBlocks(url);
   //blocks 2
-  url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+ 
 
-  getBlocks(url, 2);
+  getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2', 2);
 
   setTimeout( () => {
 
@@ -358,6 +370,6 @@ window.onload = function (event) {
     });
 
   },
-  100);
+  110);
 
 };
