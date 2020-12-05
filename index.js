@@ -98,6 +98,36 @@ const blockManager = {
   },
 };
 
+const getBlocks =  async function (){ 
+  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
+  console.log('current url', url);
+
+  jQuery.ajax({
+    url: url , 
+    crossDomain: true
+ 
+})
+  .done(function( data ) {
+    
+    data.forEach( (row, index)=> {
+      console.log(  row.Category ); 
+      let blockType  = row.blockType //1
+      let content = row.HTML;
+      content = content.replace(/\n/g, "<br />");
+
+      blockManager.creatingNewBlock('custom-block-'+index, {
+              label: row.Name,
+              content: content,
+              category: row.Category,           
+            attributes: {
+             title:  row.Name
+            }
+        }); 
+    });
+   
+  })
+}
+
 // Manager of tabs (now 'Components' and 'Blocks') contains a method to add new Tab
 const tabManager = {
   // DOM Container of tabs
@@ -237,6 +267,7 @@ editor.on('component:selected', (model) => {
 
     const addBlock = () => {
       alert('add new block');
+       
     }
 
     const selectedComponent = editor.getSelected();
@@ -248,20 +279,15 @@ editor.on('component:selected', (model) => {
      
     const addBlockClass = 'fa fa-plus-square-o'; 
     const iconFreeMode = 'fa fa-mouse-pointer';
-if (defaultToolbar.length < 6){
-  selectedComponent.set({
-    toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
-        {  attributes: {class: addBlockClass }, command:  addBlock },
-   
-    ]
 
-  });
-}
-    //if (!commandExists && !commandTwoExists) {
+    if (defaultToolbar.length < 6){ 
+      selectedComponent.set({
+        toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
+            {  attributes: {class: addBlockClass }, command:  addBlock },
+        ]
+      });
+    }
     
-    //}
-
-    console.log(defaultToolbar.length, defaultToolbar);
       
   });
 
@@ -294,5 +320,6 @@ window.onload = function (event) {
   editor.Panels.getButton('views', 'open-sm').set('active', true);
   // Open a panel
   editor.Commands.run('open-sm');
+  getBlocks(); 
  
 };
