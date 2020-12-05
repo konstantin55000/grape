@@ -55,6 +55,9 @@ const blockManager = {
         return true;
       if (category === '')
         return false;
+      if (typeof category.attributes === 'undefined')
+        return false;
+
       category = category.attributes.id;
       if (this.config.prefix === '') {
         return category.indexOf('tab-') === -1;
@@ -98,9 +101,8 @@ const blockManager = {
   },
 };
 
-const getBlocks =  async function (){ 
-  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
-  console.log('current url', url);
+const getBlocks =  async function (url){ 
+
 
   jQuery.ajax({
     url: url , 
@@ -108,9 +110,9 @@ const getBlocks =  async function (){
  
 })
   .done(function( data ) {
-    
+ 
     data.forEach( (row, index)=> {
-      console.log(  row.Category ); 
+      console.log( row.Category ); 
       let blockType  = row.blockType //1
       let content = row.HTML;
       content = content.replace(/\n/g, "<br />");
@@ -200,18 +202,18 @@ blockManager.creatingNewBlock('h2-block', {
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
   
-editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank', 
- command: {
-  run: function(editor) {
-    editor.setDragMode('absolute'); 
+// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank', 
+//  command: {
+//   run: function(editor) {
+//     editor.setDragMode('absolute'); 
    
-  },
-  stop: function(editor) {
-    editor.setDragMode('block'); 
-  }
-}
+//   },
+//   stop: function(editor) {
+//     editor.setDragMode('block'); 
+//   }
+// }
 
-} ] );
+// } ] );
  
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
@@ -312,7 +314,7 @@ window.onload = function (event) {
   // Initializing of search handler
   blockManager.initSearchers();
   // Load content from HTML to tab manager
-  tabManager.setCurrentTab('components');
+
   //tabManager.setCurrentTab('components');
   // Deleting old blocks button
   editor.Panels.removeButton('views', 'open-blocks');
@@ -320,6 +322,41 @@ window.onload = function (event) {
   editor.Panels.getButton('views', 'open-sm').set('active', true);
   // Open a panel
   editor.Commands.run('open-sm');
-  getBlocks(); 
+
+  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
+  console.log('current url', url);
+
+  getBlocks(url); 
+  url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+  getBlocks(url); 
+  
+  console.log('change', jQuery('#select-tab') );
+
+  setTimeout( () => {
+    document.querySelector('#select-tab')
+      .addEventListener("change", () =>{
+        alert('onchange');
+      });  
+
+      jQuery('#select-tab').on('change', (elem) => {   
+        console.log('this', this, this.value); 
+        if (this.value == 1){
+          tabManager.setCurrentTab('blocks');   
+        }
+        if (this.value == 2){
+          tabManager.setCurrentTab('components'); 
+          alert('components');   
+        }
+        if (this.value == 3){
+          tabManager.setCurrentTab('custom'); 
+          // alert('custom');    
+        } 
+        if (this.value == 4 ){
+          tabManager.setCurrentTab('bootstrap'); 
+          // alert('custom');    
+        } 
+      });
+  },  
+  100);
  
 };
