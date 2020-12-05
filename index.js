@@ -101,34 +101,37 @@ const blockManager = {
   },
 };
 
-const getBlocks =   function (url){ 
+const getBlocks =   function (url){
 
   jQuery.ajax({
-    url: url , 
+    url: url ,
     crossDomain: true
- 
+
 })
   .done(function( data ) {
- 
+
     data.forEach( (row, index)=> {
-      console.log( row.Category ); 
+      console.log( row.Category );
       let blockType  = row.blockType //1
       let content = row.HTML;
       content = content.replace(/\n/g, "<br />");
 
- 
+
       //tabManager.setCurrentTab('сomponents');
-      
+
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
-              content: content,              
-              category: row.Category,           
+              content: content,
+              category: {
+                id: 'tab-blocks-other',
+                label: row.Category,
+              },
               attributes: {
               title:  row.Name
             }
-        }); 
+        });
     });
-   
+
   })
 }
 
@@ -185,7 +188,7 @@ blockManager.creatingNewBlock('h1-block', {
   label: 'Yes, label',
   content: '<h1>Put your title here</h1>',
   category: {
-    id: 'tab-blocks-other',
+    id: 'tab-bootstrap-other',
     label: 'BLOCKS other.',
   },
   attributes: {
@@ -196,37 +199,37 @@ blockManager.creatingNewBlock('h1-block', {
 blockManager.creatingNewBlock('h2-block', {
   label: 'Heading',
   content: '<h2>Test</h2>',
-  category: 'Other',
-  
+  category: 'bootstrap',
+
   attributes: {
     title: 'Insert h2 block'
   }
 });
 
 // Testing creating new block without options
-blockManager.creatingNewBlock('h3-block', { label: 'Heading' }, 'blocks');
-  
-// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank', 
+blockManager.creatingNewBlock('h3-bootstrap', { label: 'Heading' }, 'bootstrap');
+
+// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
 //  command: {
 //   run: function(editor) {
-//     editor.setDragMode('absolute'); 
-   
+//     editor.setDragMode('absolute');
+
 //   },
 //   stop: function(editor) {
-//     editor.setDragMode('block'); 
+//     editor.setDragMode('block');
 //   }
-// } 
+// }
 // } ] );
- 
+
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
     tabManager.setCurrentTab('components');
-   
+
     jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
 
- 
+
 // Fix fullscreen-mode
 editor.Commands.extend('core:fullscreen', {
   run () {
@@ -245,54 +248,54 @@ editor.Commands.extend('core:fullscreen', {
   }
 });
 
- 
+
 const rightBar = document.getElementsByClassName('right-bar')[0];
- 
-  
+
+
 //hide left panel on preview
 editor.on('run:preview:before', () => {
- 
+
   rightBar.style.left = '0';
   rightBar.style.setProperty("width", "100%", "important");
 });
 
 editor.on('stop:preview:before', () => {
- 
+
   rightBar.style.left = '13.04%';
   rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
 });
 
- 
+
 editor.on('component:selected', (model) => {
 
-    // whenever a component is selected in the editor 
+    // whenever a component is selected in the editor
     let self = this;
     const freeModeCommand = () => {
       model.set('dmode', 'absolute');
     }
 
     const addBlock = () => {
-      alert('add new block'); 
+      alert('add new block');
     }
 
     const selectedComponent = editor.getSelected();
-    const defaultToolbar = selectedComponent.get('toolbar'); 
-    const addBlockClass = 'fa fa-plus-square-o'; 
+    const defaultToolbar = selectedComponent.get('toolbar');
+    const addBlockClass = 'fa fa-plus-square-o';
     const iconFreeMode = 'fa fa-mouse-pointer';
 
-    if (defaultToolbar.length < 6){ 
+    if (defaultToolbar.length < 6){
       selectedComponent.set({
         toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
             {  attributes: {class: addBlockClass }, command:  addBlock },
         ]
       });
     }
-    
-      
+
+
   });
 
 
-  
+
 function getUrlVars() {
   let vars = {};
   let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -311,7 +314,7 @@ window.onload = function (event) {
   blockManager.render();
   // Initializing of search handler
   blockManager.initSearchers();
- 
+
   // Deleting old blocks button
   editor.Panels.removeButton('views', 'open-blocks');
   //
@@ -319,41 +322,41 @@ window.onload = function (event) {
   // Open a panel
   editor.Commands.run('open-sm');
 
-  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
+  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
   console.log('current url', url);
 
-  
+
   //blocks 1
   getBlocks(url);
-  //blocks 2 
+  //blocks 2
   url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
-  getBlocks(url);   
+  getBlocks(url);
 
   setTimeout( () => {
-    
+
     document.querySelector('#select-tab')
       .addEventListener("change", () => {
-        let val = document.getElementById("select-tab").value; 
+        let val = document.getElementById("select-tab").value;
         if (val == 1){
-          tabManager.setCurrentTab('blocks'); 
+          tabManager.setCurrentTab('components');
         }
         if (val == 2){
-          tabManager.setCurrentTab('components');   
+          tabManager.setCurrentTab('blocks');
         }
-        if (val == 3){ 
-          tabManager.setCurrentTab('custom');   
+        if (val == 3){
+          tabManager.setCurrentTab('custom');
           //getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1');
           //console.log(jQuery('#customContent').html() ) ; empty
-        } 
+        }
         if (val == 4 ){
           //get blocks of blocktype two
-          //getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2');          
-          tabManager.setCurrentTab('bootstrap');  
+          //getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2');
+          tabManager.setCurrentTab('bootstrap');
           //console.log(jQuery('#bootstrapContent').html() ) ;
-        }  
-    });   
- 
-  },  
+        }
+    });
+
+  },
   100);
- 
+
 };
