@@ -275,7 +275,7 @@ editor.on('component:selected', (model) => {
     }
 
     const addBlock = () => {
-      alert('add new block');
+      editor.Commands.run('open-html-code-editor');
     }
 
     const selectedComponent = editor.getSelected();
@@ -360,3 +360,56 @@ window.onload = function (event) {
   100);
 
 };
+
+
+editor.Commands.add("open-html-code-editor", {
+    run: function(editor, sender, data) {
+
+        var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+        codeViewer.set({
+            codeName: "htmlmixed",
+            theme: "hopscotch",
+            readOnly: false
+        });
+
+        var modalContent = document.createElement("div");
+
+        var editorTextArea = document.createElement("textarea");
+        var editorTextArea2 = document.createElement("textarea");
+
+        $( editorTextArea ).attr('id', 'HtmlCode');
+        $( editorTextArea2 ).attr('id', 'CssStyle');
+
+        var saveButton = document.createElement("button");
+        saveButton.innerHTML = "Save";
+        saveButton.className = "gjs-btn-prim";
+        saveButton.style = "margin-top: 8px;";
+        saveButton.onclick = function() {
+            var content = codeViewer.editor.getValue();
+            editor.getSelected().set("content", content);
+            editor.Modal.close();
+        };
+
+        modalContent.appendChild(editorTextArea);
+        modalContent.appendChild(editorTextArea2);
+        modalContent.appendChild(saveButton);
+
+        codeViewer.init(editorTextArea);
+        codeViewer.init(editorTextArea2);
+
+
+
+        var htmlContent = document.createElement("div");
+        htmlContent.innerHTML = editor.getSelected().toHTML();
+        htmlContent = htmlContent.firstChild.innerHTML;
+
+        codeViewer.setContent(htmlContent);
+
+        editor.Modal
+            .setTitle("Edit HTML")
+            .setContent(modalContent)
+            .open();
+
+        codeViewer.editor.refresh();
+    }
+});
