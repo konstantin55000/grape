@@ -8,6 +8,7 @@ Category
 html
 style css
 
+Верстку копирую с grapedrop едитора 
 
 
 extra tabl
@@ -21,4 +22,35 @@ var blockManager = editor.BlockManager;
 blockManager.add('my-first-block', {
   label: Name,
   content: '<div class="my-block">This is a simple block</div>', //html content
+
+
 });
+
+wrapper
+850px
+
+400
+
+padding 
+10px
+
+padding 30px
+
+
+font-size: 16px
+	
+
+
+ https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks
+
+
+   <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
+    <link href="dist/grapesjs-preset-webpage.min.css" rel="stylesheet">
+    <link href="dist/editor.css" rel="stylesheet"> 
+    <!-- <script src="//feather.aviary.com/imaging/v3/editor.js"></script> -->
+    <script src="https://static.filestackapi.com/v3/filestack-0.1.10.js"></script>
+    <script src="https://unpkg.com/grapesjs"></script>
+    <script src="dist/grapesjs-preset-webpage.min.js"></script>
+    <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/grapesjs"></script>
+    <script src="path/to/grapesjs-custom-code.min.js"></script>
