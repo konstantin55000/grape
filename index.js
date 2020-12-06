@@ -20,16 +20,9 @@ const editor = grapesjs.init({
   },
   container: '#gjs',
   fromElement: true,
-<<<<<<< HEAD
   plugins: ['gjs-preset-webpage','html-block'],
-=======
-  plugins: ['gjs-preset-webpage', 'grapesjs-custom-code'],
->>>>>>> refs/remotes/origin/develop
   pluginsOpts: {
-    'gjs-preset-webpage': {}, 
-    'grapesjs-custom-code': {
-      // options
-    }
+    'gjs-preset-webpage': {}
   },
   blockManager: {
     appendTo : '#componentsContent'
@@ -221,7 +214,18 @@ blockManager.creatingNewBlock('h2-block', {
 
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-bootstrap', { label: 'Heading' }, 'bootstrap');
- 
+
+// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
+//  command: {
+//   run: function(editor) {
+//     editor.setDragMode('absolute');
+
+//   },
+//   stop: function(editor) {
+//     editor.setDragMode('block');
+//   }
+// }
+// } ] );
 
 editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
@@ -262,116 +266,11 @@ editor.on('run:preview:before', () => {
 });
 
 editor.on('stop:preview:before', () => {
+
   rightBar.style.left = '13.04%';
   rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
 });
 
-
-var pfx = editor.getConfig().stylePrefix;
-var modal = editor.Modal;
-var cmdm = editor.Commands;
-var codeViewer = editor.CodeManager.getViewer('CodeMirror').clone();
-console.log('code viewer', codeViewer);
-var pnm = editor.Panels;
-var container = document.createElement('div');
-var btnEdit = document.createElement('button');
-
-codeViewer.set({
-    codeName: 'htmlmixed',
-    readOnly: 0,
-    theme: 'hopscotch',
-    autoBeautify: true,
-    autoCloseTags: true,
-    autoCloseBrackets: true,
-    lineWrapping: true,
-    styleActiveLine: true,
-    smartIndent: true,
-    indentWithTabs: true
-});
-
-
-
-btnEdit.innerHTML = 'Edit Modal';
-btnEdit.className = pfx + 'btn-prim ' + pfx + 'btn-import';
-btnEdit.onclick = function() {
-    var code = codeViewer.editor.getValue(); 
-    editor.DomComponents.getWrapper().set('content', ''); //вот строка  
-
-    editor.setComponents(code.trim());
-    modal.close();
-};
-
-cmdm.add('html-edit', {
-    run: function(editor, sender) {
-      
-        sender && sender.set('active', 0);
-        var viewer = codeViewer.editor;
-        modal.setTitle('Edit code');
-        if (!viewer || document.querySelector('#editor-html-value') === null) {
-            var txtarea = document.createElement('textarea');
-            container.appendChild(txtarea);
-            container.appendChild(btnEdit);
-            let strModal = `
-            <div class="gjs-mdl-dialog gjs-one-bg gjs-two-color">
-                <div class="gjs-mdl-header">
-                  <div class="gjs-mdl-title">Custom block</div>
-                  <div class="gjs-mdl-btn-close" data-close-modal="">⨯</div>
-                </div>
-                <div class="gjs-mdl-content">
-                  <div id="gjs-mdl-c"><div class="panel-custom-block" id="panel-custom-block"><div class="form-base is-relative"><div class="spinner form-base__spinner" style="display: none;"><i class="spinner-large"></i></div> <form class="form-base__form"><div class="tabs tp-size--m"><div class="tabs__tabs"><div class="grid"><div class="tabs__tab-wrapper grid-item grid-item--behavior-fixed"><input id="tab_main" type="radio" class="tabs__input tabs__input-main" value="main"> <label for="tab_main" class="tabs__tab tabs__tab-main is-clickable ">
-                    Main
-                    <!----></label></div><div class="tabs__tab-wrapper grid-item grid-item--behavior-fixed"><input id="tab_extra" type="radio" class="tabs__input tabs__input-extra" value="main"> <label for="tab_extra" class="tabs__tab tabs__tab-extra is-clickable ">
-                    Extra
-                    <!----></label></div> <div class="grid-item grid-item--behavior-fixed grid-item--push-left"><!----> <div class="input-group-container is-relative is-inline--bl"><!----> <button type="submit" class="call-btn-dash"><span class="call-btn-layer"><!----> <span class="is-valign--middle">
-                  Save
-                </span> </span></button> <!----></div></div></div></div> <div class="radio-tabs__contents u-p-top--m panel-custom-block__tab-c"><div><div class="tabs__content tabs__content-main"><div class="u-m-bottom--s grid grid--align-center grid--gutters-x2lg"><div class="grid-item"><div class="input-group-container is-relative"><label for="input-name" class="input-label u-m-bottom--xs">
-            Name
-            </label>   <input type="text" name="name" id="input-name" required="required" placeholder="eg. Button" class="input-group__input input-group__input--text input-box">  <!----></div></div> <div class="grid-item"><div class="input-group-container is-relative"><label for="input-category" class="input-label u-m-bottom--xs">
-            Category
-            </label>   <input type="text" name="category" id="input-category" placeholder="eg. Buttons" class="input-group__input input-group__input--text input-box">  <!----></div></div></div> <div class="panel-custom-block__editors grid grid--gutters-x2lg grid--no-wrap"><div class="grid-item grid-item--cols-6"><label class="input-label u-m-bottom--xs">
-            HTML
-            </label> <div class="panel-custom-block__editor-left"><div><textarea style="display: none;"></textarea>
-                <div class="CodeMirror cm-s-hopscotch CodeMirror-wrap"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 4px; left: 40.3px;">
-                    
-                    <textarea id="editor-html-value" style="position: absolute; bottom: -1em; padding: 0px; width: 1px; height: 1em; outline: currentcolor none medium;" autocorrect="off" 
-                    autocapitalize="none" spellcheck="false" tabindex="0" wrap="off"></textarea></div><div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true"><div style="min-width: 1px; height: 0px;"></div></div><div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true"><div style="height: 100%; min-height: 1px; width: 0px;"></div></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1" draggable="true"><div class="CodeMirror-sizer" style="margin-left: 29px; margin-bottom: -17px; border-right-width: 33px; min-height: 53px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div style="position: relative; outline: currentcolor none medium;" role="presentation"><div class="CodeMirror-measure"><pre class="CodeMirror-line-like">x</pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"><div class="CodeMirror-selected" style="position: absolute; left: 11.3px; top: 0px; width: 350.7px; height: 15px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 15px; width: 358px; height: 15px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 30px; width: 32.5px; height: 15px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 15px; width: 358px; height: 15px;"></div></div><div class="CodeMirror-cursors" style="visibility: hidden;"></div><div class="CodeMirror-code" role="presentation"><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-tag cm-bracket">&lt;</span><span class="cm-tag">h1</span> <span class="cm-attribute">id</span>=<span class="cm-string">"iodmj"</span> <span class="cm-attribute">data-gjs-type</span>=<span class="cm-string">"header"</span> <span class="cm-attribute">data-gjs-view</span>=<span class="cm-string">""</span><span class="cm-tag cm-bracket">&gt;</span>Party Card</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-tag cm-bracket">&lt;/</span><span class="cm-tag">h1</span><span class="cm-tag cm-bracket">&gt;</span></span></pre></div></div></div></div></div></div><div style="position: absolute; height: 33px; width: 1px; border-bottom: 0px solid transparent; top: 53px;"></div><div class="CodeMirror-gutters" style="height: 86px; left: 0px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 29px;"></div></div></div></div></div></div></div> <div class="grid-item grid-item--cols-6"><label class="input-label u-m-bottom--xs">
-            CSS
-            </label> <div class="panel-custom-block__editor-right"><div><textarea id="editor-css-value" style="display: none;"></textarea>
-                
-                <div class="CodeMirror cm-s-hopscotch CodeMirror-wrap"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 4px; left: 43.6px;"><textarea style="position: absolute; bottom: -1em; padding: 0px; width: 1px; height: 1em; outline: currentcolor none medium;" autocorrect="off" autocapitalize="none" spellcheck="false" tabindex="0" wrap="off"></textarea></div><div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true"><div style="min-width: 1px; height: 0px;"></div></div><div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true"><div style="height: 100%; min-height: 1px; width: 0px;"></div></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1" draggable="true"><div class="CodeMirror-sizer" style="margin-left: 29px; margin-bottom: -17px; border-right-width: 33px; min-height: 98px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div style="position: relative; outline: currentcolor none medium;" role="presentation"><div class="CodeMirror-measure"><pre class="CodeMirror-line-like">x</pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"><div class="CodeMirror-selected" style="position: absolute; left: 14.6px; top: 0px; width: 347.4px; height: 15px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 45px; width: 47.4px; height: 15px;"></div><div class="CodeMirror-selected" style="position: absolute; left: 4px; top: 15px; width: 358px; height: 30px;"></div></div><div class="CodeMirror-cursors" style="visibility: hidden;"></div><div class="CodeMirror-code" role="presentation" style=""><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-builtin">#iodmj</span>{</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"> &nbsp;<span class="cm-property">font-family</span>:<span class="cm-variable">Brush</span> <span class="cm-variable">Script</span> <span class="cm-variable">MT</span>, <span class="cm-atom">sans-serif</span>;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">3</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"> &nbsp;<span class="cm-property">font-size</span>:<span class="cm-number">50px</span>;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">4</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"> &nbsp;<span class="cm-property">margin</span>:<span class="cm-number">0</span> <span class="cm-number">0</span> <span class="cm-number">20px</span> <span class="cm-number">0</span>;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">5</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation">}</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -29px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">6</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span cm-text="">​</span></span></pre></div></div></div></div></div></div><div style="position: absolute; height: 33px; width: 1px; border-bottom: 0px solid transparent; top: 98px;"></div><div class="CodeMirror-gutters" style="height: 131px; left: 0px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 29px;"></div></div></div></div></div></div></div></div> <br> <div class="panel-custom-block__preview is-relative--hidden"><div class="panel-custom-block__preview-toolbar color-bg--secondary is-anim is-opac--half is-abs--b-l"><div class="grid grid--align-center"><div class="grid-item"><span title="" data-tooltip-pos="right" class="tp__u tp-size--m is-clickable" data-tooltip="Save preview"><i class="icon fa fa-camera"></i></span></div> <div class="grid-item grid-item--behavior-fixed grid-item--push-left"><i class="panel-custom-block__toolbar-hand is-anim icon fa fa-angle-right"></i></div></div></div> <iframe class="panel-custom-block__preview-frame"></iframe></div></div><div class="tabs__content tabs__content-extra" style="display: none;"><div class="u-m-bottom--s grid grid--align-center grid--gutters-x2lg"><div class="grid-item">Description</div> <div class="grid-item">Preview</div></div> <div class="u-m-bottom--s grid grid--align-stretch grid--gutters-x2lg"><div class="grid-item"><div class="input-group-container is-relative"><!----> <textarea name="description" id="input-description" class="input-group__input input-group__input--textarea input-box" style="min-height: 260px;"></textarea> <!----></div></div> <div class="grid-item"><div class="input-group-container is-relative upload-group is-full-height"><!----> <input type="file" name="preview" accept="image/*" class="is-hidden"> <div class="grid grid--align-center grid--gutters-xlg is-full-height"><div class="grid-item grid-item--behavior-fixed is-full-height is-full-width"><div class="upload-group__preview input-box is-clickable is-relative upload-group__preview--fill"><img class="upload-group__preview-img is-abs--m" src="data:,"> <div class="gpd-overlay is-absolute--fill is-anim upload-group__overlay is-no-opac"><div class="is-absolute--fill is-opac--half color-bg--black"></div> <div class="is-full-height is-relative grid grid--justify-center grid--align-center"><div class="grid-item grid-item--behavior-fixed"><i class="panel-custom-block__overlay-icon icon fa fa-cloud-upload"></i></div></div></div></div> <!----></div> <!----></div> <!----></div></div></div> <div class="u-m-bottom--s grid grid--align-center grid--gutters-x2lg"><div class="grid-item"><div class="input-group-container is-relative"><!----> <label class="is-no-select is-clickable"><input type="hidden" value="0"> <input id="input-wbf4iqlbzu" type="checkbox" class="input-group__input input-group__input--checkbox input-box" value=""> <i class="form-checkbox"></i> <span class="u-m-left--xs is-valign--middle">
-                Make the block available only in this project
-              </span> </label> <!----></div></div></div></div></div></div></div></form></div></div></div>`; 
-
-            container.insertAdjacentHTML('beforeend', strModal);
-            
-
-            codeViewer.init(txtarea);
-            viewer = codeViewer.editor;
-        }
-        var InnerHtml = editor.getHtml();
-        var Css = editor.getCss();
-        modal.setContent('');
-        modal.setContent(container);
-        codeViewer.setContent(InnerHtml + "<style>" + Css + '</style>');
-        modal.open();
-        viewer.refresh();
-    
-     
-    }
-});
-
-pnm.addButton('options',
-    [
-        {
-            id: 'edit',
-            className: 'fa fa-edit',
-            command: 'html-edit',
-            attributes: {
-                title: 'Edit'
-            }
-        }
-    ]
-);
 
 editor.on('component:selected', (model) => {
 
@@ -381,18 +280,9 @@ editor.on('component:selected', (model) => {
       model.set('dmode', 'absolute');
       document.querySelector('.fa-mouse-pointer.gjs-toolbar-item').classList.toggle('active-icon');
     }
-<<<<<<< HEAD
 
     const addBlock = () => {
       editor.Commands.run('open-html-code-editor');
-=======
-    const toEdit = () => {
-      document.querySelector('.gjs-pn-btn.fa-edit').click();
-    }
-    const addBlock = () => { 
-   
-      document.querySelector('.gjs-pn-btn.fa.fa-code').click();
->>>>>>> refs/remotes/origin/develop
     }
 
     const selectedComponent = editor.getSelected();
@@ -406,17 +296,7 @@ editor.on('component:selected', (model) => {
             {  attributes: {class: addBlockClass }, command:  addBlock },
         ]
       });
-<<<<<<< HEAD
     }
-=======
-      selectedComponent.set({
-      toolbar: [ ...defaultToolbar,  
-        {  attributes: {class: 'fa fa-edit' ,  title: 'Edit'} , command: toEdit }
-      ]
-    }); 
-    } 
-  
->>>>>>> refs/remotes/origin/develop
   });
 
 
