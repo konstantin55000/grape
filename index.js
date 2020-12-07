@@ -414,8 +414,10 @@ editor.Commands.add("open-html-code-editor", {
 
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
+        saveButton.id = "save";
         saveButton.className = "gjs-btn-prim";
         saveButton.style = "margin-top: 8px;";
+
         saveButton.onclick = function() {
             var content = codeViewer.editor.getValue();
             editor.getSelected().set("content", content);
@@ -428,9 +430,6 @@ editor.Commands.add("open-html-code-editor", {
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
         
-        
-   
-        
         editorTextArea.innerHTML = htmlContent; 
         modalContent.appendChild(editorTextArea); 
         modalContent.appendChild(editorTextArea2);
@@ -438,7 +437,30 @@ editor.Commands.add("open-html-code-editor", {
 
         codeViewer.init(editorTextArea);
         codeViewer.init(editorTextArea2); 
-        codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
+
+        //codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
+ 
+
+        const htmlTextarea = document.getElementById('html-code');
+        const cssTextarea = document.getElementById('css-style');
+
+        const updateInstance = () => {
+          codeViewer.setComponents(htmlTextarea.value)
+          codeViewer.setStyle(cssTextarea.value)
+        }
+
+        saveButton.onclick=updateInstance;
+
+        
+
+        // editor.on('component:add', updateTextarea);
+        // editor.on('component:update', updateTextarea);
+        // editor.on('component:remove', updateTextarea);
+
+       
+
+
+
         editor.Modal
             .setTitle("New Block")
             .setContent(modalContent)
