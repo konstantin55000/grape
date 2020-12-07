@@ -419,11 +419,11 @@ editor.Commands.add("open-html-code-editor", {
         saveButton.className = "gjs-btn-prim";
         saveButton.style = "margin-top: 8px;";
 
-        saveButton.onclick = function() {
-            var content = codeViewer.editor.getValue();
-            editor.getSelected().set("content", content);
-            editor.Modal.close();
-        };
+        // saveButton.onclick = function() {
+        //     var content = codeViewer.editor.getValue();
+        //     editor.getSelected().set("content", content);
+        //     editor.Modal.close();
+        // };
 
         
         var htmlContent = document.createElement("div");        
@@ -431,6 +431,7 @@ editor.Commands.add("open-html-code-editor", {
         htmlContent = htmlContent.firstChild.innerHTML; 
         
         editorTextArea.innerHTML = htmlContent; 
+
         modalContent.appendChild(editorTextArea); 
         modalContent.appendChild(cssTextArea);
         modalContent.appendChild(saveButton);
@@ -445,15 +446,15 @@ editor.Commands.add("open-html-code-editor", {
         var selComponent =   editor.getSelected() ;
         var cid = selComponent.cid;
       
-        const getInstanceValues = () => {
-            
+        //this is for editing component
+        const getInstanceValues = () => {            
           editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
           cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
           editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
           editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
 
-          // let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-          // codeViewer.setContent(contentToSet);  
+           let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+          codeViewer.setContent(contentToSet);  
 
           //editor.getSelected().set("content", contentToSet);  
         }
@@ -463,32 +464,44 @@ editor.Commands.add("open-html-code-editor", {
           let selComponent =   editor.getSelected() ;
           let cid = selComponent.cid; 
 
-          localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
-          localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);          
-          localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
-          localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);  
+          //this func. is for block editing
+          // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
+          // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);          
+          // localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
+          // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
+
           editorTextArea = document.getElementById('html-code');
           cssTextArea = document.getElementById('css-style');
-          
-          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-          codeViewer.setContent(contentToSet);  
+           
+          let contentToSet = editorTextArea.value ;
+          // ' ' + cssTextArea.value;
+         // codeViewer.setContent(contentToSet);  
+          let blockName =  document.getElementById('block-name').value;
+          blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
+            label:  blockName,
+            content: contentToSet,
+            category: {              
+              label: document.getElementById('cat-value').value,
+            },
+            attributes: {
+            title:  blockName
+            }
+          }); 
+
+          editor.Modal.close();
           alert('Component values are saved.');
+          
         }
 
-        saveButton.onclick=updateInstance;
-
-        // editor.on('component:add', updateTextarea);
-        // editor.on('component:update', updateTextarea);
-        // editor.on('component:remove', updateTextarea);
- 
-
+        saveButton.onclick=updateInstance; 
+         
         editor.Modal
             .setTitle("New Block")
             .setContent(modalContent)
             .open();
 
-        getInstanceValues();
+        //getInstanceValues(); this if for editing component 
         codeViewer.editor.refresh();
-        getInstanceValues();
+        
     }
 });
