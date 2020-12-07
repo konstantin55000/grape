@@ -658,8 +658,8 @@ button, input, optgroup, select, textarea {
   margin-right: 10px;
 }
 
-#html-code + .CodeMirror-wrap{
-min-height: 300px;
+#html-code + .CodeMirror-wrap {
+ 
 margin-top: 20px;
 margin-bottom: 20px;
 }
