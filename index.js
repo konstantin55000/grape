@@ -453,7 +453,7 @@ editor.Commands.add("open-html-code-editor", {
           editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
           editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
 
-           let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
           codeViewer.setContent(contentToSet);  
 
           //editor.getSelected().set("content", contentToSet);  
@@ -473,14 +473,13 @@ editor.Commands.add("open-html-code-editor", {
           editorTextArea = document.getElementById('html-code');
           cssTextArea = document.getElementById('css-style');
            
-          let contentToSet = editorTextArea.value ;
-          // ' ' + cssTextArea.value;
-         // codeViewer.setContent(contentToSet);  
+          let contentToSet = editorTextArea.value ; 
           let blockName =  document.getElementById('block-name').value;
           blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
             label:  blockName,
             content: contentToSet,
-            category: {              
+            category: {         
+              id: 'tab-custom-other',     
               label: document.getElementById('cat-value').value,
             },
             attributes: {
@@ -488,6 +487,7 @@ editor.Commands.add("open-html-code-editor", {
             }
           }); 
 
+          
           editor.Modal.close();
           alert('Component values are saved.');
           
