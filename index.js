@@ -427,16 +427,18 @@ editor.Commands.add("open-html-code-editor", {
         
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
-        //codeViewer.setContent(htmlContent); 
+        
+        
+   
+        
         editorTextArea.innerHTML = htmlContent; 
-
         modalContent.appendChild(editorTextArea); 
         modalContent.appendChild(editorTextArea2);
         modalContent.appendChild(saveButton);
 
         codeViewer.init(editorTextArea);
         codeViewer.init(editorTextArea2); 
-        
+        codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
         editor.Modal
             .setTitle("New Block")
             .setContent(modalContent)
