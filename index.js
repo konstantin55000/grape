@@ -374,7 +374,10 @@ editor.Commands.add("open-html-code-editor", {
         });
 
         var modalContent = document.createElement("div");
-
+        var selComponent = editor.getSelected();
+        let attr =  editor.getSelectedToStyle().attributes;
+        let Css = attr.style;
+        
         var editorTextArea = document.createElement("textarea");
         var cssTextArea = document.createElement("textarea");
 
@@ -382,7 +385,7 @@ editor.Commands.add("open-html-code-editor", {
         editorLabel.for = 'cat-name';
         editorLabel.innerHTML = 'Name';
         editorLabel.id = 'label-cat-value';
-
+        
         modalContent.appendChild(editorLabel);
 
         var editorTextBlockName = document.createElement("input");
@@ -409,27 +412,25 @@ editor.Commands.add("open-html-code-editor", {
         cssTextArea.placeholder = 'CSS';
         editorTextArea.id  = 'html-code'; 
         cssTextArea.id  = 'css-style';
-        var Css = editor.getCss();
-       
-        cssTextArea.innerHTML = Css;
+   
+        console.log('selected css: ', Css); 
+         cssString = '{ '; 
+        for (const [key, value] of Object.entries(Css)) {
+          cssString +=   key +': ' + value + ";";
+        }
+        cssString += ' }'; 
+        codeViewer.setContent(htmlContent + " <style>" + Css + '</style>'); 
+        cssTextArea.innerHTML = cssString; 
 
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
         saveButton.id = "save";
         saveButton.className = "gjs-btn-prim";
         saveButton.style = "margin-top: 8px;";
-
-        // saveButton.onclick = function() {
-        //     var content = codeViewer.editor.getValue();
-        //     editor.getSelected().set("content", content);
-        //     editor.Modal.close();
-        // };
-
         
         var htmlContent = document.createElement("div");        
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
-        
         editorTextArea.innerHTML = htmlContent; 
 
         modalContent.appendChild(editorTextArea); 
@@ -438,12 +439,7 @@ editor.Commands.add("open-html-code-editor", {
 
         codeViewer.init(editorTextArea);
         codeViewer.init(cssTextArea); 
-        //codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
- 
-
-       
-
-        var selComponent =   editor.getSelected() ;
+        
         var cid = selComponent.cid;
       
         //this is for editing component
@@ -461,7 +457,7 @@ editor.Commands.add("open-html-code-editor", {
         
 
         const updateInstance = () => {
-          let selComponent =   editor.getSelected() ;
+          let selComponent = editor.getSelected() ;
           let cid = selComponent.cid; 
 
           //this func. is for block editing
@@ -472,25 +468,28 @@ editor.Commands.add("open-html-code-editor", {
 
           editorTextArea = document.getElementById('html-code');
           cssTextArea = document.getElementById('css-style');
-           
-          let contentToSet = editorTextArea.value ; 
+
+         
+
+          let contentToSet = editorTextArea.value; 
           let blockName =  document.getElementById('block-name').value;
+           
           blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
             label:  blockName,
             content: contentToSet,
+            style: Css,
             category: {         
               id: 'tab-custom-other',     
               label: document.getElementById('cat-value').value,
             },
             attributes: {
-            title:  blockName
+             title:  blockName
             }
           }); 
-
           
           editor.Modal.close();
           alert('Component values are saved.');
-          
+
         }
 
         saveButton.onclick=updateInstance; 
