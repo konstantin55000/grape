@@ -452,8 +452,8 @@ editor.Commands.add("open-html-code-editor", {
           editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
           editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
 
-          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-          codeViewer.setContent(contentToSet);  
+          // let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+          // codeViewer.setContent(contentToSet);  
 
           //editor.getSelected().set("content", contentToSet);  
         }
