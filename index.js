@@ -20,7 +20,7 @@ const editor = grapesjs.init({
   },
   container: '#gjs',
   fromElement: true,
-  plugins: ['gjs-preset-webpage','html-block'],
+  plugins: ['gjs-preset-webpage'],
   pluginsOpts: {
     'gjs-preset-webpage': {}
   },
@@ -101,7 +101,7 @@ const blockManager = {
   },
 };
 
-const getBlocks =   function (url, tab){
+const getBlocks =   function (url){
 
   jQuery.ajax({
     url: url ,
@@ -111,31 +111,25 @@ const getBlocks =   function (url, tab){
   .done(function( data ) {
 
     data.forEach( (row, index)=> {
-
-
+      console.log( row.Category );
       let blockType  = row.blockType //1
       let content = row.HTML;
       content = content.replace(/\n/g, "<br />");
 
-      let categoryName = 'tab-custom-other';
-       if (tab == 2){
-        categoryName = 'tab-blocks'
-      }
-      blockManager.creatingNewBlock('custom-block-'+index, {
-              label: `<div>
-              <img src="`+row.Preview+`"/>
-              <div class="my-label-block">`+row.Category+`</div>
-            </div>`,
-            content: content,
-            category: {
-              id: categoryName,
-              label: row.Category
-            },
-            attributes: {
-            title:  row.Name
-          }
-      });
 
+      //tabManager.setCurrentTab('сomponents');
+
+      blockManager.creatingNewBlock('custom-block-'+index, {
+              label: row.Name,
+              content: content,
+              category: {
+                id: 'tab-custom-other',
+                label: row.Category,
+              },
+              attributes: {
+              title:  row.Name
+            }
+        });
     });
 
   })
@@ -278,7 +272,6 @@ editor.on('component:selected', (model) => {
     let self = this;
     const freeModeCommand = () => {
       model.set('dmode', 'absolute');
-      document.querySelector('.fa-mouse-pointer.gjs-toolbar-item').classList.toggle('active-icon');
     }
 
     const addBlock = () => {
@@ -297,6 +290,8 @@ editor.on('component:selected', (model) => {
         ]
       });
     }
+
+
   });
 
 
@@ -330,8 +325,12 @@ window.onload = function (event) {
   let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
   console.log('current url', url);
 
+
+  //blocks 1
   getBlocks(url);
-  getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2', 2);
+  //blocks 2
+  url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+  getBlocks(url);
 
   setTimeout( () => {
 
@@ -346,67 +345,103 @@ window.onload = function (event) {
         }
         if (val == 3){
           tabManager.setCurrentTab('custom');
+          //getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1');
+          //console.log(jQuery('#customContent').html() ) ; empty
         }
         if (val == 4 ){
+          //get blocks of blocktype two
+          //getBlocks('https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2');
           tabManager.setCurrentTab('bootstrap');
+          //console.log(jQuery('#bootstrapContent').html() ) ;
         }
     });
 
   },
-  110);
+  100);
 
 };
 
 
+editor.Commands.add("open-html-code-editor", {
+    run: function(editor, sender, data) {
 
-        editor.Commands.add("open-html-code-editor", {
-            run: function(editor, sender, data) {
-
-                var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
-                codeViewer.set({
-                    codeName: "htmlmixed",
-                    theme: "hopscotch",
-                    readOnly: false
-                });
-
-                var modalContent = document.createElement("div");
-
-                var editorTextArea = document.createElement("textarea");
-                var editorTextArea2 = document.createElement("textarea");
-
-                $( editorTextArea ).attr('id', 'HtmlCode');
-                $( editorTextArea2 ).attr('id', 'CssStyle');
-
-                var saveButton = document.createElement("button");
-                saveButton.innerHTML = "Save";
-                saveButton.className = "gjs-btn-prim";
-                saveButton.style = "margin-top: 8px;";
-                saveButton.onclick = function() {
-                    var content = codeViewer.editor.getValue();
-                    editor.getSelected().set("content", content);
-                    editor.Modal.close();
-                };
-
-                modalContent.appendChild(editorTextArea);
-                modalContent.appendChild(editorTextArea2);
-                modalContent.appendChild(saveButton);
-
-                codeViewer.init(editorTextArea);
-                codeViewer.init(editorTextArea2);
-
-
-
-                var htmlContent = document.createElement("div");
-                htmlContent.innerHTML = editor.getSelected().getAttributes('style');
-                htmlContent = htmlContent.firstChild.innerHTML;
-
-                codeViewer.setContent(htmlContent);
-
-                editor.Modal
-                    .setTitle("Edit HTML")
-                    .setContent(modalContent)
-                    .open();
-
-                codeViewer.editor.refresh();
-            }
+        var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+        codeViewer.set({
+            codeName: "htmlmixed",
+            theme: "hopscotch",
+            readOnly: false
         });
+
+        var modalContent = document.createElement("div");
+
+        var editorTextArea = document.createElement("textarea");
+        var editorTextArea2 = document.createElement("textarea");
+
+        var editorLabel = document.createElement("label");
+        editorLabel.for = 'cat-name';
+        editorLabel.innerHTML = 'Name';
+        editorLabel.id = 'label-cat-value';
+
+        modalContent.appendChild(editorLabel);
+
+        var editorText = document.createElement("input");
+        editorText.type = 'text';
+        editorText.id = 'block-name';
+        editorText.placeholder = 'e.q. Button';
+        modalContent.appendChild(editorText); 
+
+        var editorLabel = document.createElement("label");
+        editorLabel.innerHTML = 'Category';
+        editorLabel.for = 'cat-value';
+        editorLabel.id = 'label-cat-value';
+
+        modalContent.appendChild(editorLabel);
+
+        editorText = document.createElement("input");
+        editorText.type = 'text';
+        editorText.placeholder = 'e.q. Buttons Category';
+        editorText.id = 'cat-value';
+
+        modalContent.appendChild(editorText);
+
+        var editorTextArea2 = document.createElement("textarea");
+        editorTextArea2.placeholder = 'CSS';
+        editorTextArea.id  = 'html-code'; 
+        editorTextArea2.id  = 'css-style';
+        var Css = editor.getCss();
+       
+        editorTextArea2.innerHTML = Css;
+
+        var saveButton = document.createElement("button");
+        saveButton.innerHTML = "Save";
+        saveButton.className = "gjs-btn-prim";
+        saveButton.style = "margin-top: 8px;";
+        saveButton.onclick = function() {
+            var content = codeViewer.editor.getValue();
+            editor.getSelected().set("content", content);
+            editor.Modal.close();
+        };
+
+        
+        var htmlContent = document.createElement("div");
+        
+        htmlContent.innerHTML = editor.getSelected().toHTML(); 
+        htmlContent = htmlContent.firstChild.innerHTML; 
+        //codeViewer.setContent(htmlContent); 
+        editorTextArea.innerHTML = htmlContent; 
+
+        modalContent.appendChild(editorTextArea); 
+        modalContent.appendChild(editorTextArea2);
+        modalContent.appendChild(saveButton);
+
+        codeViewer.init(editorTextArea);
+        codeViewer.init(editorTextArea2); 
+        
+        editor.Modal
+            .setTitle("New Block")
+            .setContent(modalContent)
+            .open();
+
+        codeViewer.editor.refresh();
+    }
+});
