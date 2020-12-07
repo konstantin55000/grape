@@ -467,6 +467,8 @@ editor.Commands.add("open-html-code-editor", {
 
           codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);             
           editor.getSelected().set("content", editorTextArea.value ); 
+
+          alert('Component values are saved.');
         }
 
         saveButton.onclick=updateInstance;
