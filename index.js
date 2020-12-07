@@ -440,8 +440,7 @@ editor.Commands.add("open-html-code-editor", {
         //codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
  
 
-        const htmlTextarea = document.getElementById('html-code');
-        const cssTextarea = document.getElementById('css-style');
+       
 
         var selComponent =   editor.getSelected() ;
         var cid = selComponent.cid;
@@ -451,10 +450,14 @@ editor.Commands.add("open-html-code-editor", {
           editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
           cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
           editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
-          editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );         
-          codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);   
+          editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
+
+          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+          codeViewer.setContent(contentToSet);  
+
+          //editor.getSelected().set("content", contentToSet);  
         }
-        getInstanceValues();
+        
 
         const updateInstance = () => {
           let selComponent =   editor.getSelected() ;
@@ -462,12 +465,13 @@ editor.Commands.add("open-html-code-editor", {
 
           localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
           localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);          
-          localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value  );
-          localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value); 
-
-          codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);             
-          editor.getSelected().set("content", editorTextArea.value ); 
-
+          localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
+          localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);  
+          editorTextArea = document.getElementById('html-code');
+          cssTextArea = document.getElementById('css-style');
+          
+          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+          codeViewer.setContent(contentToSet);  
           alert('Component values are saved.');
         }
 
@@ -476,16 +480,15 @@ editor.Commands.add("open-html-code-editor", {
         // editor.on('component:add', updateTextarea);
         // editor.on('component:update', updateTextarea);
         // editor.on('component:remove', updateTextarea);
-
-       
-
-
+ 
 
         editor.Modal
             .setTitle("New Block")
             .setContent(modalContent)
             .open();
 
+        getInstanceValues();
         codeViewer.editor.refresh();
+        getInstanceValues();
     }
 });
