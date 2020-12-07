@@ -647,3 +647,19 @@ button, input, optgroup, select, textarea {
  #gjs .gjs-one-bg {
   background-color: #463a3c !important;
 }
+
+#gjs-mdl-c input[type='text'] {
+  box-shadow: none;
+  outline: none;;
+  padding: 5px;
+  background-color: #463a3c;
+  color: #fff;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#html-code + .CodeMirror-wrap{
+min-height: 300px;
+margin-top: 20px;
+margin-bottom: 20px;
+}

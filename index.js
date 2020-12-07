@@ -375,7 +375,7 @@ editor.Commands.add("open-html-code-editor", {
         var modalContent = document.createElement("div");
 
         var editorTextArea = document.createElement("textarea");
-        var editorTextArea2 = document.createElement("textarea");
+        var cssTextArea = document.createElement("textarea");
 
         var editorLabel = document.createElement("label");
         editorLabel.for = 'cat-name';
@@ -404,13 +404,13 @@ editor.Commands.add("open-html-code-editor", {
 
         modalContent.appendChild(editorText);
 
-        var editorTextArea2 = document.createElement("textarea");
-        editorTextArea2.placeholder = 'CSS';
+        var cssTextArea = document.createElement("textarea");
+        cssTextArea.placeholder = 'CSS';
         editorTextArea.id  = 'html-code'; 
-        editorTextArea2.id  = 'css-style';
+        cssTextArea.id  = 'css-style';
         var Css = editor.getCss();
        
-        editorTextArea2.innerHTML = Css;
+        cssTextArea.innerHTML = Css;
 
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
@@ -425,33 +425,38 @@ editor.Commands.add("open-html-code-editor", {
         };
 
         
-        var htmlContent = document.createElement("div");
-        
+        var htmlContent = document.createElement("div");        
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
         
         editorTextArea.innerHTML = htmlContent; 
         modalContent.appendChild(editorTextArea); 
-        modalContent.appendChild(editorTextArea2);
+        modalContent.appendChild(cssTextArea);
         modalContent.appendChild(saveButton);
 
         codeViewer.init(editorTextArea);
-        codeViewer.init(editorTextArea2); 
-
+        codeViewer.init(cssTextArea); 
         //codeViewer.setContent(htmlContent + " <style>" + Css + '</style>');
  
 
         const htmlTextarea = document.getElementById('html-code');
         const cssTextarea = document.getElementById('css-style');
-
         const updateInstance = () => {
-          codeViewer.setComponents(htmlTextarea.value)
-          codeViewer.setStyle(cssTextarea.value)
+          codeViewer.setContent(editorTextArea.value);           
+          // codeViewer.setStyle(cssTextArea.value);      
+
+          localStorage.setItem('editorTextArea', editorTextArea.value);
+          localStorage.setItem('cssTextArea', cssTextArea.value);
+
+          localStorage.setItem('blockName', document.getElementById('block-name').value);
+          localStorage.setItem('catValue', document.getElementById('cat-value').value);
+
+          console.log('localStr', localStorage)
+
+          // codeViewer.setComponents(htmlTextarea.value)
         }
 
         saveButton.onclick=updateInstance;
-
-        
 
         // editor.on('component:add', updateTextarea);
         // editor.on('component:update', updateTextarea);
