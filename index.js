@@ -385,11 +385,11 @@ editor.Commands.add("open-html-code-editor", {
 
         modalContent.appendChild(editorLabel);
 
-        var editorText = document.createElement("input");
-        editorText.type = 'text';
-        editorText.id = 'block-name';
-        editorText.placeholder = 'e.q. Button';
-        modalContent.appendChild(editorText); 
+        var editorTextBlockName = document.createElement("input");
+        editorTextBlockName.type = 'text';
+        editorTextBlockName.id = 'block-name';
+        editorTextBlockName.placeholder = 'e.q. Button';
+        modalContent.appendChild(editorTextBlockName); 
 
         var editorLabel = document.createElement("label");
         editorLabel.innerHTML = 'Category';
@@ -398,12 +398,12 @@ editor.Commands.add("open-html-code-editor", {
 
         modalContent.appendChild(editorLabel);
 
-        editorText = document.createElement("input");
-        editorText.type = 'text';
-        editorText.placeholder = 'e.q. Buttons Category';
-        editorText.id = 'cat-value';
+        let editorTextCategoryName = document.createElement("input");
+        editorTextCategoryName.type = 'text';
+        editorTextCategoryName.placeholder = 'e.q. Buttons Category';
+        editorTextCategoryName.id = 'cat-value';
 
-        modalContent.appendChild(editorText);
+        modalContent.appendChild(editorTextCategoryName);
 
         var cssTextArea = document.createElement("textarea");
         cssTextArea.placeholder = 'CSS';
@@ -445,13 +445,13 @@ editor.Commands.add("open-html-code-editor", {
 
         var selComponent =   editor.getSelected() ;
         var cid = selComponent.cid;
-
+      
         const getInstanceValues = () => {
             
           editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
           cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
-          document.getElementById('block-name').value  = localStorage.getItem( 'blockName_' + cid );
-          document.getElementById('cat-value').value = localStorage.getItem( 'catValue_' + cid );         
+          editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
+          editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );         
           codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);   
         }
         getInstanceValues();
