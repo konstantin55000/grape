@@ -362,6 +362,7 @@ window.onload = function (event) {
 };
 
 
+
 editor.Commands.add("open-html-code-editor", {
     run: function(editor, sender, data) {
 
@@ -441,19 +442,31 @@ editor.Commands.add("open-html-code-editor", {
 
         const htmlTextarea = document.getElementById('html-code');
         const cssTextarea = document.getElementById('css-style');
+
+        var selComponent =   editor.getSelected() ;
+        var cid = selComponent.cid;
+
+        const getInstanceValues = () => {
+            
+          editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
+          cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
+          document.getElementById('block-name').value  = localStorage.getItem( 'blockName_' + cid );
+          document.getElementById('cat-value').value = localStorage.getItem( 'catValue_' + cid );         
+          codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);   
+        }
+        getInstanceValues();
+
         const updateInstance = () => {
-          codeViewer.setContent(editorTextArea.value);           
-          // codeViewer.setStyle(cssTextArea.value);      
+          let selComponent =   editor.getSelected() ;
+          let cid = selComponent.cid; 
 
-          localStorage.setItem('editorTextArea', editorTextArea.value);
-          localStorage.setItem('cssTextArea', cssTextArea.value);
+          localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
+          localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);          
+          localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value  );
+          localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value); 
 
-          localStorage.setItem('blockName', document.getElementById('block-name').value);
-          localStorage.setItem('catValue', document.getElementById('cat-value').value);
-
-          console.log('localStr', localStorage)
-
-          // codeViewer.setComponents(htmlTextarea.value)
+          codeViewer.setContent(editorTextArea.value + ' ' + cssTextArea.value);             
+          editor.getSelected().set("content", editorTextArea.value ); 
         }
 
         saveButton.onclick=updateInstance;
