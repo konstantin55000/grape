@@ -275,14 +275,18 @@ editor.on('component:selected', (model) => {
     const defaultToolbar = selectedComponent.get('toolbar');
     const addBlockClass = 'fa fa-plus-square-o';
     const iconFreeMode = 'fa fa-mouse-pointer';
-
-    if (defaultToolbar.length < 6){
-      selectedComponent.set({
-        toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
-            {  attributes: {class: addBlockClass }, command:  addBlock },
-        ]
-      });
-    }  
+   
+    if (selectedComponent.attributes.type  !== 'wrapper') {
+   // if (selectedComponent.cid  !== 'c55') { //if not a body
+      if (defaultToolbar.length < 6){
+        selectedComponent.set({
+          toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
+              {  attributes: {class: addBlockClass }, command:  addBlock },
+          ]
+        });
+      }
+    }
+     
   });
 
 
