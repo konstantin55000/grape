@@ -437,24 +437,31 @@ editor.Commands.add("open-html-code-editor", {
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
         saveButton.id = "save";
-        saveButton.classList.add("gjs-btn-prim");
+        saveButton.classList.add("save");
         saveButton.classList.add("call-btn-dash");
-        
-        saveButton.style = "margin-top: 8px;";
-        let wrapButton = document.createElement('div');
-        wrapButton.appendChild(saveButton); 
+      
 
-        var htmlContent = document.createElement("div");        
+        let wrapButton = document.createElement('div'); 
+        var htmlContent = document.createElement("div");      
+
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
         editorTextArea.innerHTML = htmlContent; 
 
         wrapColumnOne.appendChild(editorTextArea);
-        wrapColumnTwo.appendChild(cssTextArea); 
-        modalContent.appendChild(wrapButton);    
-        modalContent.appendChild(wrapColumnOne); 
-        modalContent.appendChild(wrapColumnTwo);
-          
+        wrapColumnTwo.appendChild(cssTextArea);  
+        wrapButton.appendChild(saveButton); 
+        modalContent.appendChild(wrapButton);
+
+
+
+        let wrapColumns = document.createElement("div");   
+        wrapColumns.className = 'wrap-columns';      
+        wrapColumns.classList.add('wrap-columns'); 
+        wrapColumns.appendChild(wrapColumnOne); 
+        wrapColumns.appendChild(wrapColumnTwo);
+        
+        modalContent.appendChild(wrapColumns);          
         codeViewer.init(editorTextArea);
         codeViewer.init(cssTextArea); 
         
