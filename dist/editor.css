@@ -658,3 +658,13 @@ button, input, optgroup, select, textarea {
   margin-right: 10px;
 }
 
+
+.tab-manager__tab-bodies .body {
+  position : relative; 
+}
+
+#add-custom-block.call-btn-dash {
+  position: absolute; 
+  bottom: 0; 
+  left: 150px;
+}
