@@ -378,6 +378,13 @@ editor.Commands.add("open-html-code-editor", {
         let attr =  editor.getSelectedToStyle().attributes;
         let Css = attr.style;
         
+        var wrapColumnOne = document.createElement('div');
+        var wrapColumnTwo = document.createElement('div') 
+        wrapColumnOne.classList.add('wrap-column');
+        wrapColumnTwo.classList.add('wrap-column');
+        wrapColumnTwo.classList.add('wrap-column-two');
+        
+
         var editorTextArea = document.createElement("textarea");
         var cssTextArea = document.createElement("textarea");
 
@@ -385,28 +392,33 @@ editor.Commands.add("open-html-code-editor", {
         editorLabel.for = 'cat-name';
         editorLabel.innerHTML = 'Name';
         editorLabel.id = 'label-cat-value';
-        
-        modalContent.appendChild(editorLabel);
+        wrapColumnOne.appendChild(editorLabel);
+     
 
         var editorTextBlockName = document.createElement("input");
         editorTextBlockName.type = 'text';
+        editorTextBlockName.class = 'input-box';
         editorTextBlockName.id = 'block-name';
         editorTextBlockName.placeholder = 'e.q. Button';
-        modalContent.appendChild(editorTextBlockName); 
+        editorTextBlockName.classList.add('input-box');
+
+        wrapColumnOne.appendChild(editorTextBlockName); 
 
         var editorLabel = document.createElement("label");
         editorLabel.innerHTML = 'Category';
         editorLabel.for = 'cat-value';
         editorLabel.id = 'label-cat-value';
 
-        modalContent.appendChild(editorLabel);
+        wrapColumnTwo.appendChild(editorLabel);
 
         let editorTextCategoryName = document.createElement("input");
         editorTextCategoryName.type = 'text';
         editorTextCategoryName.placeholder = 'e.q. Buttons Category';
-        editorTextCategoryName.id = 'cat-value';
+        editorTextCategoryName.id = 'cat-value'; 
+        editorTextCategoryName.classList.add('input-box');
+        editorTextCategoryName.classList.add('second');
 
-        modalContent.appendChild(editorTextCategoryName);
+        wrapColumnTwo.appendChild(editorTextCategoryName);
 
         var cssTextArea = document.createElement("textarea");
         cssTextArea.placeholder = 'CSS';
@@ -433,10 +445,14 @@ editor.Commands.add("open-html-code-editor", {
         htmlContent = htmlContent.firstChild.innerHTML; 
         editorTextArea.innerHTML = htmlContent; 
 
-        modalContent.appendChild(editorTextArea); 
-        modalContent.appendChild(cssTextArea);
-        modalContent.appendChild(saveButton);
+        wrapColumnOne.appendChild(editorTextArea);
+        wrapColumnTwo.appendChild(cssTextArea);
 
+       
+        modalContent.appendChild(wrapColumnOne); 
+        modalContent.appendChild(wrapColumnTwo);
+        modalContent.appendChild(saveButton);
+        
         codeViewer.init(editorTextArea);
         codeViewer.init(cssTextArea); 
         
@@ -467,17 +483,17 @@ editor.Commands.add("open-html-code-editor", {
           // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
 
           editorTextArea = document.getElementById('html-code');
+          editorTextArea.class = 'input-box text-area-box';
           cssTextArea = document.getElementById('css-style');
-
-         
+          cssTextArea.class = 'input-box text-area-box';
 
           let contentToSet = editorTextArea.value; 
           let blockName =  document.getElementById('block-name').value;
            
           blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
+            style: Css,
             label:  blockName,
             content: contentToSet,
-            style: Css,
             category: {         
               id: 'tab-custom-other',     
               label: document.getElementById('cat-value').value,
