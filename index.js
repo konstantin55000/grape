@@ -109,10 +109,10 @@ const getBlocks =   function (url, blockTabId){
   .done(function( data ) {
 
     data.forEach( (row, index)=> {
-      
+
       let blockType  = row.blockType //1
       let content = row.HTML;
-      content = content.replace(/\n/g, "<br />"); 
+      content = content.replace(/\n/g, "<br />");
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
               content: content,
@@ -282,7 +282,7 @@ editor.on('component:selected', (model) => {
             {  attributes: {class: addBlockClass }, command:  addBlock },
         ]
       });
-    }  
+    }
   });
 
 
@@ -313,13 +313,13 @@ window.onload = function (event) {
   // Open a panel
   editor.Commands.run('open-sm');
 
-  document.querySelector('#add-custom-block').addEventListener('click', () => { 
+  document.querySelector('#add-custom-block').addEventListener('click', () => {
       editor.Commands.run('open-html-code-editor', {fromTab : 1} );
   });
 
-  //Get block data to panel tabs: 
-  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
-  getBlocks(url, 'tab-custom-other');     
+  //Get block data to panel tabs:
+  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
+  getBlocks(url, 'tab-custom-other');
   url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
   getBlocks(url, 'tab-blocks');
 
@@ -337,11 +337,11 @@ window.onload = function (event) {
           tabManager.setCurrentTab('blocks');
         }
         if (val == 3){
-          tabManager.setCurrentTab('custom'); 
+          tabManager.setCurrentTab('custom');
         }
         if (val == 4 ){
-          //get blocks of blocktype two 
-          tabManager.setCurrentTab('bootstrap'); 
+          //get blocks of blocktype two
+          tabManager.setCurrentTab('bootstrap');
         }
     });
 
@@ -351,65 +351,79 @@ window.onload = function (event) {
 };
 
  //this is for editing component
- const getInstanceValues = () => {            
+ const getInstanceValues = () => {
   editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
-  cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
+  cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);
   editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
-  editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
+  editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );
 
   let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-  codeViewer.setContent(contentToSet);  
-   
+  codeViewer.setContent(contentToSet);
+
 }
 
 editor.Commands.add("open-html-code-editor", {
     run: function(editor, sender, data) {
         var selectedComponent =   (data.fromTab == 0);
         var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+        var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
         codeViewer.set({
             codeName: "htmlmixed",
             theme: "hopscotch",
             readOnly: false
         });
 
-        var modalContent = document.createElement("div"); 
-        let editorTextArea = document.createElement("textarea");  
-        editorTextArea.id  = 'html-code'; 
+        codeViewerCss.set({
+          codeName: 'css',
+          readOnly: 0,
+          theme: 'hopscotch',
+          autoBeautify: true,
+          autoCloseTags: true,
+          autoCloseBrackets: true,
+          lineWrapping: true,
+          styleActiveLine: true,
+          smartIndent: true,
+          indentWithTabs: true
+        });
+
+        var modalContent = document.createElement("div");
+        let editorTextArea = document.createElement("textarea");
+        editorTextArea.id  = 'html-code';
         let Css, cssString = '';
-        
+
      if (selectedComponent){ //if not from tab, get for select component.
-          var selComponent = editor.getSelected(); 
-          let attr = editor.getSelectedToStyle().attributes; 
-          Css = attr.style; 
-          editorTextArea.innerHTML = editor.getSelected().toHTML(); 
+          var selComponent = editor.getSelected();
+          let attr = editor.getSelectedToStyle().attributes;
+          Css = attr.style;
+          editorTextArea.innerHTML = editor.getSelected().toHTML();
      }
-     else { 
+     else {
          let customBlock =  `<div class="my-block-class">
               My new block example
-          </div>`; 
-           cssString =  `.my-block-class { 
-            color: #555;  
-            font-size: 3rem;  
-            padding: 50px; 
-            text-align: center; 
+          </div>`;
+           cssString =  `.my-block-class {
+            color: #555;
+            font-size: 3rem;
+            padding: 50px;
+            text-align: center;
           }
-          `; 
+          `;
           editorTextArea.innerHTML = customBlock;
      }
 
         var wrapColumnOne = document.createElement('div');
-        var wrapColumnTwo = document.createElement('div') 
+        var wrapColumnTwo = document.createElement('div')
         wrapColumnOne.classList.add('wrap-column');
         wrapColumnTwo.classList.add('wrap-column');
         wrapColumnTwo.classList.add('wrap-column-two');
-         
+
         var cssTextArea = document.createElement("textarea");
         var editorLabel = document.createElement("label");
         editorLabel.for = 'cat-name';
         editorLabel.innerHTML = 'Name';
         editorLabel.id = 'label-cat-value';
         wrapColumnOne.appendChild(editorLabel);
-     
+
 
         var editorTextBlockName = document.createElement("input");
         editorTextBlockName.type = 'text';
@@ -418,7 +432,7 @@ editor.Commands.add("open-html-code-editor", {
         editorTextBlockName.placeholder = 'e.q. Button';
         editorTextBlockName.classList.add('input-box');
 
-        wrapColumnOne.appendChild(editorTextBlockName); 
+        wrapColumnOne.appendChild(editorTextBlockName);
 
         var editorLabel = document.createElement("label");
         editorLabel.innerHTML = 'Category';
@@ -430,21 +444,21 @@ editor.Commands.add("open-html-code-editor", {
         let editorTextCategoryName = document.createElement("input");
         editorTextCategoryName.type = 'text';
         editorTextCategoryName.placeholder = 'e.q. Buttons Category';
-        editorTextCategoryName.id = 'cat-value'; 
+        editorTextCategoryName.id = 'cat-value';
         editorTextCategoryName.classList.add('input-box');
         editorTextCategoryName.classList.add('second');
 
         wrapColumnTwo.appendChild(editorTextCategoryName);
-        var cssTextArea = document.createElement("textarea"); 
-        cssTextArea.id  = 'css-style'; 
+        var cssTextArea = document.createElement("textarea");
+        cssTextArea.id  = 'css-style';
         if (selectedComponent){
-      
-       
-        cssString = '{ '; 
+
+
+        cssString = '{ ';
         for (const [key, value] of Object.entries(Css)) {
           cssString +=   key +': ' + value + ";";
         }
-        cssString += ' }'; 
+        cssString += ' }';
         }
         cssTextArea.innerHTML = cssString;
 
@@ -453,39 +467,39 @@ editor.Commands.add("open-html-code-editor", {
         saveButton.id = "save";
         saveButton.classList.add("save");
         saveButton.classList.add("call-btn-dash");
-      
 
-        let wrapButton = document.createElement('div');  
 
-        wrapColumnOne.appendChild(editorTextArea); 
-        wrapColumnTwo.appendChild(cssTextArea);  
-        wrapButton.appendChild(saveButton); 
+        let wrapButton = document.createElement('div');
+
+        wrapColumnOne.appendChild(editorTextArea);
+        wrapColumnTwo.appendChild(cssTextArea);
+        wrapButton.appendChild(saveButton);
         modalContent.appendChild(wrapButton);
 
-        let wrapColumns = document.createElement("div");   
-        wrapColumns.className = 'wrap-columns';      
+        let wrapColumns = document.createElement("div");
+        wrapColumns.className = 'wrap-columns';
         wrapColumns.classList.add('wrap-columns');
 
-        wrapColumns.appendChild(wrapColumnOne); 
-        wrapColumns.appendChild(wrapColumnTwo); 
-        modalContent.appendChild(wrapColumns);  
+        wrapColumns.appendChild(wrapColumnOne);
+        wrapColumns.appendChild(wrapColumnTwo);
+        modalContent.appendChild(wrapColumns);
 
         codeViewer.init(editorTextArea);
-        codeViewer.init(cssTextArea); 
-          
+        codeViewerCss.init(cssTextArea);
+
         const updateInstance = () => {
 
           if ( data.fromTab == 0){
             var selComponent = editor.getSelected() ;
-            var cid = selComponent.cid; 
+            var cid = selComponent.cid;
           } else {
             var cid = 10000;
           }
-          
+
 
           //this func. is for block editing
           // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
-          // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);          
+          // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);
           // localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
           // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
 
@@ -494,36 +508,37 @@ editor.Commands.add("open-html-code-editor", {
           cssTextArea = document.getElementById('css-style');
           cssTextArea.class = 'input-box text-area-box';
 
-          let contentToSet = editorTextArea.value; 
+          let contentToSet = editorTextArea.value;
           let blockName =  document.getElementById('block-name').value;
-           
+
           blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
             style: Css,
             label:  blockName,
             content: contentToSet,
-            category: {         
-              id: 'tab-custom-other',     
+            category: {
+              id: 'tab-custom-other',
               label: document.getElementById('cat-value').value,
             },
             attributes: {
              title:  blockName
             }
-          }); 
-          
+          });
+
           editor.Modal.close();
           alert('Component values are saved.');
 
         }
 
-        saveButton.onclick=updateInstance; 
-         
+        saveButton.onclick=updateInstance;
+
         editor.Modal
             .setTitle("New Block")
             .setContent(modalContent)
             .open();
 
-        //getInstanceValues(); this if for editing component 
+        //getInstanceValues(); this if for editing component
         codeViewer.editor.refresh();
-        
+        codeViewerCss.editor.refresh();
+
     }
 });
