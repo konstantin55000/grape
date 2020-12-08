@@ -437,22 +437,24 @@ editor.Commands.add("open-html-code-editor", {
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
         saveButton.id = "save";
-        saveButton.className = "gjs-btn-prim";
-        saveButton.style = "margin-top: 8px;";
+        saveButton.classList.add("gjs-btn-prim");
+        saveButton.classList.add("call-btn-dash");
         
+        saveButton.style = "margin-top: 8px;";
+        let wrapButton = document.createElement('div');
+        wrapButton.appendChild(saveButton); 
+
         var htmlContent = document.createElement("div");        
         htmlContent.innerHTML = editor.getSelected().toHTML(); 
         htmlContent = htmlContent.firstChild.innerHTML; 
         editorTextArea.innerHTML = htmlContent; 
 
         wrapColumnOne.appendChild(editorTextArea);
-        wrapColumnTwo.appendChild(cssTextArea);
-
-       
+        wrapColumnTwo.appendChild(cssTextArea); 
+        modalContent.appendChild(wrapButton);    
         modalContent.appendChild(wrapColumnOne); 
         modalContent.appendChild(wrapColumnTwo);
-        modalContent.appendChild(saveButton);
-        
+          
         codeViewer.init(editorTextArea);
         codeViewer.init(cssTextArea); 
         

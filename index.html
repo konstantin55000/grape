@@ -23,11 +23,112 @@
         #blocksContent .gjs-blocks-cs{
           height:100%;
         }
+
+        
+.input-box {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 0 !important;
+  margin-top: 5px;
+  color: white;
+  width: 100%;
+  font-size: 14px;
+  height: 32px;
+  line-height: normal;
+  transition: border-color 0.25s;
+}
+ 
+input.input-box.second {
+  margin-left: 30px;
+}
+
+.wrap-column {
+  width: 50% !important;
+  max-width: 50% !important;  
+}
+.wrap-colum label {
+    margin-bottom: 5px;
+}
+
+.wrap-column > * {
+  display: block !important; 
+}
+
+.wrap-column-two{
+  margin-left: 30px;
+}
+.input-label {
+  display:block;
+}
+
+.text-area-box   {
+  background: rgba(0,0,0,0.1);
+}
+
+.text-area-box:nth-child(2) {
+    margin-top: 30px;
+}
+
+#gjs-mdl-c > div {
+  display: flex; 
+}
+
+.wrap-column .CodeMirror-wrap { 
+    margin-top: 20px; 
+}
+
+  
+.wrap-column {
+  width: 50% !important;
+  max-width: 50% !important; 
+  margin-bottom: 20px; 
+}
+
+.wrap-column > * {
+  display: block !important; 
+ }
+ #html-code, #css-style {
+     opacity: 0; display: none !important;
+ }
+
+.save-btn {
+    padding: 0.5rem 1rem;
+    display: block;
+    transition: background-color 0.15s linear;
+}
+
+.call-btn-dash {
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0;
+    letter-spacing: 0.1rem;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    background-color: #dc659b;
+    overflow: hidden;
+    line-height: normal;
+    padding:  5px 10px !important;
+}
+
 /* CodeMirror */
-.CodeMirror { height: auto; overflow: auto; max-height: 250px; }
-.CodeMirror-scroll { height: auto; min-height: 24px; }
-    </style>
-    <link rel="stylesheet" href="./style.css">
+.CodeMirror {
+    height: auto;  
+}
+
+.CodeMirror-scroll {
+     height: auto; 
+     min-height: 300px;
+     overflow-x:hidden;
+     overflow-y: auto;
+}
+
+</style>
+
+<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
