@@ -267,9 +267,8 @@ editor.on('component:selected', (model) => {
     const freeModeCommand = () => {
       model.set('dmode', 'absolute');
     }
-
     const addBlock = () => {
-      editor.Commands.run('open-html-code-editor');
+      editor.Commands.run('open-html-code-editor', {fromTab : 0});
     }
 
     const selectedComponent = editor.getSelected();
@@ -283,9 +282,7 @@ editor.on('component:selected', (model) => {
             {  attributes: {class: addBlockClass }, command:  addBlock },
         ]
       });
-    }
-
-
+    }  
   });
 
 
@@ -316,13 +313,17 @@ window.onload = function (event) {
   // Open a panel
   editor.Commands.run('open-sm');
 
-  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-  console.log('current url', url);
+  document.querySelector('#add-custom-block').addEventListener('click', () => { 
+      editor.Commands.run('open-html-code-editor', {fromTab : 1} );
+  });
 
- 
+  //Get block data to panel tabs: 
+  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1'; 
   getBlocks(url, 'tab-custom-other');     
   url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
   getBlocks(url, 'tab-blocks');
+
+  tabManager.setCurrentTab('components'); //1s panel by defaults
 
   setTimeout( () => {
 
@@ -336,15 +337,11 @@ window.onload = function (event) {
           tabManager.setCurrentTab('blocks');
         }
         if (val == 3){
-          tabManager.setCurrentTab('custom');
-         
-          
+          tabManager.setCurrentTab('custom'); 
         }
         if (val == 4 ){
-          //get blocks of blocktype two
-           
-          tabManager.setCurrentTab('bootstrap');
-          //console.log(jQuery('#bootstrapContent').html() ) ;
+          //get blocks of blocktype two 
+          tabManager.setCurrentTab('bootstrap'); 
         }
     });
 
@@ -367,7 +364,7 @@ window.onload = function (event) {
 
 editor.Commands.add("open-html-code-editor", {
     run: function(editor, sender, data) {
-
+        var selectedComponent =   (data.fromTab == 0);
         var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
         codeViewer.set({
             codeName: "htmlmixed",
@@ -375,21 +372,38 @@ editor.Commands.add("open-html-code-editor", {
             readOnly: false
         });
 
-        var modalContent = document.createElement("div");
-        var selComponent = editor.getSelected();
-        let attr =  editor.getSelectedToStyle().attributes;
-        let Css = attr.style;
+        var modalContent = document.createElement("div"); 
+        let editorTextArea = document.createElement("textarea");  
+        editorTextArea.id  = 'html-code'; 
+        let Css, cssString = '';
         
+     if (selectedComponent){ //if not from tab, get for select component.
+          var selComponent = editor.getSelected(); 
+          let attr = editor.getSelectedToStyle().attributes; 
+          Css = attr.style; 
+          editorTextArea.innerHTML = editor.getSelected().toHTML(); 
+     }
+     else { 
+         let customBlock =  `<div class="my-block-class">
+              My new block example
+          </div>`; 
+           cssString =  `.my-block-class { 
+            color: #555;  
+            font-size: 3rem;  
+            padding: 50px; 
+            text-align: center; 
+          }
+          `; 
+          editorTextArea.innerHTML = customBlock;
+     }
+
         var wrapColumnOne = document.createElement('div');
         var wrapColumnTwo = document.createElement('div') 
         wrapColumnOne.classList.add('wrap-column');
         wrapColumnTwo.classList.add('wrap-column');
         wrapColumnTwo.classList.add('wrap-column-two');
-        
-
-       
+         
         var cssTextArea = document.createElement("textarea");
-
         var editorLabel = document.createElement("label");
         editorLabel.for = 'cat-name';
         editorLabel.innerHTML = 'Name';
@@ -421,20 +435,17 @@ editor.Commands.add("open-html-code-editor", {
         editorTextCategoryName.classList.add('second');
 
         wrapColumnTwo.appendChild(editorTextCategoryName);
-
-        var cssTextArea = document.createElement("textarea");
-        cssTextArea.placeholder = 'CSS';
+        var cssTextArea = document.createElement("textarea"); 
+        cssTextArea.id  = 'css-style'; 
+        if (selectedComponent){
+      
        
-
-        cssTextArea.id  = 'css-style';
-   
-        console.log('selected css: ', Css); 
         cssString = '{ '; 
         for (const [key, value] of Object.entries(Css)) {
           cssString +=   key +': ' + value + ";";
         }
         cssString += ' }'; 
-      
+        }
         cssTextArea.innerHTML = cssString;
 
         var saveButton = document.createElement("button");
@@ -444,15 +455,9 @@ editor.Commands.add("open-html-code-editor", {
         saveButton.classList.add("call-btn-dash");
       
 
-        let wrapButton = document.createElement('div'); 
-            
-        editorTextArea = cssTextArea.cloneNode();
-        editorTextArea.innerHTML = editor.getSelected().toHTML(); 
-        editorTextArea.id  = 'html-code'; 
+        let wrapButton = document.createElement('div');  
 
-        wrapColumnOne.appendChild(editorTextArea);
-
-       
+        wrapColumnOne.appendChild(editorTextArea); 
         wrapColumnTwo.appendChild(cssTextArea);  
         wrapButton.appendChild(saveButton); 
         modalContent.appendChild(wrapButton);
@@ -462,17 +467,21 @@ editor.Commands.add("open-html-code-editor", {
         wrapColumns.classList.add('wrap-columns');
 
         wrapColumns.appendChild(wrapColumnOne); 
-        wrapColumns.appendChild(wrapColumnTwo);
-        
-        modalContent.appendChild(wrapColumns);          
+        wrapColumns.appendChild(wrapColumnTwo); 
+        modalContent.appendChild(wrapColumns);  
+
         codeViewer.init(editorTextArea);
         codeViewer.init(cssTextArea); 
-        
-        var cid = selComponent.cid;
-       
+          
         const updateInstance = () => {
-          let selComponent = editor.getSelected() ;
-          let cid = selComponent.cid; 
+
+          if ( data.fromTab == 0){
+            var selComponent = editor.getSelected() ;
+            var cid = selComponent.cid; 
+          } else {
+            var cid = 10000;
+          }
+          
 
           //this func. is for block editing
           // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
