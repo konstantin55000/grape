@@ -361,7 +361,17 @@ window.onload = function (event) {
 
 };
 
+ //this is for editing component
+ const getInstanceValues = () => {            
+  editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
+  cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
+  editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
+  editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
 
+  let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
+  codeViewer.setContent(contentToSet);  
+   
+}
 
 editor.Commands.add("open-html-code-editor", {
     run: function(editor, sender, data) {
@@ -442,11 +452,14 @@ editor.Commands.add("open-html-code-editor", {
       
 
         let wrapButton = document.createElement('div'); 
-        var htmlContent = document.createElement("div");      
+        
 
-        htmlContent.innerHTML = editor.getSelected().toHTML(); 
-        htmlContent = htmlContent.firstChild.innerHTML; 
-        editorTextArea.innerHTML = htmlContent; 
+         var htmlContent = editor.getSelected().toHTML(); 
+        editorTextArea.innerHTML =  htmlContent; 
+         
+        //  htmlContent.innerHTML =htmlContent.firstChild.innerHTML; 
+
+     
 
         wrapColumnOne.appendChild(editorTextArea);
         wrapColumnTwo.appendChild(cssTextArea);  
@@ -467,18 +480,7 @@ editor.Commands.add("open-html-code-editor", {
         
         var cid = selComponent.cid;
       
-        //this is for editing component
-        const getInstanceValues = () => {            
-          editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
-          cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);          
-          editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
-          editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );     
-
-          let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-          codeViewer.setContent(contentToSet);  
-
-          //editor.getSelected().set("content", contentToSet);  
-        }
+       
         
 
         const updateInstance = () => {
