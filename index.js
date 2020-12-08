@@ -395,7 +395,7 @@ editor.Commands.add("open-html-code-editor", {
         wrapColumnTwo.classList.add('wrap-column-two');
         
 
-        var editorTextArea = document.createElement("textarea");
+       
         var cssTextArea = document.createElement("textarea");
 
         var editorLabel = document.createElement("label");
@@ -432,17 +432,19 @@ editor.Commands.add("open-html-code-editor", {
 
         var cssTextArea = document.createElement("textarea");
         cssTextArea.placeholder = 'CSS';
-        editorTextArea.id  = 'html-code'; 
+       
+
         cssTextArea.id  = 'css-style';
    
         console.log('selected css: ', Css); 
-         cssString = '{ '; 
+        cssString = '{ '; 
         for (const [key, value] of Object.entries(Css)) {
           cssString +=   key +': ' + value + ";";
         }
         cssString += ' }'; 
-        codeViewer.setContent(htmlContent + " <style>" + Css + '</style>'); 
-        cssTextArea.innerHTML = cssString; 
+        //codeViewer.setContent(htmlContent + " <style>" + Css + '</style>'); 
+
+        cssTextArea.innerHTML = cssString;
 
         var saveButton = document.createElement("button");
         saveButton.innerHTML = "Save";
@@ -452,25 +454,25 @@ editor.Commands.add("open-html-code-editor", {
       
 
         let wrapButton = document.createElement('div'); 
-        
-
-         var htmlContent = editor.getSelected().toHTML(); 
-        editorTextArea.innerHTML =  htmlContent; 
-         
-        //  htmlContent.innerHTML =htmlContent.firstChild.innerHTML; 
-
+       
+       
+        //  htmlContent.innerHTML = htmlContent.firstChild.innerHTML;  
      
+        editorTextArea = cssTextArea.cloneNode();
+        editorTextArea.innerHTML = editor.getSelected().toHTML(); 
+        editorTextArea.id  = 'html-code'; 
 
         wrapColumnOne.appendChild(editorTextArea);
+
+       
         wrapColumnTwo.appendChild(cssTextArea);  
         wrapButton.appendChild(saveButton); 
         modalContent.appendChild(wrapButton);
 
-
-
         let wrapColumns = document.createElement("div");   
         wrapColumns.className = 'wrap-columns';      
-        wrapColumns.classList.add('wrap-columns'); 
+        wrapColumns.classList.add('wrap-columns');
+
         wrapColumns.appendChild(wrapColumnOne); 
         wrapColumns.appendChild(wrapColumnTwo);
         
@@ -479,10 +481,7 @@ editor.Commands.add("open-html-code-editor", {
         codeViewer.init(cssTextArea); 
         
         var cid = selComponent.cid;
-      
        
-        
-
         const updateInstance = () => {
           let selComponent = editor.getSelected() ;
           let cid = selComponent.cid; 
