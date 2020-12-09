@@ -272,20 +272,35 @@ editor.on('stop:preview:before', () => {
   rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
 });
 
-
+var drModeIsOn = false;
 editor.on('component:selected', (model) => {
-
+ 
     // whenever a component is selected in the editor
     let self = this;
+
+    if (drModeIsOn){  
+      document.querySelectorAll('.gjs-toolbar-item.fa-mouse-pointer').forEach(element => {
+        jQuery(element).addClass('active'); 
+      }); 
+      console.log('drModeIsOn', drModeIsOn, $( ".gjs-toolbar-item.fa-mouse-pointer" )[0])
+    }
+    
     const freeModeCommand = () => {
       if(editor.getSelected().get("drag-mode") == 1){
-        model.setDragMode('');
-        editor.getSelected().set("drag-mode",0);
-        $( " .active-toolbar" ).removeClass( "active-toolbar" );
-      }else{
+        model.setDragMode(''); 
+        editor.getSelected().set("drag-mode",0); 
+        $( ".gjs-toolbar-item.fa-mouse-pointer" ).removeClass( "active" ); 
+        document.querySelectorAll('.gjs-toolbar-item.fa-mouse-pointer').forEach(element => {
+          jQuery(element).removeClass('active'); 
+        });
+        drModeIsOn  = false;
+        console.log('drModeIsOn', drModeIsOn)
+      } else {
         model.setDragMode('translate');
-        editor.getSelected().set("drag-mode",1);
-        $( ".fa-mouse-pointer" ).addClass( "active-toolbar" );
+        editor.getSelected().set("drag-mode", 1); 
+        drModeIsOn = true; 
+        $(".gjs-toolbar-item.fa-mouse-pointer").addClass("active");
+        console.log('drModeIsOn', drModeIsOn) 
       }
     }
 
