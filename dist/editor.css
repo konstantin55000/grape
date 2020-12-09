@@ -1,4 +1,7 @@
 
+.active-toolbar{
+  color:#00FF00;
+}
 
 .input-box {
  border:1px solid rgba(0,0,0,.2);
@@ -240,10 +243,10 @@
     flex: 1;
   }
 
- 
+
 
 .flexbox {
-    display: flex; 
+    display: flex;
     flex-wrap: wrap;
     margin: 0;
     margin-bottom: 0px;
@@ -251,7 +254,7 @@
     padding: 0;
 }
 
-.first_tab > div{ 
+.first_tab > div{
     justify-content: center;
     align-items: center;
 }
@@ -271,9 +274,9 @@
     position: absolute;
     z-index: 44444;
 }
- 
+
 .column-half {
-    width: 49% !important; 
+    width: 49% !important;
 }
 
 .column-half  textarea, .modal  .gjs-field{
@@ -292,12 +295,12 @@
 
 .tab {
     display: none;
-    opacity: 0; 
+    opacity: 0;
 }
 
 .tab1.active {
     opacity: 1;
-} 
+}
 
 .modal-popup {
 
@@ -589,7 +592,7 @@ button, input, optgroup, select, textarea {
 
 /*Button Save*/
 
-#modal-popup   div, #modal-popup input, #modal-popup  label , 
+#modal-popup   div, #modal-popup input, #modal-popup  label ,
 .tabs__tab tabs__tab-main{
   font-family: Roboto,system-ui,Helvetica,Arial,sans-serif !important;
   font-size: 16px;
@@ -660,13 +663,13 @@ button, input, optgroup, select, textarea {
 
 
 .tab-manager__tab-bodies .body {
-  position : relative; 
+  position : relative;
 }
 
 #add-custom-block.call-btn-dash {
-  
-  position: absolute; 
-  bottom: 0;  
+
+  position: absolute;
+  bottom: 0;
   padding: 10px 5px !important;
   width: 100%;
   z-index: 999;
