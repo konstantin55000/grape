@@ -403,7 +403,7 @@ editor.on('stop:preview:before', () => {
 
 var drModeIsOn = false;
 editor.on('component:selected', (model) => {
-  console.log('sel comp css',   editor.getSelectedToStyle().attributes);
+   
     // whenever a component is selected in the editor
     let self = this; 
     setTimeout(()=>{
@@ -415,9 +415,7 @@ editor.on('component:selected', (model) => {
       }
     }, 150);
      
-
-  
-  console.log(document.querySelector('.fa.fa-mouse-pointer'), 'pointer');
+ 
     const freeModeCommand = () => {
       if(editor.getSelected().get("drag-mode") == 1){
         model.setDragMode(''); 
@@ -480,8 +478,6 @@ function getUrlVars() {
   let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
   codeViewer.setContent(contentToSet); 
 }
-
-
  
 // Add new block
 editor.Commands.add("open-html-code-editor", {
@@ -515,7 +511,7 @@ editor.Commands.add("open-html-code-editor", {
         <button class="tabs_link" onclick="openCity(event, \'tab-2\')">
           Extra
         </button>
-        <button class="tabs_save onclick="updateInstance">
+        <button class="tabs_save" onclick="updateInstance()">
           Save
         </button>
       </div>
@@ -527,13 +523,13 @@ editor.Commands.add("open-html-code-editor", {
               <label for="input-name">
                 Name
               </label>
-              <input type="text" name="name" placeholder="eg. Button">
+              <input type="text" name="name" id="block-name" placeholder="eg. Button">
             </div>
             <div class="form-group">
               <label for="input-html">
                 HTML
               </label>
-              <textarea name="html"></textarea>
+              <textarea name="html" id="html-code"></textarea>
             </div>
           </div>
           <div class="tabs_column">
@@ -541,13 +537,13 @@ editor.Commands.add("open-html-code-editor", {
               <label for="input-category">
                 Category
               </label>
-              <input type="text" name="category" placeholder="eg. Buttons">
+              <input type="text" name="category"  id="cat-value" placeholder="eg. Buttons">
             </div>
             <div class="form-group">
               <label for="input-html">
                 CSS
               </label>
-              <textarea name="css"></textarea>
+              <textarea name="css" id="css-style"></textarea>
             </div>
           </div>
         </div>
@@ -632,6 +628,7 @@ editor.Commands.add("open-html-code-editor", {
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
 
+   
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
       const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
@@ -647,19 +644,14 @@ editor.Commands.add("open-html-code-editor", {
       editorIframe.srcdoc = source
     }
 
-    window.updateInstance = () => {
+  const updateInstance = () => {
+      
       if (data.fromTab == 0) {
         var selComponent = editor.getSelected();
         var cid = selComponent.cid;
       } else {
         var cid = 10000;
       }
-
-      //this func. is for block editing
-      // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
-      // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);
-      // localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
-      // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
 
       editorTextArea = document.getElementById("html-code");
       editorTextArea.class = "input-box text-area-box";
@@ -668,6 +660,7 @@ editor.Commands.add("open-html-code-editor", {
 
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
+      console.log('cont to set; style: ', contentToSet, Css);
 
       blockManager.creatingNewBlock("custom-block-" + (cid + 1), {
         style: Css,
@@ -685,6 +678,7 @@ editor.Commands.add("open-html-code-editor", {
       editor.Modal.close();
       alert("Component values are saved.");
     };
+    window.updateInstance = updateInstance;
 
     window.openCity = (evt, cityName) => {
       var i, tabcontent, tablinks;
