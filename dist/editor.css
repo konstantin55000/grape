@@ -117,7 +117,7 @@
     white-space: nowrap;
 }
 
-.active-icon {
+.fa-mouse-pointer.gjs-toolbar-item.active {
     color: greenyellow !important;
 }
 

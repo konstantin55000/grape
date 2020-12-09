@@ -279,6 +279,7 @@ editor.on('component:selected', (model) => {
     let self = this;
     const freeModeCommand = () => {
       model.set('dmode', 'absolute');
+      document.querySelector('.fa-mouse-pointer.gjs-toolbar-item').classList.toggle('active');
     }
     const addBlock = () => {
       editor.Commands.run('open-html-code-editor', {fromTab : 0});
