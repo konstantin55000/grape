@@ -184,8 +184,8 @@ blockManager.creatingNewBlock('h1-block', {
   label: 'Yes, label',
   content: '<h1>Put your title here</h1>',
   category: {
-    id: 'tab-bootstrap-other',
-    label: 'BLOCKS other.',
+    id: 'tab-blocks',
+    label: 'Built in Blocks.'
   },
   attributes: {
     title: 'Insert h1 block'
@@ -195,32 +195,42 @@ blockManager.creatingNewBlock('h1-block', {
 blockManager.creatingNewBlock('h2-block', {
   label: 'Heading',
   content: '<h2>Test</h2>',
-  category: 'bootstrap',
-
+  category: {
+    id: 'tab-blocks',
+    label: 'Built in Blocks.'
+  },
   attributes: {
     title: 'Insert h2 block'
   }
-});
+}); 
+blockManager.creatingNewBlock('h2-block', {
+  label: 'Another built in block',
+  content: '<h1>Title</h1>',
+  category: 'tab-blocks',
 
-// Testing creating new block without options
-blockManager.creatingNewBlock('h3-bootstrap', { label: 'Heading' }, 'bootstrap');
-
-editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
- command: {
-  run: function(editor) {
-    editor.setDragMode('absolute');
-
-  },
-  stop: function(editor) {
-    editor.setDragMode('block');
+  attributes: {
+    title: 'Insert h1 block'
   }
-}
-} ] );
+}); 
+// Testing creating new block without options
+blockManager.creatingNewBlock('h3-bootstrap', { label: 'Bootstrap block' , content: '<p class="col-md-6">Bootstrap block</p>',}, 'bootstrap');
+blockManager.creatingNewBlock('h1-bootstrap', { label: 'Сustom In Bootstrap', content: '<div class="col-md-10"><h1 class="">Title</h1></div>', }, 'bootstrap');
+
+// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
+//  command: {
+//   run: function(editor) {
+//     editor.setDragMode('absolute');
+
+//   },
+//   stop: function(editor) {
+//     editor.setDragMode('block');
+//   }
+// }
+// } ] );
 
 editor.Panels.addButton('devices-c', 
 [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
- command: function(editor1, sender) {
-    // tabManager.setCurrentTab('blocks');
+ command: function(editor1, sender) {    
    jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
