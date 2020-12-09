@@ -125,7 +125,7 @@ sortMediaObject(items = {}) {
   );
 }
 
-}; 
+};
 
 // Grapes-editor object
 const editor = grapesjs.init({
@@ -403,37 +403,21 @@ editor.on('stop:preview:before', () => {
 
 var drModeIsOn = false;
 editor.on('component:selected', (model) => {
-   
+
     // whenever a component is selected in the editor
-    let self = this; 
-    setTimeout(()=>{
-      if (drModeIsOn){  
-        document.querySelector('.fa.fa-mouse-pointer').style='color: greenyellow';
-        document.querySelector('.fa.fa-mouse-pointer').classList.add('active'); 
-        console.log(document.querySelector('.fa.fa-mouse-pointer') );
-        //alert( JSON.stringify( $('.fa.fa-mouse-pointer')[0] )  );
-      }
-    }, 150);
-     
- 
+    let self = this;
+
     const freeModeCommand = () => {
       if(editor.getSelected().get("drag-mode") == 1){
-        model.setDragMode(''); 
-        editor.getSelected().set("drag-mode",0); 
-        $( ".gjs-toolbar-item.fa-mouse-pointer" ).removeClass( "active" ); 
-        document.querySelectorAll('.gjs-toolbar-item.fa-mouse-pointer').forEach(element => {
-          console.log('each element', element);  
-         document.querySelector('.fa.fa-mouse-pointer').style='color: #fff';
-         document.querySelector('.fa.fa-mouse-pointer').classList.remove('active');
-        });
+        model.setDragMode('');
+        editor.getSelected().set("drag-mode",0);
+        $( ".gjs-toolbar-item.fa-mouse-pointer" ).removeClass( "active" );
         drModeIsOn  = false;
         console.log('drModeIsOn', drModeIsOn);
       } else {
         model.setDragMode('translate');
-        editor.getSelected().set("drag-mode", 1); 
-        drModeIsOn = true; 
-        document.querySelector('.fa.fa-mouse-pointer').style='color: greenyellow';
-        document.querySelector('.fa.fa-mouse-pointer').classList.add('active'); 
+        editor.getSelected().set("drag-mode", 1);
+        drModeIsOn = true;
       }
       console.log(document.querySelector('.fa.fa-mouse-pointer'), 'pointer');
     }
@@ -446,7 +430,6 @@ editor.on('component:selected', (model) => {
     const defaultToolbar = selectedComponent.get('toolbar');
     const addBlockClass = 'fa fa-plus-square-o';
     const iconFreeMode = 'fa fa-mouse-pointer';
-    const iconDisable = 'fa fa-close';
 
     if(model.get("type") != 'wrapper'){
       if (defaultToolbar.length < 6){
@@ -474,22 +457,31 @@ function getUrlVars() {
   editorTextArea.value = localStorage.getItem('editorTextArea_' + cid);
   cssTextArea.value = localStorage.getItem('cssTextArea_' + cid);
   editorTextBlockName.value  = localStorage.getItem( 'blockName_' + cid );
-  editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid ); 
+  editorTextCategoryName.value = localStorage.getItem( 'catValue_' + cid );
   let contentToSet = editorTextArea.value + ' ' + cssTextArea.value;
-  codeViewer.setContent(contentToSet); 
+  codeViewer.setContent(contentToSet);
 }
- 
+
 // Add new block
 editor.Commands.add("open-html-code-editor", {
   run: function (editor, sender, data) {
     var selectedComponent = data.fromTab == 0;
     var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
     var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
+
     codeViewer.set({
-      codeName: "htmlmixed",
-      theme: "hopscotch",
-      readOnly: false,
+      codeName: 'htmlmixed',
+      readOnly: 0,
+      theme: 'hopscotch',
+      autoBeautify: true,
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      lineWrapping: true,
+      styleActiveLine: true,
+      smartIndent: true,
+      indentWithTabs: true
     });
+
     codeViewerCss.set({
       codeName: "css",
       readOnly: 0,
@@ -622,13 +614,15 @@ editor.Commands.add("open-html-code-editor", {
     }
 
     var cssTextArea = document.querySelector('[name="css"]');
-   
+
 
     cssTextArea.innerHTML = cssString;
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
 
-   
+    codeViewer.setContent(htmlString);
+    codeViewerCss.setContent(cssString);
+
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
       const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
@@ -645,7 +639,7 @@ editor.Commands.add("open-html-code-editor", {
     }
 
   const updateInstance = () => {
-      
+
       if (data.fromTab == 0) {
         var selComponent = editor.getSelected();
         var cid = selComponent.cid;
