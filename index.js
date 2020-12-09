@@ -41,7 +41,7 @@ const blockManager = {
   },
   // Render panel with blocks to DOM element by query selector
   render: function (blocks) {
-    const el = document.querySelector(this.config.queryContent);      
+    const el = document.querySelector(this.config.queryContent);
     if (!el) return;
     el.innerHTML = '';
     el.appendChild(blocks === undefined ? this.searchBlocks('') : blocks);
@@ -201,7 +201,7 @@ const tabManager = {
 //   attributes: {
 //     title: 'Insert h2 block'
 //   }
-// }); 
+// });
 
 blockManager.creatingNewBlock('h2-block', {
   label: 'Another built in block',
@@ -211,7 +211,7 @@ blockManager.creatingNewBlock('h2-block', {
   attributes: {
     title: 'Insert h1 block'
   }
-}); 
+});
 
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-bootstrap', { label: 'Bootstrap block' , content: '<p class="col-md-6">Bootstrap block</p>',}, 'bootstrap');
@@ -229,9 +229,9 @@ blockManager.creatingNewBlock('h1-bootstrap', { label: 'Сustom In Bootstrap', c
 // }
 // } ] );
 
-editor.Panels.addButton('devices-c', 
+editor.Panels.addButton('devices-c',
 [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
- command: function(editor1, sender) {    
+ command: function(editor1, sender) {
    jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
@@ -278,9 +278,17 @@ editor.on('component:selected', (model) => {
     // whenever a component is selected in the editor
     let self = this;
     const freeModeCommand = () => {
-      model.set('dmode', 'absolute');
-      document.querySelector('.fa-mouse-pointer.gjs-toolbar-item').classList.toggle('active');
+      if(editor.getSelected().get("drag-mode") == 1){
+        model.setDragMode('');
+        editor.getSelected().set("drag-mode",0);
+        $( " .active-toolbar" ).removeClass( "active-toolbar" );
+      }else{
+        model.setDragMode('translate');
+        editor.getSelected().set("drag-mode",1);
+        $( ".fa-mouse-pointer" ).addClass( "active-toolbar" );
+      }
     }
+
     const addBlock = () => {
       editor.Commands.run('open-html-code-editor', {fromTab : 0});
     }
@@ -289,18 +297,20 @@ editor.on('component:selected', (model) => {
     const defaultToolbar = selectedComponent.get('toolbar');
     const addBlockClass = 'fa fa-plus-square-o';
     const iconFreeMode = 'fa fa-mouse-pointer';
- 
-    if (selectedComponent.attributes.type  !== 'wrapper') {
-   // if (selectedComponent.cid  !== 'c55') { //if not a body
+    const iconDisable = 'fa fa-close';
+
+    if(model.get("type") != 'wrapper'){
       if (defaultToolbar.length < 6){
         selectedComponent.set({
-          toolbar: [ ...defaultToolbar, {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
-              {  attributes: {class: addBlockClass }, command:  addBlock },
+          toolbar: [ ...defaultToolbar,
+            {  attributes: {class: iconFreeMode  }, command:  freeModeCommand  },
+            {  attributes: {class: addBlockClass }, command:  addBlock },
           ]
         });
       }
     }
- });
+
+  });
 
 function getUrlVars() {
   let vars = {};
@@ -509,30 +519,30 @@ editor.Commands.add("open-html-code-editor", {
 
 
 
- 
+
 
 // Init default page by editor content
 editor.on('load', function (event) {
-   
+
     // Rendering blocks
     blockManager.render();
     document.querySelector('#select-tab').selectedIndex = 0
     // Initializing of search handler
     blockManager.initSearchers();
-  
+
     // Deleting old blocks button
     editor.Panels.removeButton('views', 'open-blocks');
     //
     editor.Panels.getButton('views', 'open-sm').set('active', true);
     // Open a panel
     editor.Commands.run('open-sm');
-  
+
     document.querySelector('#add-custom-block').addEventListener('click', () => {
         editor.Commands.run('open-html-code-editor', {fromTab : 1} );
     });
-  
+
     //Get block data to panel tabs:
-  
+
     setTimeout( () => {
       var firstTimeBlocks = true;
       var firstTimeCustomBlocks = true;
@@ -542,15 +552,15 @@ editor.on('load', function (event) {
           if (val == 1){
             tabManager.setCurrentTab('components');
           }
-          if (val == 2){ 
-            if(firstTimeBlocks) { 
+          if (val == 2){
+            if(firstTimeBlocks) {
               let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
               getBlocks(url, 'tab-blocks');
               firstTimeBlocks = false;
             }
-            tabManager.setCurrentTab('blocks'); 
+            tabManager.setCurrentTab('blocks');
           }
-          
+
             if (val == 3){
               tabManager.setCurrentTab('custom');
               if( firstTimeCustomBlocks) {
@@ -564,8 +574,8 @@ editor.on('load', function (event) {
             tabManager.setCurrentTab('bootstrap');
           }
       });
-  
+
     },
     100);
-  
+
   });
