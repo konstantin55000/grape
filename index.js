@@ -180,38 +180,40 @@ const tabManager = {
 };
 
 // Testing creating new block without category
-blockManager.creatingNewBlock('h1-block', {
-  label: 'Yes, label',
-  content: '<h1>Put your title here</h1>',
-  category: {
-    id: 'tab-blocks',
-    label: 'Built in Blocks.'
-  },
-  attributes: {
-    title: 'Insert h1 block'
-  }
-});
+// blockManager.creatingNewBlock('h1-block', {
+//   label: 'Yes, label',
+//   content: '<h1>Put your title here</h1>',
+//   category: {
+//     id: 'tab-blocks',
+//     label: 'Built in Blocks.'
+//   },
+//   attributes: {
+//     title: 'Insert h1 block'
+//   }
+// });
 // Testing creating new block with category
-blockManager.creatingNewBlock('h2-block', {
-  label: 'Heading',
-  content: '<h2>Test</h2>',
-  category: {
-    id: 'tab-blocks',
-    label: 'Built in Blocks.'
-  },
-  attributes: {
-    title: 'Insert h2 block'
-  }
-}); 
+// blockManager.creatingNewBlock('h2-block', {
+//   label: 'Heading',
+//   content: '<h2>Test</h2>',
+//   category: {
+//     id: 'tab-blocks',
+//     label: 'Built in Blocks.'
+//   },
+//   attributes: {
+//     title: 'Insert h2 block'
+//   }
+// }); 
+
 blockManager.creatingNewBlock('h2-block', {
   label: 'Another built in block',
   content: '<h1>Title</h1>',
-  category: 'tab-blocks',
+  category: 'tab-bootstrap',
 
   attributes: {
     title: 'Insert h1 block'
   }
 }); 
+
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-bootstrap', { label: 'Bootstrap block' , content: '<p class="col-md-6">Bootstrap block</p>',}, 'bootstrap');
 blockManager.creatingNewBlock('h1-bootstrap', { label: 'Сustom In Bootstrap', content: '<div class="col-md-10"><h1 class="">Title</h1></div>', }, 'bootstrap');
@@ -530,9 +532,9 @@ editor.on('load', function (event) {
   
     //Get block data to panel tabs:
     let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-    getBlocks(url, 'tab-custom-other');
-    url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
     getBlocks(url, 'tab-blocks');
+    url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+    getBlocks(url, 'tab-custom');
   
     tabManager.setCurrentTab('components'); //1s panel by defaults
   
