@@ -41,12 +41,10 @@ const blockManager = {
   },
   // Render panel with blocks to DOM element by query selector
   render: function (blocks) {
-    const el = document.querySelector(this.config.queryContent); 
-    console.log(this.config.queryContent);
+    const el = document.querySelector(this.config.queryContent);      
     if (!el) return;
     el.innerHTML = '';
     el.appendChild(blocks === undefined ? this.searchBlocks('') : blocks);
-     
   },
   // Searching query in blocks names and category names
   searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
@@ -149,6 +147,7 @@ const tabManager = {
       document.querySelectorAll('.js__active-tab').forEach(e => e.classList.remove('js__active-tab'));
       document.querySelectorAll(`[data-tab-key=${key}]`).forEach(e => e.classList.add('js__active-tab'));
       this.currentKey = key;
+      console.log( this.currentKey , this.bManager.config.queryContent );;
       if (key === 'components') {
         this.bManager.config.prefix = ''
       } else {
@@ -509,13 +508,14 @@ editor.Commands.add("open-html-code-editor", {
 
 
 
-
+ 
 
 // Init default page by editor content
 editor.on('load', function (event) {
    
     // Rendering blocks
     blockManager.render();
+    document.querySelector('#select-tab').selectedIndex = 0
     // Initializing of search handler
     blockManager.initSearchers();
   
@@ -531,26 +531,32 @@ editor.on('load', function (event) {
     });
   
     //Get block data to panel tabs:
-    let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-    getBlocks(url, 'tab-blocks');
-    url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
-    getBlocks(url, 'tab-custom');
-  
-    tabManager.setCurrentTab('components'); //1s panel by defaults
   
     setTimeout( () => {
-  
+      var firstTimeBlocks = true;
+      var firstTimeCustomBlocks = true;
       document.querySelector('#select-tab')
         .addEventListener("change", () => {
           let val = document.getElementById("select-tab").value;
           if (val == 1){
             tabManager.setCurrentTab('components');
           }
-          if (val == 2){
-            tabManager.setCurrentTab('blocks');
+          if (val == 2){ 
+            if(firstTimeBlocks) { 
+              let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
+              getBlocks(url, 'tab-blocks');
+              firstTimeBlocks = false;
+            }
+            tabManager.setCurrentTab('blocks'); 
           }
-          if (val == 3){
-            tabManager.setCurrentTab('custom');
+          
+            if (val == 3){
+              tabManager.setCurrentTab('custom');
+              if( firstTimeCustomBlocks) {
+              let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+              getBlocks(url, 'tab-custom');
+              firstTimeCustomBlocks = false;
+            }
           }
           if (val == 4 ){
             //get blocks of blocktype two
