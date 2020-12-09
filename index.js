@@ -336,185 +336,237 @@ function getUrlVars() {
 
 }
 
+// Add new block
 editor.Commands.add("open-html-code-editor", {
-    run: function(editor, sender, data) {
-        var selectedComponent =   (data.fromTab == 0);
-        var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
-        var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
-        codeViewer.set({
-            codeName: "htmlmixed",
-            theme: "hopscotch",
-            readOnly: false
-        });
+  run: function (editor, sender, data) {
+    var selectedComponent = data.fromTab == 0;
+    var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+    var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
+    codeViewer.set({
+      codeName: "htmlmixed",
+      theme: "hopscotch",
+      readOnly: false,
+    });
+    codeViewerCss.set({
+      codeName: "css",
+      readOnly: 0,
+      theme: "hopscotch",
+      autoBeautify: true,
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      lineWrapping: true,
+      styleActiveLine: true,
+      smartIndent: true,
+      indentWithTabs: true,
+    });
 
-        codeViewerCss.set({
-          codeName: 'css',
-          readOnly: 0,
-          theme: 'hopscotch',
-          autoBeautify: true,
-          autoCloseTags: true,
-          autoCloseBrackets: true,
-          lineWrapping: true,
-          styleActiveLine: true,
-          smartIndent: true,
-          indentWithTabs: true
-        });
+    var documentContent = document.createElement('div').innerHTML = `
+      <div class="tabs">
+        <button class="tabs_link" onclick="openCity(event, \'tab-1\')">
+          Main
+        </button>
+        <button class="tabs_link" onclick="openCity(event, \'tab-2\')">
+          Extra
+        </button>
+        <button class="tabs_save onclick="updateInstance">
+          Save
+        </button>
+      </div>
 
-        var modalContent = document.createElement("div");
-        let editorTextArea = document.createElement("textarea");
-        editorTextArea.id  = 'html-code';
-        let Css, cssString = '';
+      <div id="tab-1" class="tabs_content">
+        <div class="tabs_row">
+          <div class="tabs_column">
+            <div class="form-group">
+              <label for="input-name">
+                Name
+              </label>
+              <input type="text" name="name" placeholder="eg. Button">
+            </div>
+            <div class="form-group">
+              <label for="input-html">
+                HTML
+              </label>
+              <textarea name="html"></textarea>
+            </div>
+          </div>
+          <div class="tabs_column">
+            <div class="form-group">
+              <label for="input-category">
+                Category
+              </label>
+              <input type="text" name="category" placeholder="eg. Buttons">
+            </div>
+            <div class="form-group">
+              <label for="input-html">
+                CSS
+              </label>
+              <textarea name="css"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="tabs_row">
+          <div class="tabs_column tabs_column__full">
+            <iframe id="iframe-editor" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+      <div id="tab-2" class="tabs_content">
+        <div class="tabs_row">
+          <div class="tabs_column">
+            <div class="form-group">
+              <label for="input-html">
+                Description
+              </label>
+              <textarea name="description"></textarea>
+            </div>
+          </div>
+          <div class="tabs_column">
+            <div class="form-group">
+              <label for="input-html">
+                Preview
+              </label>
+              <textarea name="preview"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="tabs_row">
+          <div class="tabs_column tabs_column__full">
+            <div class="form-group">
+              <input id="input-visibility" type="checkbox" name="visibility">
+              <label for="input-visibility">
+                Make the block available only in this project
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
 
-     if (selectedComponent){ //if not from tab, get for select component.
-          var selComponent = editor.getSelected();
-          let attr = editor.getSelectedToStyle().attributes;
-          Css = attr.style;
-          editorTextArea.innerHTML = editor.getSelected().toHTML();
-     }
-     else {
-         let customBlock =  `<div class="my-block-class">
+    editor.Modal.setTitle("New Block").setContent(documentContent).open();
+
+    var editorIframe = document.querySelector('#iframe-editor');
+
+    var editorTextArea = document.querySelector('[name="html"]');
+    var Css, cssString, htmlString = "";
+
+    if (selectedComponent) {
+      //if not from tab, get for select component.
+      var selComponent = editor.getSelected();
+      var attr = editor.getSelectedToStyle().attributes;
+      Css = attr.style;
+      htmlString = editor.getSelected().toHTML();
+      editorTextArea.innerHTML = htmlString;
+    } else {
+      var customBlock = `<div class="my-block-class">
               My new block example
           </div>`;
-           cssString =  `.my-block-class {
+      cssString = `.my-block-class {
             color: #555;
             font-size: 3rem;
             padding: 50px;
             text-align: center;
           }
           `;
-          editorTextArea.innerHTML = customBlock;
-     }
-
-        var wrapColumnOne = document.createElement('div');
-        var wrapColumnTwo = document.createElement('div')
-        wrapColumnOne.classList.add('wrap-column');
-        wrapColumnTwo.classList.add('wrap-column');
-        wrapColumnTwo.classList.add('wrap-column-two');
-
-        var cssTextArea = document.createElement("textarea");
-        var editorLabel = document.createElement("label");
-        editorLabel.for = 'cat-name';
-        editorLabel.innerHTML = 'Name';
-        editorLabel.id = 'label-cat-value';
-        wrapColumnOne.appendChild(editorLabel);
-
-
-        var editorTextBlockName = document.createElement("input");
-        editorTextBlockName.type = 'text';
-        editorTextBlockName.class = 'input-box';
-        editorTextBlockName.id = 'block-name';
-        editorTextBlockName.placeholder = 'e.q. Button';
-        editorTextBlockName.classList.add('input-box');
-
-        wrapColumnOne.appendChild(editorTextBlockName);
-
-        var editorLabel = document.createElement("label");
-        editorLabel.innerHTML = 'Category';
-        editorLabel.for = 'cat-value';
-        editorLabel.id = 'label-cat-value';
-
-        wrapColumnTwo.appendChild(editorLabel);
-
-        let editorTextCategoryName = document.createElement("input");
-        editorTextCategoryName.type = 'text';
-        editorTextCategoryName.placeholder = 'e.q. Buttons Category';
-        editorTextCategoryName.id = 'cat-value';
-        editorTextCategoryName.classList.add('input-box');
-        editorTextCategoryName.classList.add('second');
-
-        wrapColumnTwo.appendChild(editorTextCategoryName);
-        var cssTextArea = document.createElement("textarea");
-        cssTextArea.id  = 'css-style';
-        if (selectedComponent){
-
-
-        cssString = '{ ';
-        for (const [key, value] of Object.entries(Css)) {
-          cssString +=   key +': ' + value + ";";
-        }
-        cssString += ' }';
-        }
-        cssTextArea.innerHTML = cssString;
-
-        var saveButton = document.createElement("button");
-        saveButton.innerHTML = "Save";
-        saveButton.id = "save";
-        saveButton.classList.add("save");
-        saveButton.classList.add("call-btn-dash");
-
-
-        let wrapButton = document.createElement('div');
-
-        wrapColumnOne.appendChild(editorTextArea);
-        wrapColumnTwo.appendChild(cssTextArea);
-        wrapButton.appendChild(saveButton);
-        modalContent.appendChild(wrapButton);
-
-        let wrapColumns = document.createElement("div");
-        wrapColumns.className = 'wrap-columns';
-        wrapColumns.classList.add('wrap-columns');
-
-        wrapColumns.appendChild(wrapColumnOne);
-        wrapColumns.appendChild(wrapColumnTwo);
-        modalContent.appendChild(wrapColumns);
-
-        codeViewer.init(editorTextArea);
-        codeViewerCss.init(cssTextArea);
-
-        const updateInstance = () => {
-
-          if ( data.fromTab == 0){
-            var selComponent = editor.getSelected() ;
-            var cid = selComponent.cid;
-          } else {
-            var cid = 10000;
-          }
-
-
-          //this func. is for block editing
-          // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
-          // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);
-          // localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
-          // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
-
-          editorTextArea = document.getElementById('html-code');
-          editorTextArea.class = 'input-box text-area-box';
-          cssTextArea = document.getElementById('css-style');
-          cssTextArea.class = 'input-box text-area-box';
-
-          let contentToSet = editorTextArea.value;
-          let blockName =  document.getElementById('block-name').value;
-
-          blockManager.creatingNewBlock('custom-block-'+(cid + 1), {
-            style: Css,
-            label:  blockName,
-            content: contentToSet,
-            category: {
-              id: 'tab-custom-other',
-              label: document.getElementById('cat-value').value,
-            },
-            attributes: {
-             title:  blockName
-            }
-          });
-
-          editor.Modal.close();
-          alert('Component values are saved.');
-
-        }
-
-        saveButton.onclick=updateInstance;
-
-        editor.Modal
-            .setTitle("New Block")
-            .setContent(modalContent)
-            .open();
-
-        //getInstanceValues(); this if for editing component
-        codeViewer.editor.refresh();
-        codeViewerCss.editor.refresh();
-
+      htmlString = customBlock;
+      editorTextArea.innerHTML = htmlString;
     }
+
+    var cssTextArea = document.querySelector('[name="css"]');
+
+    if (selectedComponent) {
+      cssString = "{ ";
+      for (const [key, value] of Object.entries(Css)) {
+        cssString += key + ": " + value + ";";
+      }
+      cssString += " }";
+    }
+
+    cssTextArea.innerHTML = cssString;
+
+    codeViewer.init(editorTextArea);
+    codeViewerCss.init(cssTextArea);
+
+    function setIframeContent(cssString, customBlock) {
+      const iframeContent = document.querySelector('.gjs-frame').contentWindow
+      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
+      console.log(defaultRules)
+      const source = `
+        <html>
+          <head><style>${defaultRules + ' ' + cssString}</style></head>
+          <body>
+            ${customBlock}
+          </body>
+        </html>
+      `
+      editorIframe.srcdoc = source
+    }
+
+    window.updateInstance = () => {
+      if (data.fromTab == 0) {
+        var selComponent = editor.getSelected();
+        var cid = selComponent.cid;
+      } else {
+        var cid = 10000;
+      }
+
+      //this func. is for block editing
+      // localStorage.setItem('editorTextArea_' + cid, editorTextArea.value);
+      // localStorage.setItem('cssTextArea_' + cid, cssTextArea.value);
+      // localStorage.setItem('blockName_' + cid,  document.getElementById('block-name').value );
+      // localStorage.setItem('catValue_' + cid, document.getElementById('cat-value').value);
+
+      editorTextArea = document.getElementById("html-code");
+      editorTextArea.class = "input-box text-area-box";
+      cssTextArea = document.getElementById("css-style");
+      cssTextArea.class = "input-box text-area-box";
+
+      var contentToSet = editorTextArea.value;
+      var blockName = document.getElementById("block-name").value;
+
+      blockManager.creatingNewBlock("custom-block-" + (cid + 1), {
+        style: Css,
+        label: blockName,
+        content: contentToSet,
+        category: {
+          id: "tab-custom-other",
+          label: document.getElementById("cat-value").value,
+        },
+        attributes: {
+          title: blockName,
+        },
+      });
+
+      editor.Modal.close();
+      alert("Component values are saved.");
+    };
+
+    window.openCity = (evt, cityName) => {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabs_content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tabs_link");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+
+      if (evt && evt.currentTarget) {
+        evt.currentTarget.className += " active";
+      } else {
+        evt.className += " active";
+      }
+    }
+
+    openCity(document.querySelector(".tabs_link"), "tab-1");
+    setTimeout(() => {
+      //getInstanceValues(); this if for editing component
+      codeViewer.editor.refresh();
+      codeViewerCss.editor.refresh();
+      setIframeContent(cssString, htmlString);
+    },1);
+  },
 });
 
 

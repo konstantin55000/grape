@@ -3,6 +3,90 @@
   color:#00FF00;
 }
 
+.CodeMirror-scroll{
+  font-size: 11px;
+}
+
+.tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.tabs_save{
+  float: right;
+  margin-right: 10px;
+}
+
+.tabs_save,
+.tabs_link {
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  -webkit-transition: color 0.25s, border-color 0.25s;
+  transition: color 0.25s, border-color 0.25s;
+  background: transparent;
+}
+.tabs_link.active {
+  color: #dc659b;
+  border-color: #dc659b;
+}
+.tabs_save {
+  color: #ffffff;
+  background: #dc659b;
+}
+.tabs_content {
+  display: none;
+  padding: 6px 12px;
+}
+.tabs_row {
+  display: -webkit-box;
+  display: flex;
+  width: 100%;
+}
+.tabs_column {
+  width: 50%;
+  padding: 10px;
+}
+.tabs_column__full {
+  width: 100%;
+}
+.tabs_column__full iframe {
+  width: 100%;
+  height: 300px;
+  background-color: #fff;
+}
+
+.form-group {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  margin: 10px 0;
+}
+.form-group label{
+  margin: 5px 0px;
+}
+.form-group input,
+.form-group textarea {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 5px 10px;
+  color: white;
+  font-size: 14px;
+  height: 32px;
+  line-height: normal;
+  -webkit-transition: border-color 0.25s;
+  transition: border-color 0.25s;
+}
+.form-group textarea {
+  min-height: 260px;
+}
+
+
 .input-box {
  border:1px solid rgba(0,0,0,.2);
  background-color:rgba(0,0,0,.1);
@@ -657,8 +741,6 @@ button, input, optgroup, select, textarea {
   padding: 5px;
   background-color: #463a3c;
   color: #fff;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 
