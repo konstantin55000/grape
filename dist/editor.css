@@ -750,11 +750,11 @@ button, input, optgroup, select, textarea {
 }
 
 #add-custom-block.call-btn-dash {
-
-  position: absolute;
+  margin-left: 5px;
+  margin-bottom: 10px;
   bottom: 0;
   padding: 10px 5px !important;
-  width: 100%;
+  width: 95%;
   z-index: 999;
 
 }
