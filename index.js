@@ -233,15 +233,17 @@ const blockManager = {
 const getBlocks =   function (url, blockTabId){
   jQuery.ajax({
     url: url ,
-    crossDomain: true
-})
+    crossDomain: true,
+    dataType: 'json'
+  })
   .done(function( data ) {
 
     data.forEach( (row, index)=> {
 
       let blockType  = row.blockType //1
       let content = row.HTML;
-      content = content.replace(/\n/g, "<br />");
+
+
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
               content: content,
