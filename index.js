@@ -277,11 +277,18 @@ editor.on('component:selected', (model) => {
  
     // whenever a component is selected in the editor
     let self = this; 
-    if (drModeIsOn){  
-      document.querySelector('.fa.fa-mouse-pointer').style='color: greenyellow';
-      document.querySelector('.fa.fa-mouse-pointer').classList.add('active'); 
-    }
-    
+    setTimeout(()=>{
+      if (drModeIsOn){  
+        document.querySelector('.fa.fa-mouse-pointer').style='color: greenyellow';
+        document.querySelector('.fa.fa-mouse-pointer').classList.add('active'); 
+        console.log(document.querySelector('.fa.fa-mouse-pointer') );
+        //alert( JSON.stringify( $('.fa.fa-mouse-pointer')[0] )  );
+      }
+    }, 150);
+     
+
+  
+  console.log(document.querySelector('.fa.fa-mouse-pointer'), 'pointer');
     const freeModeCommand = () => {
       if(editor.getSelected().get("drag-mode") == 1){
         model.setDragMode(''); 
@@ -293,17 +300,15 @@ editor.on('component:selected', (model) => {
          document.querySelector('.fa.fa-mouse-pointer').classList.remove('active');
         });
         drModeIsOn  = false;
-        console.log('drModeIsOn', drModeIsOn)
+        console.log('drModeIsOn', drModeIsOn);
       } else {
         model.setDragMode('translate');
         editor.getSelected().set("drag-mode", 1); 
         drModeIsOn = true; 
-     
-         
         document.querySelector('.fa.fa-mouse-pointer').style='color: greenyellow';
-        document.querySelector('.fa.fa-mouse-pointer').classList.add('active');
-        console.log('drModeIsOn', drModeIsOn) 
+        document.querySelector('.fa.fa-mouse-pointer').classList.add('active'); 
       }
+      console.log(document.querySelector('.fa.fa-mouse-pointer'), 'pointer');
     }
 
     const addBlock = () => {
@@ -336,10 +341,6 @@ function getUrlVars() {
   });
   return vars;
 }
-
-
-
-
 
  //this is for editing component
  const getInstanceValues = () => {
@@ -462,7 +463,6 @@ editor.Commands.add("open-html-code-editor", {
     editor.Modal.setTitle("New Block").setContent(documentContent).open();
 
     var editorIframe = document.querySelector('#iframe-editor');
-
     var editorTextArea = document.querySelector('[name="html"]');
     var Css, cssString, htmlString = "";
 
@@ -489,7 +489,6 @@ editor.Commands.add("open-html-code-editor", {
     }
 
     var cssTextArea = document.querySelector('[name="css"]');
-
     if (selectedComponent) {
       cssString = "{ ";
       for (const [key, value] of Object.entries(Css)) {
@@ -499,7 +498,6 @@ editor.Commands.add("open-html-code-editor", {
     }
 
     cssTextArea.innerHTML = cssString;
-
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
 
