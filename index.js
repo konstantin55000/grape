@@ -41,10 +41,12 @@ const blockManager = {
   },
   // Render panel with blocks to DOM element by query selector
   render: function (blocks) {
-    const el = document.querySelector(this.config.queryContent);
+    const el = document.querySelector(this.config.queryContent); 
+    console.log(this.config.queryContent);
     if (!el) return;
     el.innerHTML = '';
     el.appendChild(blocks === undefined ? this.searchBlocks('') : blocks);
+     
   },
   // Searching query in blocks names and category names
   searchBlocks: function (query, labelFlag=true, categoryFlag=true) {
@@ -203,23 +205,23 @@ blockManager.creatingNewBlock('h2-block', {
 // Testing creating new block without options
 blockManager.creatingNewBlock('h3-bootstrap', { label: 'Heading' }, 'bootstrap');
 
-// editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
-//  command: {
-//   run: function(editor) {
-//     editor.setDragMode('absolute');
+editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
+ command: {
+  run: function(editor) {
+    editor.setDragMode('absolute');
 
-//   },
-//   stop: function(editor) {
-//     editor.setDragMode('block');
-//   }
-// }
-// } ] );
+  },
+  stop: function(editor) {
+    editor.setDragMode('block');
+  }
+}
+} ] );
 
-editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
+editor.Panels.addButton('devices-c', 
+[ { id: 'toggle-panel-right2', className: 'fa fa-plus  icon-blank',
  command: function(editor1, sender) {
-    tabManager.setCurrentTab('blocks');
-
-    jQuery('.panel-blocks').toggleClass('panel-blocks--open');
+    // tabManager.setCurrentTab('blocks');
+   jQuery('.panel-blocks').toggleClass('panel-blocks--open');
    }, attributes: { title: 'Blocks' } }
 , ]);
 
@@ -298,58 +300,7 @@ function getUrlVars() {
 
 
 
-// Init default page by editor content
-window.onload = function (event) {
-//  pageManager.dflPg.components = editor.getHtml();
-//  pageManager.dflPg.styles = editor.getCss();
-  // Rendering blocks
-  blockManager.render();
-  // Initializing of search handler
-  blockManager.initSearchers();
 
-  // Deleting old blocks button
-  editor.Panels.removeButton('views', 'open-blocks');
-  //
-  editor.Panels.getButton('views', 'open-sm').set('active', true);
-  // Open a panel
-  editor.Commands.run('open-sm');
-
-  document.querySelector('#add-custom-block').addEventListener('click', () => {
-      editor.Commands.run('open-html-code-editor', {fromTab : 1} );
-  });
-
-  //Get block data to panel tabs:
-  let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-  getBlocks(url, 'tab-custom-other');
-  url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
-  getBlocks(url, 'tab-blocks');
-
-  tabManager.setCurrentTab('components'); //1s panel by defaults
-
-  setTimeout( () => {
-
-    document.querySelector('#select-tab')
-      .addEventListener("change", () => {
-        let val = document.getElementById("select-tab").value;
-        if (val == 1){
-          tabManager.setCurrentTab('components');
-        }
-        if (val == 2){
-          tabManager.setCurrentTab('blocks');
-        }
-        if (val == 3){
-          tabManager.setCurrentTab('custom');
-        }
-        if (val == 4 ){
-          //get blocks of blocktype two
-          tabManager.setCurrentTab('bootstrap');
-        }
-    });
-
-  },
-  100);
-
-};
 
  //this is for editing component
  const getInstanceValues = () => {
@@ -543,3 +494,59 @@ editor.Commands.add("open-html-code-editor", {
 
     }
 });
+
+
+
+
+
+// Init default page by editor content
+editor.on('load', function (event) {
+   
+    // Rendering blocks
+    blockManager.render();
+    // Initializing of search handler
+    blockManager.initSearchers();
+  
+    // Deleting old blocks button
+    editor.Panels.removeButton('views', 'open-blocks');
+    //
+    editor.Panels.getButton('views', 'open-sm').set('active', true);
+    // Open a panel
+    editor.Commands.run('open-sm');
+  
+    document.querySelector('#add-custom-block').addEventListener('click', () => {
+        editor.Commands.run('open-html-code-editor', {fromTab : 1} );
+    });
+  
+    //Get block data to panel tabs:
+    let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
+    getBlocks(url, 'tab-custom-other');
+    url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+    getBlocks(url, 'tab-blocks');
+  
+    tabManager.setCurrentTab('components'); //1s panel by defaults
+  
+    setTimeout( () => {
+  
+      document.querySelector('#select-tab')
+        .addEventListener("change", () => {
+          let val = document.getElementById("select-tab").value;
+          if (val == 1){
+            tabManager.setCurrentTab('components');
+          }
+          if (val == 2){
+            tabManager.setCurrentTab('blocks');
+          }
+          if (val == 3){
+            tabManager.setCurrentTab('custom');
+          }
+          if (val == 4 ){
+            //get blocks of blocktype two
+            tabManager.setCurrentTab('bootstrap');
+          }
+      });
+  
+    },
+    100);
+  
+  });
