@@ -230,6 +230,20 @@ const blockManager = {
   },
 };
 
+const saveBlock =   function (objToSave){
+  let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';
+  jQuery.ajax({
+    url: url ,
+    data: objToSave,
+    crossDomain: true,
+    dataType: 'json'
+  })
+  .done(function( response ) {
+   alert('Block is saved'); 
+   console.log('saved response', response);
+  });
+}
+
 const getBlocks =   function (url, blockTabId){
   jQuery.ajax({
     url: url ,
@@ -641,14 +655,12 @@ editor.Commands.add("open-html-code-editor", {
     }
 
   const updateInstance = () => {
-
       if (data.fromTab == 0) {
         var selComponent = editor.getSelected();
         var cid = selComponent.cid;
       } else {
         var cid = 10000;
       }
-
       editorTextArea = document.getElementById("html-code");
       editorTextArea.class = "input-box text-area-box";
       cssTextArea = document.getElementById("css-style");
@@ -658,7 +670,7 @@ editor.Commands.add("open-html-code-editor", {
       var blockName = document.getElementById("block-name").value;
       console.log('cont to set; style: ', contentToSet, Css);
 
-      blockManager.creatingNewBlock("custom-block-" + (cid + 1), {
+      let objToSave = blockManager.creatingNewBlock("custom-block-" + (cid + 1), {
         style: Css,
         label: blockName,
         content: contentToSet,
@@ -670,7 +682,8 @@ editor.Commands.add("open-html-code-editor", {
           title: blockName,
         },
       });
-
+      //alert(JSON.stringify(objToSave)) //undefined
+      saveBlock(objToSave); 
       editor.Modal.close();
       alert("Component values are saved.");
     };
