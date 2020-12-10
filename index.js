@@ -231,24 +231,23 @@ const blockManager = {
 };
 
 const saveBlock =   function (objToSave){
-  let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';
-  
-  console.log('url to save', url);
+  let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  
+  // console.log('url to save', url);
   jQuery.ajax({
     type: 'POST',
     url: url ,
-    data: objToSave, // JSON.stringify(objToSave)
+    data: JSON.stringify(objToSave), // objToSave)
     crossDomain: true,
     dataType: 'json'
   })
-  .done( ( response ) =>{
+  .done( ( response ) => {
    alert('Block is saved'); 
    console.log('saved response', response);
   }) 
-  .fail( ( response ) =>{
+  .fail( ( response ) => {
     console.error('Some error appeared', response);   //this appear0
    }).
-  always(()=>{
+  always( ()=> {
     console.log('try to save this block' + JSON.stringify(objToSave) );
   });
 }
@@ -587,12 +586,13 @@ editor.Commands.add("open-html-code-editor", {
               </label>
               <textarea name="preview"></textarea>
             </div>
-          </div>
+          </div>    
+      
         </div>
         <div class="tabs_row">
           <div class="tabs_column tabs_column__full">
-            <div class="form-group">
-              <input id="input-visibility" type="checkbox" name="visibility">
+            <div class="form-group" class="input_visibility__wrapper" style="flex-direction: row;">
+            <input id="input-visibility" type="checkbox" name="visibility" style="width: 12px;">
               <label for="input-visibility">
                 Make the block available only in this project
               </label>
@@ -611,10 +611,24 @@ editor.Commands.add("open-html-code-editor", {
     if (selectedComponent) {
       //if not from tab, get for select component.
       var selComponent = editor.getSelected();
-      var attr = editor.getSelectedToStyle().attributes;
-      // Css = attr.style;
-      let cssSpliter = new CssRules();
-      cssString = cssSpliter.run(editor); 
+      var attr = editor.getSelectedToStyle().attributes; //NO CLASS NAME here.
+ 
+      Css = attr.style;   
+      console.log('=====', attr.selectors);
+      console.log('****', attr);
+
+      cssString += ' .' + (attr.selectors.models[0]).attributes.name + "{ "; 
+
+      attr.selectors.forEach( (element) => {     
+        console.log('css', Css);
+        for (const [key, value] of Object.entries(Css)) {
+          cssString += key + ": " + value + ";";
+        }
+        cssString += " }";
+        console.log('this elem', element);
+
+    });
+
       htmlString = editor.getSelected().toHTML();
 
       editorTextArea.innerHTML = htmlString;
@@ -638,6 +652,8 @@ editor.Commands.add("open-html-code-editor", {
 
 
     cssTextArea.innerHTML = cssString;
+  
+ 
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
 
