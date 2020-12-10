@@ -232,15 +232,25 @@ const blockManager = {
 
 const saveBlock =   function (objToSave){
   let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';
+  
+  console.log('url to save', url);
   jQuery.ajax({
+    type: 'POST',
     url: url ,
     data: objToSave,
     crossDomain: true,
     dataType: 'json'
   })
-  .done(function( response ) {
+  .done( ( response ) =>{
    alert('Block is saved'); 
    console.log('saved response', response);
+  }) 
+  .fail( ( response ) =>{
+    console.error('Some error appeared', response); 
+    
+   }).
+  always(()=>{
+    console.log('try to save this block' + JSON.stringify(objToSave) );
   });
 }
 
@@ -605,11 +615,7 @@ editor.Commands.add("open-html-code-editor", {
       var attr = editor.getSelectedToStyle().attributes;
       //was: Css = attr.style;
       let cssSpliter = new CssRules();
-      cssString = cssSpliter.run(editor);
-
-      console.log(cssString);
-      //alert(cssString);
-
+      cssString = cssSpliter.run(editor); 
       htmlString = editor.getSelected().toHTML();
 
       editorTextArea.innerHTML = htmlString;
@@ -641,8 +647,7 @@ editor.Commands.add("open-html-code-editor", {
 
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
-      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
-      console.log(defaultRules)
+      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join(''); 
       const source = `
         <html>
           <head><style>${defaultRules + ' ' + cssString}</style></head>
@@ -668,9 +673,9 @@ editor.Commands.add("open-html-code-editor", {
 
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
-      console.log('cont to set; style: ', contentToSet, Css);
+       
 
-      let objToSave = blockManager.creatingNewBlock("custom-block-" + (cid + 1), {
+      let objToSave = {
         style: Css,
         label: blockName,
         content: contentToSet,
@@ -680,8 +685,10 @@ editor.Commands.add("open-html-code-editor", {
         },
         attributes: {
           title: blockName,
-        },
-      });
+        }
+      }; 
+      blockManager.creatingNewBlock("custom-block-" + (cid + 1), 
+      objToSave);
       //alert(JSON.stringify(objToSave)) //undefined
       saveBlock(objToSave); 
       editor.Modal.close();
