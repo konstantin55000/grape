@@ -246,7 +246,7 @@ const saveBlock =   function (objToSave){
    console.log('saved response', response);
   }) 
   .fail( ( response ) =>{
-    console.error('Some error appeared', response);   //this appear
+    console.error('Some error appeared', response);   //this appear0
    }).
   always(()=>{
     console.log('try to save this block' + JSON.stringify(objToSave) );
@@ -612,7 +612,7 @@ editor.Commands.add("open-html-code-editor", {
       //if not from tab, get for select component.
       var selComponent = editor.getSelected();
       var attr = editor.getSelectedToStyle().attributes;
-      //was: Css = attr.style;
+      // Css = attr.style;
       let cssSpliter = new CssRules();
       cssString = cssSpliter.run(editor); 
       htmlString = editor.getSelected().toHTML();
