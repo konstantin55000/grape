@@ -268,12 +268,14 @@ const getBlocks =   function (url, blockTabId){
   })
   .done(function( data ) {
 
-    data.forEach( (row, index)=> {
+    data.forEach( (row, index)=> { 
 
-      let blockType  = row.blockType //1
-      let content = row.HTML;
-
-
+      let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
+      content = row.HTML;  
+      content = content.replace(/\n/g, '<br/>'); 
+      content = content.replace(/\\n/g, "<br/>");
+      //console.log('the content 1  after.', content);
+    
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
               content: content,
@@ -642,15 +644,13 @@ editor.Commands.add("open-html-code-editor", {
       editorTextArea.innerHTML = htmlString;
     }
 
-    var cssTextArea = document.querySelector('[name="css"]');
-
+    var cssTextArea = document.querySelector('[name="css"]'); 
 
     cssTextArea.innerHTML = cssString;
  
 
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
-
     codeViewer.setContent(htmlString);
     codeViewerCss.setContent(cssString);
 
@@ -682,8 +682,8 @@ editor.Commands.add("open-html-code-editor", {
 
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
-       
-
+     
+      
       let objToSave = {
         style: Css,
         label: blockName,
