@@ -611,24 +611,10 @@ editor.Commands.add("open-html-code-editor", {
     if (selectedComponent) {
       //if not from tab, get for select component.
       var selComponent = editor.getSelected();
-      var attr = editor.getSelectedToStyle().attributes; //NO CLASS NAME here.
- 
-      Css = attr.style;   
-      console.log('=====', attr.selectors);
-      console.log('****', attr);
-
-      cssString += ' .' + (attr.selectors.models[0]).attributes.name + "{ "; 
-
-      attr.selectors.forEach( (element) => {     
-        console.log('css', Css);
-        for (const [key, value] of Object.entries(Css)) {
-          cssString += key + ": " + value + ";";
-        }
-        cssString += " }";
-        console.log('this elem', element);
-
-    });
-
+      var attr = editor.getSelectedToStyle().attributes;
+      // Css = attr.style;
+      let cssSpliter = new CssRules();
+      cssString = cssSpliter.run(editor, false, {target: selComponent}); 
       htmlString = editor.getSelected().toHTML();
 
       editorTextArea.innerHTML = htmlString;
@@ -652,8 +638,8 @@ editor.Commands.add("open-html-code-editor", {
 
 
     cssTextArea.innerHTML = cssString;
-  
  
+
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
 
