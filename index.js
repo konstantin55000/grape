@@ -237,7 +237,7 @@ const saveBlock =   function (objToSave){
   jQuery.ajax({
     type: 'POST',
     url: url ,
-    data: objToSave,
+    data: objToSave, // JSON.stringify(objToSave)
     crossDomain: true,
     dataType: 'json'
   })
@@ -246,8 +246,7 @@ const saveBlock =   function (objToSave){
    console.log('saved response', response);
   }) 
   .fail( ( response ) =>{
-    console.error('Some error appeared', response); 
-    
+    console.error('Some error appeared', response);   //this appear
    }).
   always(()=>{
     console.log('try to save this block' + JSON.stringify(objToSave) );
