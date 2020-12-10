@@ -233,10 +233,18 @@ const blockManager = {
 const saveBlock =   function (objToSave){
   let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  
   // console.log('url to save', url);
+ 
+ objToSave['css'] = objToSave.style;
+ objToSave['html'] = objToSave.content; 
+ objToSave['blockType'] = '1'; //unknown
+ objToSave['project'] = 'Test Project';   
+ objToSave['preview'] = null;
+ objToSave['description'] = null
+
   jQuery.ajax({
     type: 'POST',
     url: url ,
-    data: JSON.stringify(objToSave), // objToSave)
+    data: objToSave,  
     crossDomain: true,
     dataType: 'json'
   })
@@ -727,9 +735,7 @@ editor.Commands.add("open-html-code-editor", {
   },
 });
 
-
-
-
+ 
 
 // Init default page by editor content
 editor.on('load', function (event) {
