@@ -274,6 +274,7 @@ const getBlocks =   function (url, blockTabId){
       content = row.HTML;  
       content = content.replace(/\n/g, '<br/>'); 
       content = content.replace(/\\n/g, "<br/>");
+      content = content.replace(/\\"/g, `"`);
       //console.log('the content 1  after.', content);
     
       blockManager.creatingNewBlock('custom-block-'+index, {
