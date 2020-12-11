@@ -230,35 +230,38 @@ const blockManager = {
   },
 };
 
-const saveBlock =   function (objToSave){
-  let url  = 'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  
-  // console.log('url to save', url);
- 
- objToSave['css'] = objToSave.style;
- objToSave['html'] = objToSave.content; 
- objToSave['blockType'] = '1'; //unknown
- objToSave['project'] = 'Test Project';   
- objToSave['preview'] = null;
- objToSave['description'] = null
+const saveBlock = function (objToSave){
 
-  jQuery.ajax({
-    type: 'POST',
-    url: url ,
-    data: objToSave,  
-    crossDomain: true,
-    dataType: 'json'
-  })
-  .done( ( response ) => {
-   alert('Block is saved'); 
-   console.log('saved response', response);
-  }) 
-  .fail( ( response ) => {
-    console.error('Some error appeared', response);   //this appear0
-   }).
-  always( ()=> {
-    console.log('try to save this block' + JSON.stringify(objToSave) );
-  });
-}
+  let url  =  'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  // 'https%3A%2F%2Fengine.cashngo.com.au%2Fapi%2FCommunication%2FPostWorkflow%3Fworkflow%3DSaveBlocks';
+    
+  objToSave['css'] = objToSave.style;
+  objToSave['html'] = objToSave.content;
+  objToSave['blockType'] = '1'; //unknown
+  objToSave['project'] = 'Test Project';
+  objToSave['preview'] = null;
+  objToSave['description'] = null
+  
+   let encodedHtml =  jQuery('<div />').text(objToSave.html).html() ;
+   objToSave.html = encodedHtml;
+   console.log('BEFORE: ', objToSave);
+ 
+   jQuery.ajax({
+     type: 'POST',
+     url: url ,
+     data:  JSON.stringify(objToSave),
+     processData: false,
+     contentType: 'application/json'
+   })
+     .done( ( response ) => {
+     alert('Block is saved');
+    console.log('saved response', response);
+   })
+   .fail( ( response ) => {
+     console.error('error ajax', response);   //this appear0
+    }); 
+ }
+ 
+ 
 
 const getBlocks =   function (url, blockTabId){
   jQuery.ajax({
