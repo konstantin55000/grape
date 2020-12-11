@@ -3,6 +3,14 @@ body {
   overflow: hidden;
 }
 
+.padding-0{
+  padding: 0px;
+}
+
+.margin-0{
+  margin: 0px;
+}
+
 .left-bar, .right-bar {
   position: absolute;
   top: 0;

@@ -233,18 +233,18 @@ const blockManager = {
 const saveBlock = function (objToSave){
 
   let url  =  'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  // 'https%3A%2F%2Fengine.cashngo.com.au%2Fapi%2FCommunication%2FPostWorkflow%3Fworkflow%3DSaveBlocks';
-    
+
   objToSave['css'] = objToSave.style;
   objToSave['html'] = objToSave.content;
   objToSave['blockType'] = '1'; //unknown
   objToSave['project'] = 'Test Project';
   objToSave['preview'] = null;
   objToSave['description'] = null
-  
+
    let encodedHtml =  jQuery('<div />').text(objToSave.html).html() ;
    objToSave.html = encodedHtml;
    console.log('BEFORE: ', objToSave);
- 
+
    jQuery.ajax({
      type: 'POST',
      url: url ,
@@ -258,10 +258,10 @@ const saveBlock = function (objToSave){
    })
    .fail( ( response ) => {
      console.error('error ajax', response);   //this appear0
-    }); 
+    });
  }
- 
- 
+
+
 
 const getBlocks =   function (url, blockTabId){
   jQuery.ajax({
@@ -271,15 +271,15 @@ const getBlocks =   function (url, blockTabId){
   })
   .done(function( data ) {
 
-    data.forEach( (row, index)=> { 
+    data.forEach( (row, index)=> {
 
       let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
-      content = row.HTML;  
-      content = content.replace(/\n/g, '<br/>'); 
+      content = row.HTML;
+      content = content.replace(/\n/g, '<br/>');
       content = content.replace(/\\n/g, "<br/>");
       content = content.replace(/\\"/g, `"`);
       //console.log('the content 1  after.', content);
-    
+
       blockManager.creatingNewBlock('custom-block-'+index, {
               label: row.Name,
               content: content,
@@ -600,12 +600,12 @@ editor.Commands.add("open-html-code-editor", {
               </label>
               <textarea name="preview"></textarea>
             </div>
-          </div>    
-      
+          </div>
+
         </div>
         <div class="tabs_row">
-          <div class="tabs_column tabs_column__full">
-            <div class="form-group" class="input_visibility__wrapper" style="flex-direction: row;">
+          <div class="tabs_column tabs_column__full padding-0">
+            <div class="form-group input_visibility__wrapper margin-0" style="flex-direction: row;">
             <input id="input-visibility" type="checkbox" name="visibility" style="width: 12px;">
               <label for="input-visibility">
                 Make the block available only in this project
@@ -628,7 +628,7 @@ editor.Commands.add("open-html-code-editor", {
       var attr = editor.getSelectedToStyle().attributes;
       // Css = attr.style;
       let cssSpliter = new CssRules();
-      cssString = cssSpliter.run(editor, false, {target: selComponent}); 
+      cssString = cssSpliter.run(editor, false, {target: selComponent});
       htmlString = editor.getSelected().toHTML();
 
       editorTextArea.innerHTML = htmlString;
@@ -648,10 +648,10 @@ editor.Commands.add("open-html-code-editor", {
       editorTextArea.innerHTML = htmlString;
     }
 
-    var cssTextArea = document.querySelector('[name="css"]'); 
+    var cssTextArea = document.querySelector('[name="css"]');
 
     cssTextArea.innerHTML = cssString;
- 
+
 
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
@@ -660,7 +660,7 @@ editor.Commands.add("open-html-code-editor", {
 
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
-      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join(''); 
+      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
       const source = `
         <html>
           <head><style>${defaultRules + ' ' + cssString}</style></head>
@@ -686,8 +686,8 @@ editor.Commands.add("open-html-code-editor", {
 
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
-     
-      
+
+
       let objToSave = {
         style: Css,
         label: blockName,
@@ -699,11 +699,11 @@ editor.Commands.add("open-html-code-editor", {
         attributes: {
           title: blockName,
         }
-      }; 
-      blockManager.creatingNewBlock("custom-block-" + (cid + 1), 
+      };
+      blockManager.creatingNewBlock("custom-block-" + (cid + 1),
       objToSave);
       //alert(JSON.stringify(objToSave)) //undefined
-      saveBlock(objToSave); 
+      saveBlock(objToSave);
       editor.Modal.close();
       alert("Component values are saved.");
     };
@@ -739,7 +739,7 @@ editor.Commands.add("open-html-code-editor", {
   },
 });
 
- 
+
 
 // Init default page by editor content
 editor.on('load', function (event) {
