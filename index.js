@@ -234,7 +234,8 @@ const saveBlock = function (objToSave){
 
   let url  =  'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  // 'https%3A%2F%2Fengine.cashngo.com.au%2Fapi%2FCommunication%2FPostWorkflow%3Fworkflow%3DSaveBlocks';
     
-  objToSave['css'] = objToSave.style;
+ 
+ 
   objToSave['html'] = objToSave.content;
   objToSave['blockType'] = '1'; //unknown
   objToSave['project'] = 'Test Project';
@@ -280,17 +281,40 @@ const getBlocks =   function (url, blockTabId){
       content = content.replace(/\\"/g, `"`);
       //console.log('the content 1  after.', content);
     
-      blockManager.creatingNewBlock('custom-block-'+index, {
-              label: row.Name,
-              content: content,
-              category: {
-                id: blockTabId,
-                label: row.Category,
-              },
-              attributes: {
-              title:  row.Name
-            }
-        });
+      // blockManager.creatingNewBlock('custom-block-'+index, {
+      //         label: row.Name,
+      //         content: content,
+      //         category: {
+      //           id: blockTabId,
+      //           label: row.Category,
+      //         },
+      //         attributes: {
+      //         title:  row.Name
+      //       }
+      //   });
+
+      blockManager.add('custom-block-'+index, {
+        label: `<div>
+        <img src="` + row.preview + `"/>
+        <div class="my-label-block">`+row.name+`</div>
+      </div>`,
+            content: content,
+            category: {
+              id: blockTabId,
+              label: row.Category,
+            },
+            render: ({ el }) => {
+              const btn = document.createElement('button');
+              btn.innerHTML = '';
+              btn.classList.add('fa');
+              btn.classList.add('fa-edit');
+              btn.addEventListener('click', () =>   editor.Commands.run('open-html-code-editor', {fromTab : 1} ) ) ;                
+              el.appendChild(btn);
+            },
+            attributes: {
+            title:  row.Name
+          }
+      }); 
     });
 
   })
@@ -651,12 +675,11 @@ editor.Commands.add("open-html-code-editor", {
     var cssTextArea = document.querySelector('[name="css"]'); 
 
     cssTextArea.innerHTML = cssString;
- 
-
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
     codeViewer.setContent(htmlString);
     codeViewerCss.setContent(cssString);
+    alert(cssString);
 
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
@@ -673,6 +696,7 @@ editor.Commands.add("open-html-code-editor", {
     }
 
   const updateInstance = () => {
+    alert('OK' + cssString);
       if (data.fromTab == 0) {
         var selComponent = editor.getSelected();
         var cid = selComponent.cid;
@@ -683,13 +707,13 @@ editor.Commands.add("open-html-code-editor", {
       editorTextArea.class = "input-box text-area-box";
       cssTextArea = document.getElementById("css-style");
       cssTextArea.class = "input-box text-area-box";
+      
+      console.log('test css', cssString);
 
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
-     
-      
-      let objToSave = {
-        style: Css,
+      let objToSave = { 
+        css: cssString,
         label: blockName,
         content: contentToSet,
         category: {
@@ -700,8 +724,24 @@ editor.Commands.add("open-html-code-editor", {
           title: blockName,
         }
       }; 
+    
       blockManager.creatingNewBlock("custom-block-" + (cid + 1), 
       objToSave);
+
+      objToSave.label = `<div>
+        <img src="https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png"/>
+        <div class="my-label-block">`+blockName+`</div>
+      </div>`;
+
+      objToSave.render = function (){
+        const btn = document.createElement('button');
+        btn.innerHTML = '';
+        btn.classList.add('fa');
+        btn.classList.add('fa-edit');
+        btn.addEventListener('click', () =>   editor.Commands.run('open-html-code-editor', {fromTab : 1} ) ) ;                
+        el.appendChild(btn);
+      } ; 
+         
       //alert(JSON.stringify(objToSave)) //undefined
       saveBlock(objToSave); 
       editor.Modal.close();
