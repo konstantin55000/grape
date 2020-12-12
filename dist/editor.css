@@ -743,7 +743,10 @@ button, input, optgroup, select, textarea {
   color: #fff;
 }
 
-
+.error-notice {
+  color: rgb(255, 129, 129);
+  font-size:80%;
+}
 
 .tab-manager__tab-bodies .body {
   position : relative;

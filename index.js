@@ -273,8 +273,7 @@ class CssRules {
       dataType: 'json'
     })
     .done(function( data ) {
-      console.log('data',  data, 'block tab id: ', blockTabId);
-
+       
       data.forEach( (row, index)=> {        
         let content  = jQuery("<div/>").html(row.html).text(); //decode from server
         //row
@@ -666,29 +665,48 @@ class CssRules {
         cssTextArea = document.getElementById("css-style");
         cssTextArea.class = "input-box text-area-box"; 
        
-        const validate = (e) => {
-    
+        const validate = (e) => { 
+          
+          document.querySelectorAll('.error-notice').forEach( (elem) => {
+              elem.remove();
+          });
+
           const catValue = document.getElementById('cat-value');
           const blockName = document.getElementById('block-name');
-          if (catValue.value === "") { 
-         
+
+          let validate = true;
+          if (catValue.value === "") {  
             jQuery(`<div class="error-notice">Please enter category</div>`).insertAfter(jQuery(catValue));
             catValue.focus();
-            return false;
+            validate =  false;
           }
           if (blockName.value === "") { 
             jQuery(`<div class="error-notice">Please enter block name</div>`).insertAfter(jQuery(blockName ));
             blockName.focus();
-            return false;
+            validate =  false;
           } 
-          return true;
-          //      e.preventDefault();
+
+          return validate; 
         }
 
-        if (!validate(e))
-            return;
-         
-        var blockName = document.getElementById("block-name").value;  
+        let input_event = e; 
+        window.formIsVaild  = true;
+        document.getElementById('cat-value').addEventListener('change', () => {
+          console.log('this text');
+          window.formIsVaild  =   validate(input_event);
+        });
+
+        document.getElementById('block-name').addEventListener('change', () => { 
+          console.log('this text');
+          window.formIsVaild =  validate(input_event);
+        });
+
+        window.formIsVaild  = validate(input_event);
+        
+        if ( !window.formIsVaild)
+          return;
+
+        var blockName = document.getElementById("block-name").value; 
         var description = $("textarea[name=description]").val();  
         var cssString = codeViewerCss.getContent(); 
         var contentToSet = codeViewer.getContent();       
