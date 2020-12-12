@@ -688,7 +688,7 @@ editor.Commands.add("open-html-code-editor", {
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
       let objToSave = { 
-        Css: cssString,
+        Css: cssString, 
         label: blockName,
         content: contentToSet,
         html: contentToSet,
