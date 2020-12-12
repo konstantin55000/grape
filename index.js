@@ -236,16 +236,17 @@ const saveBlock = function (objToSave){
     
  
  
+  objToSave['css'] = objToSave.css; 
   objToSave['html'] = objToSave.content;
   objToSave['blockType'] = '1'; //unknown
   objToSave['project'] = 'Test Project';
   objToSave['preview'] = null;
   objToSave['description'] = null
-  
+
    let encodedHtml =  jQuery('<div />').text(objToSave.html).html() ;
    objToSave.html = encodedHtml;
    console.log('BEFORE: ', objToSave);
- 
+
    jQuery.ajax({
      type: 'POST',
      url: url ,
@@ -259,10 +260,10 @@ const saveBlock = function (objToSave){
    })
    .fail( ( response ) => {
      console.error('error ajax', response);   //this appear0
-    }); 
+    });
  }
- 
- 
+
+
 
 const getBlocks =   function (url, blockTabId){
   jQuery.ajax({
@@ -272,49 +273,29 @@ const getBlocks =   function (url, blockTabId){
   })
   .done(function( data ) {
 
-    data.forEach( (row, index)=> { 
+    data.forEach( (row, index)=> {
 
       let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
-      content = row.HTML;  
-      content = content.replace(/\n/g, '<br/>'); 
+      content = row.HTML;
+      content = content.replace(/\n/g, '<br/>');
       content = content.replace(/\\n/g, "<br/>");
       content = content.replace(/\\"/g, `"`);
       //console.log('the content 1  after.', content);
-    
-      // blockManager.creatingNewBlock('custom-block-'+index, {
-      //         label: row.Name,
-      //         content: content,
-      //         category: {
-      //           id: blockTabId,
-      //           label: row.Category,
-      //         },
-      //         attributes: {
-      //         title:  row.Name
-      //       }
-      //   });
 
-      blockManager.add('custom-block-'+index, {
-        label: `<div>
-        <img src="` + row.preview + `"/>
-        <div class="my-label-block">`+row.name+`</div>
-      </div>`,
-            content: content,
-            category: {
-              id: blockTabId,
-              label: row.Category,
-            },
-            render: ({ el }) => {
-              const btn = document.createElement('button');
-              btn.innerHTML = '';
-              btn.classList.add('fa');
-              btn.classList.add('fa-edit');
-              btn.addEventListener('click', () =>   editor.Commands.run('open-html-code-editor', {fromTab : 1} ) ) ;                
-              el.appendChild(btn);
-            },
-            attributes: {
-            title:  row.Name
-          }
-      }); 
+      blockManager.creatingNewBlock('custom-block-'+index, {
+              label: `<div>
+              <img src="`+row.Preview+`"/>
+              <div class="my-label-block">`+row.Category+`</div>
+              </div>`,
+              content: content,
+              category: {
+                id: blockTabId,
+                label: row.Category,
+              },
+              attributes: {
+              title:  row.Name
+            }
+        });
     });
 
   })
@@ -524,12 +505,13 @@ function getUrlVars() {
   codeViewer.setContent(contentToSet);
 }
 
+var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
+
 // Add new block
 editor.Commands.add("open-html-code-editor", {
   run: function (editor, sender, data) {
     var selectedComponent = data.fromTab == 0;
-    var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
-    var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
 
     codeViewer.set({
       codeName: 'htmlmixed',
@@ -624,12 +606,12 @@ editor.Commands.add("open-html-code-editor", {
               </label>
               <textarea name="preview"></textarea>
             </div>
-          </div>    
-      
+          </div>
+
         </div>
         <div class="tabs_row">
-          <div class="tabs_column tabs_column__full">
-            <div class="form-group" class="input_visibility__wrapper" style="flex-direction: row;">
+          <div class="tabs_column tabs_column__full padding-0">
+            <div class="form-group input_visibility__wrapper margin-0" style="flex-direction: row;">
             <input id="input-visibility" type="checkbox" name="visibility" style="width: 12px;">
               <label for="input-visibility">
                 Make the block available only in this project
@@ -652,7 +634,7 @@ editor.Commands.add("open-html-code-editor", {
       var attr = editor.getSelectedToStyle().attributes;
       // Css = attr.style;
       let cssSpliter = new CssRules();
-      cssString = cssSpliter.run(editor, false, {target: selComponent}); 
+      cssString = cssSpliter.run(editor, false, {target: selComponent});
       htmlString = editor.getSelected().toHTML();
 
       editorTextArea.innerHTML = htmlString;
@@ -672,18 +654,18 @@ editor.Commands.add("open-html-code-editor", {
       editorTextArea.innerHTML = htmlString;
     }
 
-    var cssTextArea = document.querySelector('[name="css"]'); 
+    var cssTextArea = document.querySelector('[name="css"]');
 
     cssTextArea.innerHTML = cssString;
     codeViewer.init(editorTextArea);
     codeViewerCss.init(cssTextArea);
     codeViewer.setContent(htmlString);
     codeViewerCss.setContent(cssString);
-    alert(cssString);
+   
 
     function setIframeContent(cssString, customBlock) {
       const iframeContent = document.querySelector('.gjs-frame').contentWindow
-      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join(''); 
+      const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
       const source = `
         <html>
           <head><style>${defaultRules + ' ' + cssString}</style></head>
@@ -743,7 +725,7 @@ editor.Commands.add("open-html-code-editor", {
       } ; 
          
       //alert(JSON.stringify(objToSave)) //undefined
-      saveBlock(objToSave); 
+      saveBlock(objToSave);
       editor.Modal.close();
       alert("Component values are saved.");
     };
@@ -776,10 +758,17 @@ editor.Commands.add("open-html-code-editor", {
       setIframeContent(cssString, htmlString);
 
     },1);
+
+
+    $('div.CodeMirror').mouseenter(function () {
+      updateIframeContent();
+    }).mouseleave(function () {
+      updateIframeContent();
+    });
   },
 });
 
- 
+
 
 // Init default page by editor content
 editor.on('load', function (event) {
@@ -839,3 +828,23 @@ editor.on('load', function (event) {
     100);
 
   });
+
+
+function updateIframeContent() {
+
+  var editorIframe = document.querySelector('#iframe-editor');
+  var cssString = codeViewerCss.getContent();
+  var customBlock = codeViewer.getContent();
+
+  const iframeContent = document.querySelector('.gjs-frame').contentWindow
+  const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
+  const source = `
+      <html>
+        <head><style>${defaultRules + ' ' + cssString}</style></head>
+        <body>
+          ${customBlock}
+        </body>
+      </html>
+    `
+  editorIframe.srcdoc = source
+}
