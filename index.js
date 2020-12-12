@@ -236,13 +236,6 @@ const saveBlock = function (objToSave){
     
  
  
-  objToSave['css'] = objToSave.css; 
-  objToSave['html'] = objToSave.content;
-  objToSave['blockType'] = '1'; //unknown
-  objToSave['project'] = 'Test Project';
-  objToSave['preview'] = null;
-  objToSave['description'] = null
-
    let encodedHtml =  jQuery('<div />').text(objToSave.html).html() ;
    objToSave.html = encodedHtml;
    console.log('BEFORE: ', objToSave);
@@ -256,7 +249,7 @@ const saveBlock = function (objToSave){
    })
      .done( ( response ) => {
      alert('Block is saved');
-    console.log('saved response', response);
+      console.log('saved response', response);
    })
    .fail( ( response ) => {
      console.error('error ajax', response);   //this appear0
@@ -678,7 +671,7 @@ editor.Commands.add("open-html-code-editor", {
     }
 
   const updateInstance = () => {
-    alert('OK' + cssString);
+ 
       if (data.fromTab == 0) {
         var selComponent = editor.getSelected();
         var cid = selComponent.cid;
@@ -695,9 +688,10 @@ editor.Commands.add("open-html-code-editor", {
       var contentToSet = editorTextArea.value;
       var blockName = document.getElementById("block-name").value;
       let objToSave = { 
-        css: cssString,
+        Css: cssString,
         label: blockName,
         content: contentToSet,
+        html: contentToSet,
         category: {
           id: "tab-custom-other",
           label: document.getElementById("cat-value").value,
@@ -707,13 +701,20 @@ editor.Commands.add("open-html-code-editor", {
         }
       }; 
     
+      objToSave['css'] = objToSave.css; 
+      objToSave['html'] = objToSave.content;
+      objToSave['blockType'] = '1'; //unknown
+      objToSave['project'] = 'Test Project';
+      objToSave['preview'] = null;
+      objToSave['description'] = null
+
       blockManager.creatingNewBlock("custom-block-" + (cid + 1), 
       objToSave);
 
-      objToSave.label = `<div>
-        <img src="https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png"/>
-        <div class="my-label-block">`+blockName+`</div>
-      </div>`;
+      // objToSave.label = `<div>
+      //   <img src="https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png"/>
+      //   <div class="my-label-block">`+blockName+`</div>
+      // </div>`;
 
       objToSave.render = function (){
         const btn = document.createElement('button');
