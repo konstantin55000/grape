@@ -500,12 +500,13 @@ function getUrlVars() {
   codeViewer.setContent(contentToSet);
 }
 
+var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
+var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
+
 // Add new block
 editor.Commands.add("open-html-code-editor", {
   run: function (editor, sender, data) {
     var selectedComponent = data.fromTab == 0;
-    var codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
-    var codeViewerCss = editor.CodeManager.getViewer("CodeMirror").clone();
 
     codeViewer.set({
       codeName: 'htmlmixed',
@@ -736,6 +737,13 @@ editor.Commands.add("open-html-code-editor", {
       setIframeContent(cssString, htmlString);
 
     },1);
+
+
+    $('div.CodeMirror').mouseenter(function () {
+      updateIframeContent();
+    }).mouseleave(function () {
+      updateIframeContent();
+    });
   },
 });
 
@@ -799,3 +807,23 @@ editor.on('load', function (event) {
     100);
 
   });
+
+
+function updateIframeContent() {
+
+  var editorIframe = document.querySelector('#iframe-editor');
+  var cssString = codeViewerCss.getContent();
+  var customBlock = codeViewer.getContent();
+
+  const iframeContent = document.querySelector('.gjs-frame').contentWindow
+  const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
+  const source = `
+      <html>
+        <head><style>${defaultRules + ' ' + cssString}</style></head>
+        <body>
+          ${customBlock}
+        </body>
+      </html>
+    `
+  editorIframe.srcdoc = source
+}
