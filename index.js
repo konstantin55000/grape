@@ -248,7 +248,7 @@ const saveBlock = function (objToSave){
      contentType: 'application/json'
    })
      .done( ( response ) => {
-     alert('Block is saved');
+      alert('Block is added an saved');
       console.log('saved response', response);
    })
    .fail( ( response ) => {
@@ -725,10 +725,10 @@ editor.Commands.add("open-html-code-editor", {
         el.appendChild(btn);
       } ; 
          
-      //alert(JSON.stringify(objToSave)) //undefined
+       
       saveBlock(objToSave);
       editor.Modal.close();
-      alert("Component values are saved.");
+      
     };
     window.updateInstance = updateInstance;
 
