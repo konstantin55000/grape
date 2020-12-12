@@ -275,16 +275,16 @@ class CssRules {
       dataType: 'json'
     })
     .done(function( data ) {
-  
+      console.log('data',  data);
+      
       data.forEach( (row, index)=> {
-  
+       // alert( JSON.stringify(row) );
         let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
-        content = row.HTML;
+        content = row.html; 
         content = content.replace(/\n/g, '<br/>');
         content = content.replace(/\\n/g, "<br/>");
         content = content.replace(/\\"/g, `"`);
-        //console.log('the content 1  after.', content);
-  
+        
         blockManager.creatingNewBlock('custom-block-'+index, {
                 label: `<div>
                 <img src="`+row.Preview+`"/>
