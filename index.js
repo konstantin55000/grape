@@ -234,8 +234,6 @@ class CssRules {
   
     let url  =  'https://engine.cashngo.com.au/api/Communication/PostWorkflow?workflow=SaveBlocks';  // 'https%3A%2F%2Fengine.cashngo.com.au%2Fapi%2FCommunication%2FPostWorkflow%3Fworkflow%3DSaveBlocks';
       
-   
-   
      let encodedHtml =  jQuery('<div />').text(objToSave.html).html() ;
      objToSave.html = encodedHtml;
      console.log('BEFORE: ', objToSave);
@@ -275,8 +273,8 @@ class CssRules {
       dataType: 'json'
     })
     .done(function( data ) {
-      console.log('data',  data);
-      
+      console.log('data',  data, 'block tab id: ', blockTabId);
+
       data.forEach( (row, index)=> {
        // alert( JSON.stringify(row) );
         let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
@@ -354,30 +352,7 @@ class CssRules {
     },
   };
   
-  // Testing creating new block without category
-  // blockManager.creatingNewBlock('h1-block', {
-  //   label: 'Yes, label',
-  //   content: '<h1>Put your title here</h1>',
-  //   category: {
-  //     id: 'tab-blocks',
-  //     label: 'Built in Blocks.'
-  //   },
-  //   attributes: {
-  //     title: 'Insert h1 block'
-  //   }
-  // });
-  // Testing creating new block with category
-  // blockManager.creatingNewBlock('h2-block', {
-  //   label: 'Heading',
-  //   content: '<h2>Test</h2>',
-  //   category: {
-  //     id: 'tab-blocks',
-  //     label: 'Built in Blocks.'
-  //   },
-  //   attributes: {
-  //     title: 'Insert h2 block'
-  //   }
-  // });
+  
   
   blockManager.creatingNewBlock('h2-block', {
     label: 'Another built in block',
@@ -681,45 +656,34 @@ class CssRules {
         editorIframe.srcdoc = source
       }
   
-    const updateInstance = () => {
-   
+    const updateInstance = (id) => {
+       
         if (data.fromTab == 0) {
-          var selComponent = editor.getSelected();
-          var cid = selComponent.cid;
-        } else {
-          var cid = 10000;
-        }
+          let selComponent = editor.getSelected();
+          id = selComponent.cid;
+        }  
         editorTextArea = document.getElementById("html-code");
         editorTextArea.class = "input-box text-area-box";
         cssTextArea = document.getElementById("css-style");
-        cssTextArea.class = "input-box text-area-box";
-        
-        console.log('test css', cssString);
-  
+        cssTextArea.class = "input-box text-area-box"; 
+        console.log('test css', cssString); 
         var contentToSet = editorTextArea.value;
-        var blockName = document.getElementById("block-name").value;
-  
-        var description = $("textarea[name=description]").val();
-  
-        var cssString = codeViewerCss.getContent();
-        
+        var blockName = document.getElementById("block-name").value;  
+        var description = $("textarea[name=description]").val();  
+        var cssString = codeViewerCss.getContent();        
         let encodedHtml =  jQuery('<div />').text(contentToSet).html() ;
-      
-        
-        var id = "custom-block-" + (cid + 1);
-  
+
         let objToSave = {
           Basic: {
             title: blockName,
             label: blockName,
-            content: description,
-            id: id,
+            content: description, 
             Category: document.getElementById("cat-value").value,
             html: encodedHtml,
             css: cssString,
             blockType: "2",
             project: "Test Project",
-            preview: "dsd",
+            preview: "./assets/no-preview",
             description: "null"
           },
           category: {
@@ -730,29 +694,16 @@ class CssRules {
             title: blockName,
           }
         };
-  
-        //Create block
-        blockManager.creatingNewBlock(id, objToSave);
-  
-       objToSave.render = function (){
-          const btn = document.createElement('button');
-          btn.innerHTML = '';
-          btn.classList.add('fa');
-          btn.classList.add('fa-edit');
-          btn.addEventListener('click', () =>   editor.Commands.run('open-html-code-editor', {fromTab : 1} ) ) ;                
-          el.appendChild(btn);
-        } ; 
-  
+        if (typeof (id) !== 'undefined')
+          objToSave['Basic']['id'] = id;
+          
+        //Create block for panel
+        //blockManager.creatingNewBlock(id, objToSave);   
         //Save to API
-        saveBlock(objToSave);
-  
+        saveBlock(objToSave); 
         //Close Modal
-        editor.Modal.close();
-   
-        // objToSave.label = `<div>
-        //   <img src="https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png"/>
-        //   <div class="my-label-block">`+blockName+`</div>
-        // </div>`;
+        editor.Modal.close(); 
+
       };
       window.updateInstance = updateInstance;
   
@@ -829,9 +780,9 @@ class CssRules {
             if (val == 2){
               if(firstTimeBlocks) {
                 let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-                getBlocks(url, 'tab-blocks');
-                firstTimeBlocks = false;
-                
+                getBlocks(url, 'tab-blocks'); //data-tab-key="blocks" cоответствуют
+                //должны добавляться
+                firstTimeBlocks = false; 
               }
               tabManager.setCurrentTab('blocks');
               addBtnEditEventHandler();
