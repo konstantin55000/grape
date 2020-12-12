@@ -275,10 +275,9 @@ class CssRules {
     .done(function( data ) {
       console.log('data',  data, 'block tab id: ', blockTabId);
 
-      data.forEach( (row, index)=> {
-       // alert( JSON.stringify(row) );
-        let content = `<section id=\"iaj594\">\n  <div class=\"container\" id=\"ixs50f\" data-gjs-type=\"bs4-container\">\n    <div data-columns=\"1\" class=\"row no-gutters\" id=\"ixypup\" data-gjs-type=\"bs4-row\">\n      <div data-column=\"1\" class=\"cell\">\n        <h1 id=\"i2ocjq\" data-gjs-type=\"header\">Lorem ipsum dolor sit amet\n        </h1>\n        <div id=\"irnrmj\" data-gjs-type=\"text\">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa\n        </div>\n        <a href=\"##\" id=\"ihu4ph\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n        <a href=\"##\" id=\"ia48ic\" data-gjs-type=\"link\">\n          Learn More\n        </a>\n      </div>\n    </div>\n  </div>\n</section>`;
-        content = row.html; 
+      data.forEach( (row, index)=> {        
+        let content  = jQuery("<div/>").html(row.html).text(); //decode from server
+        //row
         content = content.replace(/\n/g, '<br/>');
         content = content.replace(/\\n/g, "<br/>");
         content = content.replace(/\\"/g, `"`);
@@ -526,7 +525,7 @@ class CssRules {
           <button class="tabs_link" onclick="openCity(event, \'tab-2\')">
             Extra
           </button>
-          <button class="tabs_save" onclick="updateInstance()">
+          <button class="tabs_save" onclick="updateInstance(event, (editor.getSelected()).cid)">
             Save
           </button>
         </div>
@@ -656,7 +655,7 @@ class CssRules {
         editorIframe.srcdoc = source
       }
   
-    const updateInstance = (id) => {
+    const updateInstance = (e, id) => {
        
         if (data.fromTab == 0) {
           let selComponent = editor.getSelected();
@@ -666,8 +665,29 @@ class CssRules {
         editorTextArea.class = "input-box text-area-box";
         cssTextArea = document.getElementById("css-style");
         cssTextArea.class = "input-box text-area-box"; 
-        console.log('test css', cssString); 
        
+        const validate = (e) => {
+    
+          const catValue = document.getElementById('cat-value');
+          const blockName = document.getElementById('block-name');
+          if (catValue.value === "") { 
+         
+            jQuery(`<div class="error-notice">Please enter category</div>`).insertAfter(jQuery(catValue));
+            catValue.focus();
+            return false;
+          }
+          if (blockName.value === "") { 
+            jQuery(`<div class="error-notice">Please enter block name</div>`).insertAfter(jQuery(blockName ));
+            blockName.focus();
+            return false;
+          } 
+          return true;
+          //      e.preventDefault();
+        }
+
+        if (!validate(e))
+            return;
+         
         var blockName = document.getElementById("block-name").value;  
         var description = $("textarea[name=description]").val();  
         var cssString = codeViewerCss.getContent(); 
@@ -699,13 +719,15 @@ class CssRules {
           objToSave['Basic']['id'] = id;
           
         //Create block for panel
-        //blockManager.creatingNewBlock(id, objToSave);   
+      
         //Save to API
-        saveBlock(objToSave); 
+        //saveBlock(objToSave); 
         //Close Modal
         editor.Modal.close(); 
 
       };
+
+      
       window.updateInstance = updateInstance;
   
       window.openCity = (evt, cityName) => {
@@ -781,14 +803,12 @@ class CssRules {
             if (val == 2){
               if(firstTimeBlocks) {
                 let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-                getBlocks(url, 'tab-blocks'); //data-tab-key="blocks" cоответствуют
-                //должны добавляться
+                getBlocks(url, 'tab-blocks');  
                 firstTimeBlocks = false; 
               }
               tabManager.setCurrentTab('blocks');
               addBtnEditEventHandler();
-            }
-  
+            } 
               if (val == 3){
                 tabManager.setCurrentTab('custom');
                 if( firstTimeCustomBlocks) {
