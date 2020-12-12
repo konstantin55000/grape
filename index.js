@@ -365,8 +365,8 @@ class CssRules {
   });
   
   // Testing creating new block without options
-  blockManager.creatingNewBlock('h3-bootstrap', { label: 'Bootstrap block' , content: '<p class="col-md-6">Bootstrap block</p>',}, 'bootstrap');
-  blockManager.creatingNewBlock('h1-bootstrap', { label: 'Сustom In Bootstrap', content: '<div class="col-md-10"><h1 class="">Title</h1></div>', }, 'bootstrap');
+  blockManager.creatingNewBlock('h3-bootstrap', { label: 'Bootstrap block' , content: '<p class="col-md-6">Bootstrap block</p>'}, 'bootstrap');
+  blockManager.creatingNewBlock('h1-bootstrap', { label: 'Сustom In Bootstrap', content: '<div class="col-md-10"><h1 class="">Title</h1></div>'}, 'bootstrap');
   
   // editor.Panels.addButton('devices-c', [ { id: 'toggle-panel-right3', className: 'fa fa-arrows-alt icon-blank',
   //  command: {
@@ -667,10 +667,11 @@ class CssRules {
         cssTextArea = document.getElementById("css-style");
         cssTextArea.class = "input-box text-area-box"; 
         console.log('test css', cssString); 
-        var contentToSet = editorTextArea.value;
+       
         var blockName = document.getElementById("block-name").value;  
         var description = $("textarea[name=description]").val();  
-        var cssString = codeViewerCss.getContent();        
+        var cssString = codeViewerCss.getContent(); 
+        var contentToSet = codeViewer.getContent();       
         let encodedHtml =  jQuery('<div />').text(contentToSet).html() ;
 
         let objToSave = {
