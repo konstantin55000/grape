@@ -281,7 +281,10 @@ const getBlocks =   function (url, blockTabId){
       //console.log('the content 1  after.', content);
 
       blockManager.creatingNewBlock('custom-block-'+index, {
-              label: row.Name,
+              label: `<div>
+              <img src="`+row.Preview+`"/>
+              <div class="my-label-block">`+row.Category+`</div>
+              </div>`,
               content: content,
               category: {
                 id: blockTabId,
