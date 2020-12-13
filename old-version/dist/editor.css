@@ -15,12 +15,11 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.tabs_delete, .tabs_save{
+.tabs_save{
   float: right;
   margin-right: 10px;
 }
 
-.tabs_delete,
 .tabs_save,
 .tabs_link {
   outline: none;
@@ -36,10 +35,6 @@
 .tabs_link.active {
   color: #dc659b;
   border-color: #dc659b;
-}
-.tabs_delete{
-  color: #ffffff;
-  background: #2e3037;
 }
 .tabs_save {
   color: #ffffff;
@@ -748,7 +743,10 @@ button, input, optgroup, select, textarea {
   color: #fff;
 }
 
-
+.error-notice {
+  color: rgb(255, 129, 129);
+  font-size:80%;
+}
 
 .tab-manager__tab-bodies .body {
   position : relative;
