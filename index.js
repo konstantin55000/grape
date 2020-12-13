@@ -198,9 +198,11 @@ class CssRules {
         const labelBlock = block.attributes.label;
         const idBlock = block.id;
         const labelCategory = block.attributes.category !== '' ? block.attributes.category.attributes.label : null;
+        //console.log('render obj category:', labelCategory);
         const idCategory = block.attributes.category !== '' ? block.attributes.category.id : null;
         const cFlag = (labelCategory ? labelCategory.toLowerCase().indexOf(query) !== -1 : false) || (idCategory ? idCategory.toLowerCase().indexOf(query) !== -1 : false);
         const bFlag = labelBlock.toLowerCase().indexOf(query) !== -1 || idBlock.toLowerCase().indexOf(query) !== -1;
+        //console.log('return value',  '', cFlag, (cFlag && categoryFlag) || (bFlag && labelFlag)  );
         return (cFlag && categoryFlag) || (bFlag && labelFlag);
       }));
     },
@@ -277,10 +279,14 @@ class CssRules {
       data.forEach( (row, index)=> {        
         let content  = jQuery("<div/>").html(row.html).text(); //decode from server
         //row
+        console.log('the row', row);
+
         content = content.replace(/\n/g, '<br/>');
         content = content.replace(/\\n/g, "<br/>");
         content = content.replace(/\\"/g, `"`);
         
+        
+
         blockManager.creatingNewBlock('custom-block-'+index, {
                 label: `<div>
                 <img src="`+row.Preview+`"/>
@@ -292,8 +298,12 @@ class CssRules {
                   id: blockTabId,
                   label: row.Category,
                 },
+                style: content.css,
+                css: content.css,
                 attributes: {
-                title:  row.Name
+                title:  row.Name,
+                style: content.css,
+                css: content.css,
               }
           });
       });
@@ -420,7 +430,11 @@ class CssRules {
     rightBar.style.left = '13.04%';
     rightBar.style.setProperty("width", "calc(100% - 13.04%) ", "important");
   });
-  
+  var storeComponentCss =  function (id,css)   {
+    if (typeof (id) !== 'undefined')
+      localStorage.setItem('css' + id ,css); 
+   }
+
   var drModeIsOn = false;
   editor.on('component:selected', (model) => {
   
@@ -638,8 +652,8 @@ class CssRules {
       codeViewerCss.init(cssTextArea);
       codeViewer.setContent(htmlString);
       codeViewerCss.setContent(cssString);
-     
-  
+     //on Show popup function: 
+      storeComponentCss(selComponent.cid, cssString);
       function setIframeContent(cssString, customBlock) {
         const iframeContent = document.querySelector('.gjs-frame').contentWindow
         const defaultRules = Array.from(iframeContent && iframeContent.document.querySelectorAll('.gjs-css-rules style')).map(style => style.textContent).join('');
@@ -734,18 +748,50 @@ class CssRules {
           }
         };
         if (typeof (id) !== 'undefined')
+          objToSave['Basic']['id'] = id;  
+        
+        let strStyles =  `   <style> 
+           ` + cssString+ ` 
+        </style> 
+        ` ;
+       // console.log(strStyles);
+
+
+        blockManager.creatingNewBlock('custom-block-'+id, {
+          label: blockName,
+          content: strStyles + 
+      contentToSet,
+          category: {
+            id: "tab-custom-other" ,
+            label:  document.getElementById("cat-value").value,
+          },
+          attributes: {
+          title: blockName, 
+          style: cssString
+        }
+    });
+ 
+
+        if (typeof (id) !== 'undefined')
           objToSave['Basic']['id'] = id;
           
-        //Create block for panel
-      
         //Save to API
-        //saveBlock(objToSave); 
+        saveBlock(objToSave); 
         //Close Modal
         editor.Modal.close(); 
 
       };
 
+       
+        // editor.on('component:mount', function (model) {
+        //   let css = localStorage.getItem('css' + model.cid); 
+        //   editor.select(model);
+        //   console.log('css ', model.cid, css );
+        //   alert('id: ' +  model.cid + '=> ' +css);
+        //   model.attributes.style = css;
+        //  });
       
+     
       window.updateInstance = updateInstance;
   
       window.openCity = (evt, cityName) => {
@@ -785,7 +831,7 @@ class CssRules {
     },
   });
   
-  
+ 
   
   // Init default page by editor content
   editor.on('load', function (event) {
