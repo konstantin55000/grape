@@ -259,8 +259,8 @@ class CssRules {
       document.querySelectorAll('.btn-block-edit').forEach((btn)=> {
           console.log('button', btn);
           btn.addEventListener('click', ()=> {
-            alert('edit');
-              editor.Commands.run('open-html-code-editor', {fromTab : 1, edit: 1})
+          
+              editor.Commands.run('open-html-code-editor', {fromTab : 3})
               return false;
           });
       });
@@ -811,14 +811,10 @@ class CssRules {
         console.log(id);
 
         if (typeof (id) !== 'undefined'){
-
           objToSave['Basic']['id'] = id;
           console.log(objToSave);
-
           editor.BlockManager.get(id).set(objToBlockComp);
-
         }else{
-
           //Create block for panel
           blockManager.creatingNewBlock(id, objToBlockComp,'custom');
         }
@@ -911,7 +907,7 @@ class CssRules {
                 firstTimeBlocks = false;
               }
               tabManager.setCurrentTab('blocks');
-              addBtnEditEventHandler();
+              //addBtnEditEventHandler();
             }
 
               if (val == 3){
@@ -921,7 +917,7 @@ class CssRules {
                 getBlocks(url, 'tab-custom-other');
                 firstTimeCustomBlocks = false;
               }
-              addBtnEditEventHandler();
+             // addBtnEditEventHandler();
             }
             if (val == 4 ){
               //get blocks of blocktype two
