@@ -827,15 +827,14 @@ class CssRules {
           objToSave['Basic']['id'] = id;
           console.log(objToSave);
 
-          editor.BlockManager.get(id).set(objToBlockComp); 
-          //editor.BlockManager.get(id).set('category', category);
-
-          let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
-          getBlocks(url, 'tab-custom-other');  
-          tabManager.setCurrentTab('custom');
-
+          editor.BlockManager.get(id).set(objToBlockComp, category); 
+          // editor.BlockManager.get(id).set('category', category);          
+          // let url2 = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+          // getBlocks(url2, 'tab-custom-other');     
+          //maybe reload tab
+          //tabManager.setCurrentTab('custom');
         } else {           
-          blockManager.creatingNewBlock(id, objToBlockComp, category); 
+          blockManager.creatingNewBlock(id, objToBlockComp, category);         
         }
 
         //Save to API
