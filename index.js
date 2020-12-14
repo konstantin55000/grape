@@ -1,3 +1,12 @@
+
+window.onload = () =>{
+  $.fakeLoader({
+      timeToHide:1500,
+      bgColor:"#463a3c",
+      spinner:"spinner5"
+  });
+ 
+}
 //Class
 class CssRules {
 
