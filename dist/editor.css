@@ -7,6 +7,10 @@
   color:#00FF00;
 }
 
+.error-notice{
+    color: #ff4f4ffa
+}
+
 .CodeMirror-scroll{
   font-size: 11px;
 }

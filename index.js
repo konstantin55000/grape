@@ -1,12 +1,13 @@
+$(document).ready(function(){
+    $.fakeLoader({
+        timeToHide:1500,
+        bgColor:"#463a3c",
+        spinner:"spinner5"
+    });
+});
 
-window.onload = () =>{
-  $.fakeLoader({
-      timeToHide:1500,
-      bgColor:"#463a3c",
-      spinner:"spinner5"
-  });
- 
-}
+
+
 //Class
 class CssRules {
 
@@ -225,6 +226,7 @@ class CssRules {
     // Initialization of listeners for searching blocks
     initSearchers: function (query='.body__search') {
       document.querySelectorAll(query).forEach(e => e.addEventListener('input', this.searchManage.bind(this)));
+       
     },
     // Creating new block (if no define to category it will be in 'other' category)
     creatingNewBlock: function (id, opts, tab='') {
@@ -232,10 +234,11 @@ class CssRules {
         id: tab !== '' ? `tab-${tab}-other` : 'Other',
         label: 'Other',
       };
+
       let options = opts ? opts : { category: defaultCategory };
       if (!options.category)
-        options.category = defaultCategory;
-      this.obj.add(id, options);
+        options.category = defaultCategory;  
+      this.obj.add(id, options, options.category );
     },
   };
 
@@ -268,8 +271,8 @@ class CssRules {
       document.querySelectorAll('.btn-block-edit').forEach((btn)=> {
           console.log('button', btn);
           btn.addEventListener('click', ()=> {
-          
-              editor.Commands.run('open-html-code-editor', {fromTab : 3})
+            alert('edit');
+              editor.Commands.run('open-html-code-editor', {fromTab : 1, edit: 1})
               return false;
           });
       });
@@ -288,10 +291,8 @@ class CssRules {
        // alert( JSON.stringify(row) );
 
         let content  = jQuery("<div/>").html(row.html).text();
-        content = content.replace(/\n/g, '<br/>');
-        content = content.replace(/\\n/g, "<br/>");
         content = content.replace(/\\"/g, `"`);
-
+      
         blockManager.creatingNewBlock(row.Id, {
                 label: `<div>
                 <img src="`+row.Preview+`"/>
@@ -620,25 +621,23 @@ class CssRules {
         </div>
       `;
 
-      if(data.fromTab  == 3)
-        editor.Modal.setTitle("Edit Block").setContent(documentContent).open();
-      else 
-        editor.Modal.setTitle("New Block").setContent(documentContent).open();
+      editor.Modal.setTitle("New Block").setContent(documentContent).open();
 
       var editorIframe = document.querySelector('#iframe-editor');
       var editorTextArea = document.querySelector('[name="html"]');
       var Css, cssString, htmlString = "";
 
-      if (selectedComponent  ) {
+      if (selectedComponent) {
         //if not from tab, get for select component.
         var selComponent = editor.getSelected();
         var attr = editor.getSelectedToStyle().attributes;
         // Css = attr.style;
         let cssSpliter = new CssRules();
         cssString = cssSpliter.run(editor, false, {target: selComponent});
-        htmlString = editor.getSelected().toHTML(); 
+        htmlString = editor.getSelected().toHTML();
+
         editorTextArea.innerHTML = htmlString;
-        
+
       } else {
         var customBlock = `<div class="my-block-class">
                 My new block example
@@ -653,13 +652,14 @@ class CssRules {
         htmlString = customBlock;
         editorTextArea.innerHTML = htmlString;
       }
-      
-      if (data.fromTab == 3 ) {
+
+      if (data.fromTab == 3) {
 
         var raws_data = {};
 
         let url  =  'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetSingleBlock&BlockID='+data.id;
          var data = jQuery.ajax({
+           async: false,
            type: 'GET',
            url: url ,
            crossDomain: true,
@@ -667,34 +667,20 @@ class CssRules {
          })
            .done( ( response ) => {
             raws_data = response[0];
-             
-            $("#HtmlStyleSave").val(raws_data.html)
             $("#CssStyleSave").val(raws_data.css);
-             
-            console.log(`raws_data.css);`, raws_data.css,  raws_data.html);
-            
+            $("#HtmlStyleSave").val(raws_data.html);
             $("#block-name").val(raws_data.Name);
             $("#cat-value").val(raws_data.Category);
+            console.log( $("#cat-value").val(raws_data.Category) );
             $("textarea[name=description]").val(raws_data.Desciption);
             $("textarea[name=preview]").val(raws_data.Preview);
             console.log(raws_data);
-
-            
-          let html = raws_data.html
-          let css = raws_data.css;
-
-          let content  = jQuery("<div/>").html(html).text();
-          content = content.replace(/\\"/g, `"`);
-
-
-          let customBlock = content;
-          cssString = css;
-          htmlString = customBlock;
-          editorTextArea.innerHTML = htmlString;
          })
          .fail( ( response ) => {
            console.error('error ajax', response);
           });
+
+
 
 
           var html = $("#HtmlStyleSave").val();
@@ -735,6 +721,8 @@ class CssRules {
         editorIframe.srcdoc = source
       }
 
+
+
     const updateInstance = (input_event, id) => {
 
         if (data.fromTab == 0) {
@@ -745,9 +733,8 @@ class CssRules {
         var cssString = codeViewerCss.getContent();
         var contentToSet = codeViewer.getContent();
 
-   
-        const validate = (e) => { 
-          
+        const validate = (e) => {
+
           document.querySelectorAll('.error-notice').forEach( (elem) => {
               elem.remove();
           });
@@ -755,33 +742,33 @@ class CssRules {
           const catValue = document.getElementById('cat-value');
           const blockName = document.getElementById('block-name');
           let validate = true;
-          if (catValue.value === "") {  
+          if (catValue.value === "") {
             jQuery(`<div class="error-notice">Please enter category</div>`).insertAfter(jQuery(catValue));
             catValue.focus();
             validate =  false;
           }
-          if (blockName.value === "") { 
+          if (blockName.value === "") {
             jQuery(`<div class="error-notice">Please enter block name</div>`).insertAfter(jQuery(blockName ));
             blockName.focus();
             validate =  false;
-          } 
+          }
 
-          return validate; 
+          return validate;
         }
 
-         
+
         window.formIsVaild  = true;
-        document.getElementById('cat-value').addEventListener('change', () => {           
+        document.getElementById('cat-value').addEventListener('change', () => {
           window.formIsVaild  =   validate(input_event);
         });
 
-        document.getElementById('block-name').addEventListener('change', () => { 
+        document.getElementById('block-name').addEventListener('change', () => {
           console.log('this text');
           window.formIsVaild =  validate(input_event);
         });
 
         window.formIsVaild  = validate(input_event);
-        
+
         if ( !window.formIsVaild)
           return;
 
@@ -796,6 +783,11 @@ class CssRules {
         let encodedHtml =  jQuery('<div />').text(contentToSet).html();
         var preview = $("textarea[name=preview]").val();
 
+        let category =  {
+          id: "tab-custom-other-"+document.getElementById("cat-value").value,
+          label: document.getElementById("cat-value").value,
+        };
+
         let objToSave = {
           Basic: {
             title: blockName,
@@ -809,60 +801,41 @@ class CssRules {
             preview: preview,
             description: $("textarea[name=description]").val()
           },
-          category: {
-            id: "tab-custom-other-"+document.getElementById("cat-value").value,
-            label: document.getElementById("cat-value").value,
-          },
+          category: category,
           attributes: {
             title: blockName,
           }
         };
 
-         
-      
-        var id = $("#IDBlock").val();
-        console.log(id);
-        /*  <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>*/
         let objToBlockComp = {
           label: `<div>
           <img src="`+preview+`"/>
           <div class="my-label-block">`+blockName+`</div>
-         
           </div>`,
-          content: contentToSet+' <style>'+ cssString +'</style>',
-          category: {
-            id: "tab-custom-other-"+document.getElementById("cat-value").value,
-            label: document.getElementById("cat-value").value,
-          },
+          content: contentToSet+'<style>'+ cssString +'</style>',
+          category: category,
           attributes: {
             title: blockName,
           }
         };
 
+        var id = $("#IDBlock").val();
+
+        console.log('cat to make: ', "tab-custom-other-"+document.getElementById("cat-value").value );
+
         if (typeof (id) !== 'undefined'){
           objToSave['Basic']['id'] = id;
-          //console.log(objToSave); 
-          editor.BlockManager.get(id).set(objToBlockComp); 
+          console.log(objToSave);
 
-        }else{
-          /*   <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>*/
-          let objToBlockComp = {
-            label: `<div>
-            <img src="`+preview+`"/>
-            <div class="my-label-block">`+blockName+`</div>
-          
-            </div>`,
-            content: contentToSet+' <style>'+ cssString +'</style>',
-            category: {
-              id: "tab-custom-other-"+document.getElementById("cat-value").value,
-              label: document.getElementById("cat-value").value,
-            },
-            attributes: {
-              title: blockName,
-            }
-          };
-          //Create block for panel
-          blockManager.creatingNewBlock(id, objToBlockComp,'custom');
+          editor.BlockManager.get(id).set(objToBlockComp); 
+          //editor.BlockManager.get(id).set('category', category);
+
+          let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+          getBlocks(url, 'tab-custom-other');  
+          tabManager.setCurrentTab('custom');
+
+        } else {           
+          blockManager.creatingNewBlock(id, objToBlockComp, category); 
         }
 
         //Save to API
@@ -917,6 +890,12 @@ class CssRules {
   // Init default page by editor content
   editor.on('load', function (event) {
 
+    let url1 = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
+    getBlocks(url1, 'tab-blocks-other'); //data-tab-key="blocks" cоответствуют
+
+     let url2 = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
+     getBlocks(url2, 'tab-custom-other');
+
       // Rendering blocks
       blockManager.render();
       document.querySelector('#select-tab').selectedIndex = 0
@@ -947,23 +926,19 @@ class CssRules {
             }
             if (val == 2){
               if(firstTimeBlocks) {
-                let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=1';
-                getBlocks(url, 'tab-blocks-other'); //data-tab-key="blocks" cоответствуют
                 //должны добавляться
                 firstTimeBlocks = false;
               }
               tabManager.setCurrentTab('blocks');
-              //addBtnEditEventHandler();
+              addBtnEditEventHandler();
             }
 
               if (val == 3){
                 tabManager.setCurrentTab('custom');
                 if( firstTimeCustomBlocks) {
-                let url = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
-                getBlocks(url, 'tab-custom-other');
                 firstTimeCustomBlocks = false;
               }
-             // addBtnEditEventHandler();
+              addBtnEditEventHandler();
             }
             if (val == 4 ){
               //get blocks of blocktype two
@@ -980,7 +955,7 @@ class CssRules {
     editor.Commands.run('open-html-code-editor', {fromTab : 3, id: id});
   }
 
-  
+
   function updateIframeContent() {
 
     var editorIframe = document.querySelector('#iframe-editor');

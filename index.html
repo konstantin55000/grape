@@ -7,8 +7,8 @@
     <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
     <link href="dist/grapesjs-preset-webpage.min.css" rel="stylesheet">
     <link href="dist/editor.css" rel="stylesheet">
+    <link href="./fakeLoader.min.css" rel="stylesheet">
     <!-- <script src="//feather.aviary.com/imaging/v3/editor.js"></script> -->
-    <link href="dist/fakeLoader.min.css" rel="stylesheet">
     <script src="https://static.filestackapi.com/v3/filestack-0.1.10.js"></script>
     <script src="https://unpkg.com/grapesjs"></script>
     <script src="dist/grapesjs-preset-webpage.min.js"></script>
@@ -174,10 +174,6 @@ input.input-box.second {
     font-size: 12px;
     float: right;
 }
-
-.error-notice{
-    color: #ff4f4ffa
-}
 </style>
 
 
@@ -234,7 +230,7 @@ input.input-box.second {
                                    </div>
                                   <div class="body" data-tab-key="custom">
                                     <input class="body__search js__search-blocks" type="text" />
-                                    
+
                                     <button class="call-btn-dash" id="add-custom-block"> Add custom block </button>
                                     <div class="body__content" id="customContent"></div>
                                     </div>
@@ -264,7 +260,7 @@ input.input-box.second {
                 max-width: 700px;
                 border-radius: 3px;
                 padding: 30px 20px;
-                margin: 150px auto 0px;
+                margin: 50px auto 0px;
                 background-color: #d983a6;
                 box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.25);
                 color: rgba(255, 255, 255, 0.75);
@@ -306,8 +302,9 @@ input.input-box.second {
 
         </style>
     </div>
+
     <div class="fakeLoader"></div>
-    
+
     <input type="hidden" name="html" id="CssStyleSave" value=""/>
     <input type="hidden" name="css" id="HtmlStyleSave" value=""/>
     <script
@@ -315,7 +312,7 @@ input.input-box.second {
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
     crossorigin="anonymous"></script>
 
-    <script src="./dist/fakeLoader.min.js" type="text/javascript"></script> 
+    <script src="./dist/fakeLoader.min.js"></script> 
     <script src="./dist/html2canvas.min.js" type="text/javascript"></script>
 
     <script src="./index.js" type="text/javascript"></script>
