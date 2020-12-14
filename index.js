@@ -259,8 +259,8 @@ class CssRules {
       document.querySelectorAll('.btn-block-edit').forEach((btn)=> {
           console.log('button', btn);
           btn.addEventListener('click', ()=> {
-            alert('edit');
-              editor.Commands.run('open-html-code-editor', {fromTab : 1, edit: 1})
+          
+              editor.Commands.run('open-html-code-editor', {fromTab : 3})
               return false;
           });
       });
@@ -611,7 +611,10 @@ class CssRules {
         </div>
       `;
 
-      editor.Modal.setTitle("New Block").setContent(documentContent).open();
+      if(data.fromTab  == 3)
+        editor.Modal.setTitle("Edit Block").setContent(documentContent).open();
+      else 
+        editor.Modal.setTitle("New Block").setContent(documentContent).open();
 
       var editorIframe = document.querySelector('#iframe-editor');
       var editorTextArea = document.querySelector('[name="html"]');
@@ -624,8 +627,7 @@ class CssRules {
         // Css = attr.style;
         let cssSpliter = new CssRules();
         cssString = cssSpliter.run(editor, false, {target: selComponent});
-        htmlString = editor.getSelected().toHTML();
-
+        htmlString = editor.getSelected().toHTML(); 
         editorTextArea.innerHTML = htmlString;
 
       } else {
@@ -924,7 +926,7 @@ class CssRules {
                 firstTimeBlocks = false;
               }
               tabManager.setCurrentTab('blocks');
-              addBtnEditEventHandler();
+              //addBtnEditEventHandler();
             }
 
               if (val == 3){
@@ -934,7 +936,7 @@ class CssRules {
                 getBlocks(url, 'tab-custom-other');
                 firstTimeCustomBlocks = false;
               }
-              addBtnEditEventHandler();
+             // addBtnEditEventHandler();
             }
             if (val == 4 ){
               //get blocks of blocktype two
