@@ -791,12 +791,17 @@ class CssRules {
           }
         };
 
+         
+      
+        var id = $("#IDBlock").val();
+        console.log(id);
         let objToBlockComp = {
           label: `<div>
           <img src="`+preview+`"/>
           <div class="my-label-block">`+blockName+`</div>
+          <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>
           </div>`,
-          content: contentToSet+'<style>'+ cssString +'</style>',
+          content: contentToSet+' <style>'+ cssString +'</style>',
           category: {
             id: "tab-custom-other-"+document.getElementById("cat-value").value,
             label: document.getElementById("cat-value").value,
@@ -806,19 +811,27 @@ class CssRules {
           }
         };
 
-        var id = $("#IDBlock").val();
-
-        console.log(id);
-
         if (typeof (id) !== 'undefined'){
-
           objToSave['Basic']['id'] = id;
-          console.log(objToSave);
-
-          editor.BlockManager.get(id).set(objToBlockComp);
+          //console.log(objToSave); 
+          editor.BlockManager.get(id).set(objToBlockComp); 
 
         }else{
-
+          let objToBlockComp = {
+            label: `<div>
+            <img src="`+preview+`"/>
+            <div class="my-label-block">`+blockName+`</div>
+            <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>
+            </div>`,
+            content: contentToSet+' <style>'+ cssString +'</style>',
+            category: {
+              id: "tab-custom-other-"+document.getElementById("cat-value").value,
+              label: document.getElementById("cat-value").value,
+            },
+            attributes: {
+              title: blockName,
+            }
+          };
           //Create block for panel
           blockManager.creatingNewBlock(id, objToBlockComp,'custom');
         }
