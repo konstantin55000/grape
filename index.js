@@ -620,7 +620,7 @@ class CssRules {
       var editorTextArea = document.querySelector('[name="html"]');
       var Css, cssString, htmlString = "";
 
-      if (selectedComponent) {
+      if (selectedComponent  ) {
         //if not from tab, get for select component.
         var selComponent = editor.getSelected();
         var attr = editor.getSelectedToStyle().attributes;
@@ -629,7 +629,7 @@ class CssRules {
         cssString = cssSpliter.run(editor, false, {target: selComponent});
         htmlString = editor.getSelected().toHTML(); 
         editorTextArea.innerHTML = htmlString;
-
+        
       } else {
         var customBlock = `<div class="my-block-class">
                 My new block example
@@ -644,8 +644,7 @@ class CssRules {
         htmlString = customBlock;
         editorTextArea.innerHTML = htmlString;
       }
-      $("#CssStyleSave").val(cssString);
-      $("#HtmlStyleSave").val(htmlString);
+      
       if (data.fromTab == 3 ) {
 
         var raws_data = {};
@@ -659,13 +658,16 @@ class CssRules {
          })
            .done( ( response ) => {
             raws_data = response[0];
-            $("#CssStyleSave").val(raws_data.css);
-            $("#HtmlStyleSave").val(raws_data.html);
+             
+            $("#HtmlStyleSave").val(raws_data.html)
+            $("#CssStyleSave").val(raws_data.css);  
+            $("#html-code").val(raws_data.html)
+            $("#css-style").val(raws_data.css); 
             $("#block-name").val(raws_data.Name);
             $("#cat-value").val(raws_data.Category);
             $("textarea[name=description]").val(raws_data.Desciption);
-            $("textarea[name=preview]").val(raws_data.Preview);
-            console.log(raws_data);
+            $("textarea[name=preview]").val(raws_data.Preview); 
+            //console.log(raws_data);
          })
          .fail( ( response ) => {
            console.error('error ajax', response);
@@ -953,7 +955,7 @@ class CssRules {
     editor.Commands.run('open-html-code-editor', {fromTab : 3, id: id});
   }
 
-
+  
   function updateIframeContent() {
 
     var editorIframe = document.querySelector('#iframe-editor');
