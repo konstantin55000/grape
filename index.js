@@ -813,11 +813,12 @@ class CssRules {
       
         var id = $("#IDBlock").val();
         console.log(id);
+        /*  <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>*/
         let objToBlockComp = {
           label: `<div>
           <img src="`+preview+`"/>
           <div class="my-label-block">`+blockName+`</div>
-          <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>
+         
           </div>`,
           content: contentToSet+' <style>'+ cssString +'</style>',
           category: {
@@ -835,11 +836,12 @@ class CssRules {
           editor.BlockManager.get(id).set(objToBlockComp); 
 
         }else{
+          /*   <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>*/
           let objToBlockComp = {
             label: `<div>
             <img src="`+preview+`"/>
             <div class="my-label-block">`+blockName+`</div>
-            <a class="edit-block-btn fa fa-edit" href="#" onClick="callEditBlock('`+id+`');"></a>
+          
             </div>`,
             content: contentToSet+' <style>'+ cssString +'</style>',
             category: {
