@@ -642,8 +642,9 @@ class CssRules {
         htmlString = customBlock;
         editorTextArea.innerHTML = htmlString;
       }
-
-      if (data.fromTab == 3) {
+      $("#CssStyleSave").val(cssString);
+      $("#HtmlStyleSave").val(htmlString);
+      if (data.fromTab == 3 ) {
 
         var raws_data = {};
 
@@ -743,8 +744,7 @@ class CssRules {
 
          
         window.formIsVaild  = true;
-        document.getElementById('cat-value').addEventListener('change', () => {
-           
+        document.getElementById('cat-value').addEventListener('change', () => {           
           window.formIsVaild  =   validate(input_event);
         });
 
