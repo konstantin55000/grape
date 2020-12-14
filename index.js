@@ -660,14 +660,28 @@ class CssRules {
             raws_data = response[0];
              
             $("#HtmlStyleSave").val(raws_data.html)
-            $("#CssStyleSave").val(raws_data.css);  
-            $("#html-code").val(raws_data.html)
-            $("#css-style").val(raws_data.css); 
+            $("#CssStyleSave").val(raws_data.css);
+             
+            console.log(`raws_data.css);`, raws_data.css,  raws_data.html);
+            
             $("#block-name").val(raws_data.Name);
             $("#cat-value").val(raws_data.Category);
             $("textarea[name=description]").val(raws_data.Desciption);
-            $("textarea[name=preview]").val(raws_data.Preview); 
-            //console.log(raws_data);
+            $("textarea[name=preview]").val(raws_data.Preview);
+            console.log(raws_data);
+
+            
+          let html = raws_data.html
+          let css = raws_data.css;
+
+          let content  = jQuery("<div/>").html(html).text();
+          content = content.replace(/\\"/g, `"`);
+
+
+          let customBlock = content;
+          cssString = css;
+          htmlString = customBlock;
+          editorTextArea.innerHTML = htmlString;
          })
          .fail( ( response ) => {
            console.error('error ajax', response);
