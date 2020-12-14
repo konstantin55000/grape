@@ -265,19 +265,7 @@ class CssRules {
        console.error('error ajax', response);   //this appear0
       });
    }
-
-   const addBtnEditEventHandler = () => {
-      // console.log('buttons',   document.querySelectorAll('.btn-block-edit'));
-      document.querySelectorAll('.btn-block-edit').forEach((btn)=> {
-          console.log('button', btn);
-          btn.addEventListener('click', ()=> {
-            alert('edit');
-              editor.Commands.run('open-html-code-editor', {fromTab : 1, edit: 1})
-              return false;
-          });
-      });
-   }
-
+ 
   const getBlocks =   function (url, blockTabId){
     jQuery.ajax({
       url: url ,
@@ -828,7 +816,10 @@ class CssRules {
           console.log(objToSave);
 
           editor.BlockManager.get(id).set(objToBlockComp, category); 
-          // editor.BlockManager.get(id).set('category', category);          
+
+
+          // editor.BlockManager.get(id).set('category', category);
+          //чтоб Обновлять блоки в табе надо сначала за-сетить категории          
           // let url2 = 'https://engine.cashngo.com.au/api/Communication/GetWorkflow?workflow=GetBlocks&BlockType=2';
           // getBlocks(url2, 'tab-custom-other');     
           //maybe reload tab
@@ -929,7 +920,7 @@ class CssRules {
                 firstTimeBlocks = false;
               }
               tabManager.setCurrentTab('blocks');
-              addBtnEditEventHandler();
+              
             }
 
               if (val == 3){
@@ -937,7 +928,7 @@ class CssRules {
                 if( firstTimeCustomBlocks) {
                 firstTimeCustomBlocks = false;
               }
-              addBtnEditEventHandler();
+            
             }
             if (val == 4 ){
               //get blocks of blocktype two
