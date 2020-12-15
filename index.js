@@ -591,7 +591,8 @@ class CssRules {
                 <label for="input-html">
                   Preview
                 </label>
-                <textarea name="preview"></textarea>
+               <!-- <textarea name="preview"></textarea> -->
+                <iframe id="iframe-editor-preview" frameborder="0"></iframe>
               </div>
             </div>
 
@@ -612,6 +613,7 @@ class CssRules {
       editor.Modal.setTitle("New Block").setContent(documentContent).open();
 
       var editorIframe = document.querySelector('#iframe-editor');
+      var editorIframePreview = document.querySelector('#iframe-editor');
       var editorTextArea = document.querySelector('[name="html"]');
       var Css, cssString, htmlString = "";
 
@@ -706,7 +708,8 @@ class CssRules {
             </body>
           </html>
         `
-        editorIframe.srcdoc = source
+        editorIframe.srcdoc = source;
+        editorIframePreview.srcdoc = source;
       }
 
 
@@ -815,7 +818,7 @@ class CssRules {
           objToSave['Basic']['id'] = id;
           console.log(objToSave);
 
-          editor.BlockManager.get(id).set(objToBlockComp, category); 
+            editor.BlockManager.get(id).set(objToBlockComp, category); 
 
 
           // editor.BlockManager.get(id).set('category', category);
@@ -949,6 +952,8 @@ class CssRules {
   function updateIframeContent() {
 
     var editorIframe = document.querySelector('#iframe-editor');
+    var editorIframePreview = document.querySelector('#iframe-editor-preview');
+
     var cssString = codeViewerCss.getContent();
     var customBlock = codeViewer.getContent();
 
@@ -963,6 +968,7 @@ class CssRules {
         </html>
       `
     editorIframe.srcdoc = source
+    editorIframePreview.srcdoc = source;
   }
 
   function deleteItem(id){
